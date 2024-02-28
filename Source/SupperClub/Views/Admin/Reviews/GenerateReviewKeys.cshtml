@@ -1,0 +1,103 @@
+﻿@model SupperClub.Models.GenerateReviewKeysModel
+
+@{
+    ViewBag.Title = "Generate Review Keys";
+}
+
+@section PageSpecificScripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#SelectedEventId').change(function () {
+            window.location = '@Url.Action("GenerateReviewKeys","Admin")?eventsDaysOld=@Model.EventsDaysOld&selectedEventId=' + $(this).val();
+        });
+
+    });
+
+    function GenerateKey(userId, accountName) {
+        var selectedEventId = $('#SelectedEventId').val();
+        var allowGuests = $('#AllowGuests').is(':checked');
+        $.getJSON('@Url.Action("GenerateAuthToken", "Admin")', { eventId: selectedEventId, allowGuests: allowGuests, userId: userId }, function (data) {
+            $('#KeyUserId').html('<strong>' + userId + '</strong>');
+            $('#KeyUserName').html('<strong>' + accountName + '</strong>');
+            $('#KeyLink').html('<strong>' + '@SupperClub.Code.ServerMethods.ServerUrl' + 'Event/AddReview' + '?authToken=' + data + '</strong>');
+            $('#LinkDetails').show();
+        });
+    }
+
+</script>
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+        <h4 class="headline">Choose Event</h4>
+
+        <div class="field">
+            @Html.DropDownListFor(m => m.SelectedEventId, (SelectList)ViewBag.EventsList, "Select", new { @class = "custom_select" })
+        </div>
+        
+        @if (ViewBag.SelectedEvent != null)
+        {
+            <br /><br />           
+            <table class="standard-table" style="margin-bottom:0px;">
+                <tr>
+                    <th>
+                        Account
+                    </th>
+                    <th>
+                        User Name
+                    </th>
+                    <th>
+                        Generate Link
+                    </th>
+                </tr>
+                <tr>
+                    <td>All Users</td>
+                    <td>@Html.CheckBoxFor(m => m.AllowGuests) Allow Guest Reviews</td>
+                    <td><a href="#" onclick="GenerateKey('', 'All Users')">Generate Link</a></td>
+                </tr>
+
+                @foreach (SupperClub.Domain.EventAttendee ea in ViewBag.SelectedEvent.EventAttendees)
+                {
+                    <tr id="@ea.UserId">
+                        <td>
+                            @ea.User.Email
+                        </td>
+                        <td>
+                            @ea.User.FirstName @ea.User.LastName
+                        </td>
+                        <td>
+                            <a href="#" onclick="GenerateKey('@ea.UserId','@ea.User.Email')">Generate Link</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        <br /><br />
+        <div id="LinkDetails" class="field" style="display:none;">
+            <h4>Account:</h4>
+            <p id="KeyUserName"></p>
+            <h4>User Id:</h4>
+            <p id="KeyUserId"></p>
+            <h4>Link to send:</h4>
+            <p id="KeyLink"></p>
+        </div>
+
+	</div>
+</div>

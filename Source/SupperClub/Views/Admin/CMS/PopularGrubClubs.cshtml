@@ -1,0 +1,87 @@
+﻿
+@model SupperClub.Models.CMSPopularGrubClubsModel
+    @{
+        ViewBag.Title = "Pop Up Restaurants| Eat Out with Grub Club";
+        ViewBag.Description = "Grub Club connects foodies with the best creative chefs in your area. We are a platform for entrepreneurial Chefs. Come support a new generation of restaurants and discover the next big chef.";
+    }
+
+    @section PageSpecificScripts {
+        <style>
+            table {
+                border: 1px solid black;
+                width: 80%;
+                align-content: center;
+                margin-left:100px;
+                margin-bottom:20px;
+            }
+
+            th, td {
+                border: 1px solid black;
+                height: 25px;
+              
+            }
+
+            img {
+                height: 100px;
+                width: 150px;
+            }
+        </style>
+    }
+@using (Html.BeginForm("PopularGrubClubs", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "PopularGrubClubsForm" }))
+{
+
+    <input type="submit" id="btnSave" value="Update" style="margin: 10px 10px 10px 1050px;" />
+
+ <table>
+        <tr>
+            <th width="50px"> EventId </th>
+            <th width="150px">Event Name</th>
+            <th width="125px">Event Date</th>
+            <th width="50px">No. of Tickets Left / Total</th>
+            <th width="50px">Chef Rating</th>
+            <th width="50px">New Chef</th>
+            <th style="display:none;">EventUrl</th>
+            <th width="150px">SupperClub Name</th>            
+            <th width="50px">Admin Rank</th>
+        </tr>
+
+
+
+        @for(int i=0; i <= Model.PopularEvents.Count - 1 ; i++)
+        {
+            SupperClub.Domain.PopularEventAdmin _event = Model.PopularEvents[i];
+            string supperclubUrl = _event.popularEvent.Event.SupperClub.UrlFriendlyName;
+            string eventUrl = _event.popularEvent.Event.UrlFriendlyName;
+            <tr>
+                <td style="padding-left:5px;"><a href="/@supperclubUrl/@eventUrl/@_event.popularEvent.EventId" target="_blank"><span style="color:orange;">@_event.popularEvent.EventId</span></a></td>
+                <td><a href="/@supperclubUrl/@eventUrl/@_event.popularEvent.EventId" target="_blank"><span style="color:orange;">@_event.popularEvent.Event.Name</span></a></td>
+                <td style="padding-left:5px !important;">@_event.popularEvent.Event.Start.ToString("ddd, d MMM yyyy")</td>
+                @if (_event.popularEvent.Event.TotalNumberOfAvailableSeats <= 0)
+                {
+                    <td style="padding-left:5px !important;">Soldout</td>
+                }
+                else
+                {
+                    <td style="padding-left:5px !important;">@_event.popularEvent.Event.TotalNumberOfAvailableSeats / @_event.popularEvent.Event.TotalEventGuests</td>
+                }
+                <td style="padding-left:5px !important;">@_event.popularEvent.Event.SupperClub.AverageRank</td>
+                @if (_event.popularEvent.Event.SupperClub.Events.Count <= 2)
+                {
+                    <td style="padding-left:5px !important;">Yes</td>
+                }
+                else
+                {
+                    <td style="padding-left:5px !important;">No</td>
+                }
+                <td style="display:none;"><input type="text" name="eventUrl @_event.popularEvent.EventId" value="@_event.EventUrl"></td>
+                <td><a href="/@supperclubUrl" target="_blank"><span style="color:orange;">@_event.popularEvent.Event.SupperClub.Name</span></a></td>
+                <td style="padding-left:5px !important;"><input type="text" name="@_event.popularEvent.EventId" value="@_event.AdminRank" /></td>
+            </tr>
+
+        }
+
+             
+    </table>
+    
+           
+}

@@ -1,0 +1,154 @@
+﻿@model SupperClub.Domain.Review
+
+@{
+    ViewBag.Title = "Check Review";
+}
+
+@section PageSpecificScripts {
+<script type="text/javascript">
+    function FlipPublishState(reviewId) {
+        $.getJSON('@Url.Action("FlipPublishOrUnpublish", "Admin")', { reviewId: reviewId }, function (newState) {
+            if (newState == null) {
+                alert("There was a problem (un)publishing this user, please try again");
+            }
+            else {
+                $("#Publish_" + reviewId).text(newState);
+            }
+        });
+    }
+
+    function DeleteReview() {
+        var conf = confirm('Are you sure you want to delete this review?');
+        if (conf) {
+            window.location = '@Html.Raw(Url.Action("DeleteReview", "Admin", new { reviewId = Model.Id, eventId = Model.EventId }))';
+        }
+    }
+</script>
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+        <h4 class="headline">Review Details</h4>
+        <table class="standard-table">
+            
+            <tr>
+                <th>
+                    Property
+                </th>
+                <th>
+                    Value
+                </th>
+            </tr>
+
+            <tr>
+                <td>
+                    Event
+                </td>
+                <td>
+                    <a href="@Url.Action("DetailsByIdWithName", "Event", new { eventId = Model.EventId })">@Model.Event.Name</a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Created
+                </td>
+                <td>
+                    @Model.DateCreated.ToString("dd/MM/yy HH:mm")
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    User
+                </td>
+                <td>
+                    @if (Model.UserId != null)
+                    {
+                        @ViewBag.UserAccount
+                    }
+                    else
+                    {
+                        @:Guest
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Rating</strong>
+                </td>
+                <td>
+                    <strong>@((Model.Rating == null) ? "None" : Model.Rating.ToString())</strong>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Title</strong>
+                </td>
+                <td>
+                    @Model.Title
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Public Comment</strong>
+                </td>
+                <td>
+                    @Html.DisplayWithBreaksFor(m => m.PublicReview)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Anonymous
+                </td>
+                <td>
+                    @Model.Anonymous.ToString()
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Private Comment
+                </td>
+                <td>
+                    @Html.DisplayWithBreaksFor(m => m.PrivateReview)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Published
+                </td>
+                <td>
+                    <a id="@("Publish_" + @Model.Id)" href="#" onclick="FlipPublishState(@Model.Id)">@Model.Publish.ToString().ToLower()</a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Delete
+                </td>
+                <td>
+                    <a href="#" onclick="DeleteReview();">Delete</a>
+                </td>
+            </tr>
+
+        </table>
+
+        <a id="Backbtn" href="@Url.Action("CheckReviews", "Admin", new { selectedEventId = Model.EventId })" class="button small green">Back</a>
+
+	</div>
+</div>

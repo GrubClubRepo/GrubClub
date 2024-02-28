@@ -1,0 +1,26 @@
+﻿@model SupperClub.Models.DeviceInfoModel
+
+@{
+    ViewBag.Title = "Cookie Info";
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<!-- 960 Container Start -->
+<div class="container">
+    <div class="sixteen columns">
+      
+            <h5>Event Booking Cookie</h5>
+            <p>@ViewBag.BCI</p>
+
+        <h5>Event View Cookie</h5>
+        <p>@ViewBag.VCI</p>
+    </div>
+</div>    
+<!-- 960 Container End -->

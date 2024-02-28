@@ -1,0 +1,62 @@
+﻿.field-validation-error,
+.validation-summary-errors
+{
+    color: Red;
+}
+
+.full_width
+{
+    width: 90% !important
+}
+
+.custom_select
+{
+    width: 260px;
+    padding: 8px;
+}
+
+#page-title
+{
+    background: url(../images/wood_bg.jpg)
+}
+
+#page-title h2
+{
+    color: #DFD8D8;
+}
+
+#page-title span
+{
+    color: #FFF;
+}
+
+.tab-content label
+{
+    font-weight:bold;
+}
+
+.inline
+{
+    display: inline-block;
+}
+
+.inline_right
+{
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.check-box
+{
+    width: 15px !important;
+}
+
+.check-box-field label
+{
+    display: inline-block;
+}
+
+.sub-title2 
+{
+    padding-bottom: 2em;
+}

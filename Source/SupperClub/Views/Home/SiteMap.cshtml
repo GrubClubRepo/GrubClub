@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Site Map";
+}
+
+@section PageSpecificScripts {
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<!--  960 Container Start -->
+<div class="container">
+
+	<div class="sixteen columns">
+        <h2 style="font-family: 'Lobster', cursive; padding: 5px 0 5px 0">Site Map</h2>
+        <p>This is a site map for Search Crawlers</p>
+
+        <p><strong>Static Pages</strong></p>
+        @foreach (KeyValuePair<string, string> kvp in (Dictionary<string, string>)ViewBag.OtherFriendlyUrls)
+        {
+            <a href="@(SupperClub.Code.ServerMethods.ServerUrl.ToLower() + kvp.Value)">@kvp.Key</a><br />
+        }
+
+        <br />
+        <p><strong>Grub Club Hosts</strong></p>
+        @foreach (KeyValuePair<string, string> kvp in (Dictionary<string, string>)ViewBag.SupperClubsFriendlyUrls)
+        {
+            <a href="@(SupperClub.Code.ServerMethods.ServerUrl.ToLower() + kvp.Value)">@kvp.Key</a><br />
+        }
+        <br />
+        <p><strong>Grub Club Events</strong></p>
+        @foreach (KeyValuePair<string, string> kvp in (Dictionary<string, string>)ViewBag.EventFriendlyUrls)
+        {
+            <a href="@(SupperClub.Code.ServerMethods.ServerUrl.ToLower() + kvp.Value)">@kvp.Key</a><br />
+        }
+        <p><strong>Grub Club Category Pages</strong></p>
+        @foreach (KeyValuePair<string, string> kvp in (Dictionary<string, string>)ViewBag.CategoryUrls)
+        {
+            <a href="@(SupperClub.Code.ServerMethods.ServerUrl.ToLower() + kvp.Value)">@kvp.Key</a><br />
+        }
+        <br />
+        <p><strong>Grub Club Tag Pages</strong></p>
+        @foreach (KeyValuePair<string, string> kvp in (Dictionary<string, string>)ViewBag.CategoryTagUrls)
+        {
+            <a href="@(SupperClub.Code.ServerMethods.ServerUrl.ToLower() + kvp.Value)">@kvp.Key</a><br />
+        }
+        <br />
+        <p><strong>Grub Club Tag City Pages</strong></p>
+        @foreach (KeyValuePair<string, string> kvp in (Dictionary<string, string>)ViewBag.CityCategoryTagUrls)
+        {
+            <a href="@(SupperClub.Code.ServerMethods.ServerUrl.ToLower() + kvp.Value)">@kvp.Key</a><br />
+        }
+        <br />
+        <p><strong>Grub Club Tag City Area Pages</strong></p>
+        @foreach (KeyValuePair<string, string> kvp in (Dictionary<string, string>)ViewBag.CityAreaCategoryTagUrls)
+        {
+            <a href="@(SupperClub.Code.ServerMethods.ServerUrl.ToLower() + kvp.Value)">@kvp.Key</a><br />
+        }
+        <br />
+        <p><strong>Grub Club City Pages</strong></p>
+        @foreach (KeyValuePair<string, string> kvp in (Dictionary<string, string>)ViewBag.CityUrls)
+        {
+            <a href="@(SupperClub.Code.ServerMethods.ServerUrl.ToLower() + kvp.Value)">@kvp.Key</a><br />
+        }
+        <br />
+        <p><strong>Grub Club City Area Pages</strong></p>
+        @foreach (KeyValuePair<string, string> kvp in (Dictionary<string, string>)ViewBag.CityArealUrls)
+        {
+            <a href="@(SupperClub.Code.ServerMethods.ServerUrl.ToLower() + kvp.Value)">@kvp.Key</a><br />
+        }
+        <br />
+	</div>
+
+</div>
+<!-- End 960 Container -->

@@ -1,0 +1,1643 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Web.WebPages.Razor.1.0.0.0.Fakes</name>
+    </assembly>
+    <members>
+        <member name="T:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection">
+            <summary>Shim type of System.Web.WebPages.Razor.Configuration.HostSection</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.#ctor(System.Web.WebPages.Razor.Configuration.HostSection)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.Constructor">
+            <summary>Sets the shim of HostSection.HostSection()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.FactoryTypeGet">
+            <summary>Sets the shim of HostSection.get_FactoryType()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.FactoryTypeSetString">
+            <summary>Sets the shim of HostSection.set_FactoryType(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.StaticConstructor">
+            <summary>Sets the shim of HostSection.HostSection()</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.AllInstances.FactoryTypeGet">
+            <summary>Sets the shim of HostSection.get_FactoryType()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimHostSection.AllInstances.FactoryTypeSetString">
+            <summary>Sets the shim of HostSection.set_FactoryType(String value)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection">
+            <summary>Shim type of System.Web.WebPages.Razor.Configuration.RazorPagesSection</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.#ctor(System.Web.WebPages.Razor.Configuration.RazorPagesSection)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.Constructor">
+            <summary>Sets the shim of RazorPagesSection.RazorPagesSection()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.NamespacesGet">
+            <summary>Sets the shim of RazorPagesSection.get_Namespaces()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.NamespacesSetNamespaceCollection">
+            <summary>Sets the shim of RazorPagesSection.set_Namespaces(NamespaceCollection value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.PageBaseTypeGet">
+            <summary>Sets the shim of RazorPagesSection.get_PageBaseType()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.PageBaseTypeSetString">
+            <summary>Sets the shim of RazorPagesSection.set_PageBaseType(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.StaticConstructor">
+            <summary>Sets the shim of RazorPagesSection.RazorPagesSection()</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.AllInstances.NamespacesGet">
+            <summary>Sets the shim of RazorPagesSection.get_Namespaces()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.AllInstances.NamespacesSetNamespaceCollection">
+            <summary>Sets the shim of RazorPagesSection.set_Namespaces(NamespaceCollection value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.AllInstances.PageBaseTypeGet">
+            <summary>Sets the shim of RazorPagesSection.get_PageBaseType()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorPagesSection.AllInstances.PageBaseTypeSetString">
+            <summary>Sets the shim of RazorPagesSection.set_PageBaseType(String value)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup">
+            <summary>Shim type of System.Web.WebPages.Razor.Configuration.RazorWebSectionGroup</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.#ctor(System.Web.WebPages.Razor.Configuration.RazorWebSectionGroup)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.Constructor">
+            <summary>Sets the shim of RazorWebSectionGroup.RazorWebSectionGroup()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.HostGet">
+            <summary>Sets the shim of RazorWebSectionGroup.get_Host()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.HostSetHostSection">
+            <summary>Sets the shim of RazorWebSectionGroup.set_Host(HostSection value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.PagesGet">
+            <summary>Sets the shim of RazorWebSectionGroup.get_Pages()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.PagesSetRazorPagesSection">
+            <summary>Sets the shim of RazorWebSectionGroup.set_Pages(RazorPagesSection value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.StaticConstructor">
+            <summary>Sets the shim of RazorWebSectionGroup.RazorWebSectionGroup()</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.AllInstances.HostGet">
+            <summary>Sets the shim of RazorWebSectionGroup.get_Host()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.AllInstances.HostSetHostSection">
+            <summary>Sets the shim of RazorWebSectionGroup.set_Host(HostSection value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.AllInstances.PagesGet">
+            <summary>Sets the shim of RazorWebSectionGroup.get_Pages()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.ShimRazorWebSectionGroup.AllInstances.PagesSetRazorPagesSection">
+            <summary>Sets the shim of RazorWebSectionGroup.set_Pages(RazorPagesSection value)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection">
+            <summary>Stub type of System.Web.WebPages.Razor.Configuration.HostSection</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.DeserializeElement(System.Xml.XmlReader,System.Boolean)">
+            <summary>Sets the stub of ConfigurationElement.DeserializeElement(XmlReader reader, Boolean serializeCollectionKey)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.DeserializeElementXmlReaderBoolean">
+            <summary>Sets the stub of ConfigurationElement.DeserializeElement(XmlReader reader, Boolean serializeCollectionKey)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.DeserializeSection(System.Xml.XmlReader)">
+            <summary>Sets the stub of ConfigurationSection.DeserializeSection(XmlReader reader)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.DeserializeSectionXmlReader">
+            <summary>Sets the stub of ConfigurationSection.DeserializeSection(XmlReader reader)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ElementPropertyGet">
+            <summary>Sets the stub of ConfigurationElement.get_ElementProperty()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.Equals(System.Object)">
+            <summary>Sets the stub of ConfigurationElement.Equals(Object compareTo)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.EqualsObject">
+            <summary>Sets the stub of ConfigurationElement.Equals(Object compareTo)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.GetHashCode">
+            <summary>Sets the stub of ConfigurationElement.GetHashCode()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.GetHashCode01">
+            <summary>Sets the stub of ConfigurationElement.GetHashCode()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.GetRuntimeObject">
+            <summary>Sets the stub of ConfigurationSection.GetRuntimeObject()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.GetRuntimeObject01">
+            <summary>Sets the stub of ConfigurationSection.GetRuntimeObject()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.GetTransformedAssemblyString(System.String)">
+            <summary>Sets the stub of ConfigurationElement.GetTransformedAssemblyString(String assemblyName)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.GetTransformedAssemblyStringString">
+            <summary>Sets the stub of ConfigurationElement.GetTransformedAssemblyString(String assemblyName)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.GetTransformedTypeString(System.String)">
+            <summary>Sets the stub of ConfigurationElement.GetTransformedTypeString(String typeName)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.GetTransformedTypeStringString">
+            <summary>Sets the stub of ConfigurationElement.GetTransformedTypeString(String typeName)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.Init">
+            <summary>Sets the stub of ConfigurationElement.Init()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.Init01">
+            <summary>Sets the stub of ConfigurationElement.Init()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.InitializeDefault">
+            <summary>Sets the stub of ConfigurationElement.InitializeDefault()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.InitializeDefault01">
+            <summary>Sets the stub of ConfigurationElement.InitializeDefault()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.InitializeStub">
+            <summary>Initializes a new instance of type StubHostSection</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.IsModified">
+            <summary>Sets the stub of ConfigurationSection.IsModified()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.IsModified01">
+            <summary>Sets the stub of ConfigurationSection.IsModified()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.IsReadOnly">
+            <summary>Sets the stub of ConfigurationElement.IsReadOnly()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.IsReadOnly01">
+            <summary>Sets the stub of ConfigurationElement.IsReadOnly()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ListErrors(System.Collections.IList)">
+            <summary>Sets the stub of ConfigurationElement.ListErrors(IList errorList)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ListErrorsIList">
+            <summary>Sets the stub of ConfigurationElement.ListErrors(IList errorList)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.OnDeserializeUnrecognizedAttribute(System.String,System.String)">
+            <summary>Sets the stub of ConfigurationElement.OnDeserializeUnrecognizedAttribute(String name, String value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.OnDeserializeUnrecognizedAttributeStringString">
+            <summary>Sets the stub of ConfigurationElement.OnDeserializeUnrecognizedAttribute(String name, String value)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.OnDeserializeUnrecognizedElement(System.String,System.Xml.XmlReader)">
+            <summary>Sets the stub of ConfigurationElement.OnDeserializeUnrecognizedElement(String elementName, XmlReader reader)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.OnDeserializeUnrecognizedElementStringXmlReader">
+            <summary>Sets the stub of ConfigurationElement.OnDeserializeUnrecognizedElement(String elementName, XmlReader reader)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.OnRequiredPropertyNotFound(System.String)">
+            <summary>Sets the stub of ConfigurationElement.OnRequiredPropertyNotFound(String name)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.OnRequiredPropertyNotFoundString">
+            <summary>Sets the stub of ConfigurationElement.OnRequiredPropertyNotFound(String name)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.PostDeserialize">
+            <summary>Sets the stub of ConfigurationElement.PostDeserialize()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.PostDeserialize01">
+            <summary>Sets the stub of ConfigurationElement.PostDeserialize()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.PreSerialize(System.Xml.XmlWriter)">
+            <summary>Sets the stub of ConfigurationElement.PreSerialize(XmlWriter writer)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.PreSerializeXmlWriter">
+            <summary>Sets the stub of ConfigurationElement.PreSerialize(XmlWriter writer)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.PropertiesGet">
+            <summary>Sets the stub of ConfigurationElement.get_Properties()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.Reset(System.Configuration.ConfigurationElement)">
+            <summary>Sets the stub of ConfigurationElement.Reset(ConfigurationElement parentElement)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ResetConfigurationElement">
+            <summary>Sets the stub of ConfigurationElement.Reset(ConfigurationElement parentElement)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ResetModified">
+            <summary>Sets the stub of ConfigurationSection.ResetModified()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ResetModified01">
+            <summary>Sets the stub of ConfigurationSection.ResetModified()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.SerializeElement(System.Xml.XmlWriter,System.Boolean)">
+            <summary>Sets the stub of ConfigurationElement.SerializeElement(XmlWriter writer, Boolean serializeCollectionKey)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.SerializeElementXmlWriterBoolean">
+            <summary>Sets the stub of ConfigurationElement.SerializeElement(XmlWriter writer, Boolean serializeCollectionKey)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.SerializeSection(System.Configuration.ConfigurationElement,System.String,System.Configuration.ConfigurationSaveMode)">
+            <summary>Sets the stub of ConfigurationSection.SerializeSection(ConfigurationElement parentElement, String name, ConfigurationSaveMode saveMode)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.SerializeSectionConfigurationElementStringConfigurationSaveMode">
+            <summary>Sets the stub of ConfigurationSection.SerializeSection(ConfigurationElement parentElement, String name, ConfigurationSaveMode saveMode)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.SerializeToXmlElement(System.Xml.XmlWriter,System.String)">
+            <summary>Sets the stub of ConfigurationElement.SerializeToXmlElement(XmlWriter writer, String elementName)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.SerializeToXmlElementXmlWriterString">
+            <summary>Sets the stub of ConfigurationElement.SerializeToXmlElement(XmlWriter writer, String elementName)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.SetReadOnly">
+            <summary>Sets the stub of ConfigurationElement.SetReadOnly()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.SetReadOnly01">
+            <summary>Sets the stub of ConfigurationElement.SetReadOnly()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ShouldSerializeElementInTargetVersion(System.Configuration.ConfigurationElement,System.String,System.Runtime.Versioning.FrameworkName)">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializeElementInTargetVersion(ConfigurationElement element, String elementName, FrameworkName targetFramework)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ShouldSerializeElementInTargetVersionConfigurationElementStringFrameworkName">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializeElementInTargetVersion(ConfigurationElement element, String elementName, FrameworkName targetFramework)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ShouldSerializePropertyInTargetVersion(System.Configuration.ConfigurationProperty,System.String,System.Runtime.Versioning.FrameworkName,System.Configuration.ConfigurationElement)">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializePropertyInTargetVersion(ConfigurationProperty property, String propertyName, FrameworkName targetFramework, ConfigurationElement parentConfigurationElement)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ShouldSerializePropertyInTargetVersionConfigurationPropertyStringFrameworkNameConfigurationElement">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializePropertyInTargetVersion(ConfigurationProperty property, String propertyName, FrameworkName targetFramework, ConfigurationElement parentConfigurationElement)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ShouldSerializeSectionInTargetVersion(System.Runtime.Versioning.FrameworkName)">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializeSectionInTargetVersion(FrameworkName targetFramework)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ShouldSerializeSectionInTargetVersionFrameworkName">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializeSectionInTargetVersion(FrameworkName targetFramework)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.Unmerge(System.Configuration.ConfigurationElement,System.Configuration.ConfigurationElement,System.Configuration.ConfigurationSaveMode)">
+            <summary>Sets the stub of ConfigurationElement.Unmerge(ConfigurationElement sourceElement, ConfigurationElement parentElement, ConfigurationSaveMode saveMode)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.UnmergeConfigurationElementConfigurationElementConfigurationSaveMode">
+            <summary>Sets the stub of ConfigurationElement.Unmerge(ConfigurationElement sourceElement, ConfigurationElement parentElement, ConfigurationSaveMode saveMode)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.ElementProperty">
+            <summary>Sets the stub of ConfigurationElement.get_ElementProperty()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubHostSection.Properties">
+            <summary>Sets the stub of ConfigurationElement.get_Properties()</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection">
+            <summary>Stub type of System.Web.WebPages.Razor.Configuration.RazorPagesSection</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.DeserializeElement(System.Xml.XmlReader,System.Boolean)">
+            <summary>Sets the stub of ConfigurationElement.DeserializeElement(XmlReader reader, Boolean serializeCollectionKey)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.DeserializeElementXmlReaderBoolean">
+            <summary>Sets the stub of ConfigurationElement.DeserializeElement(XmlReader reader, Boolean serializeCollectionKey)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.DeserializeSection(System.Xml.XmlReader)">
+            <summary>Sets the stub of ConfigurationSection.DeserializeSection(XmlReader reader)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.DeserializeSectionXmlReader">
+            <summary>Sets the stub of ConfigurationSection.DeserializeSection(XmlReader reader)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ElementPropertyGet">
+            <summary>Sets the stub of ConfigurationElement.get_ElementProperty()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.Equals(System.Object)">
+            <summary>Sets the stub of ConfigurationElement.Equals(Object compareTo)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.EqualsObject">
+            <summary>Sets the stub of ConfigurationElement.Equals(Object compareTo)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.GetHashCode">
+            <summary>Sets the stub of ConfigurationElement.GetHashCode()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.GetHashCode01">
+            <summary>Sets the stub of ConfigurationElement.GetHashCode()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.GetRuntimeObject">
+            <summary>Sets the stub of ConfigurationSection.GetRuntimeObject()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.GetRuntimeObject01">
+            <summary>Sets the stub of ConfigurationSection.GetRuntimeObject()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.GetTransformedAssemblyString(System.String)">
+            <summary>Sets the stub of ConfigurationElement.GetTransformedAssemblyString(String assemblyName)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.GetTransformedAssemblyStringString">
+            <summary>Sets the stub of ConfigurationElement.GetTransformedAssemblyString(String assemblyName)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.GetTransformedTypeString(System.String)">
+            <summary>Sets the stub of ConfigurationElement.GetTransformedTypeString(String typeName)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.GetTransformedTypeStringString">
+            <summary>Sets the stub of ConfigurationElement.GetTransformedTypeString(String typeName)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.Init">
+            <summary>Sets the stub of ConfigurationElement.Init()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.Init01">
+            <summary>Sets the stub of ConfigurationElement.Init()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.InitializeDefault">
+            <summary>Sets the stub of ConfigurationElement.InitializeDefault()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.InitializeDefault01">
+            <summary>Sets the stub of ConfigurationElement.InitializeDefault()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.InitializeStub">
+            <summary>Initializes a new instance of type StubRazorPagesSection</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.IsModified">
+            <summary>Sets the stub of ConfigurationSection.IsModified()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.IsModified01">
+            <summary>Sets the stub of ConfigurationSection.IsModified()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.IsReadOnly">
+            <summary>Sets the stub of ConfigurationElement.IsReadOnly()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.IsReadOnly01">
+            <summary>Sets the stub of ConfigurationElement.IsReadOnly()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ListErrors(System.Collections.IList)">
+            <summary>Sets the stub of ConfigurationElement.ListErrors(IList errorList)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ListErrorsIList">
+            <summary>Sets the stub of ConfigurationElement.ListErrors(IList errorList)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.OnDeserializeUnrecognizedAttribute(System.String,System.String)">
+            <summary>Sets the stub of ConfigurationElement.OnDeserializeUnrecognizedAttribute(String name, String value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.OnDeserializeUnrecognizedAttributeStringString">
+            <summary>Sets the stub of ConfigurationElement.OnDeserializeUnrecognizedAttribute(String name, String value)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.OnDeserializeUnrecognizedElement(System.String,System.Xml.XmlReader)">
+            <summary>Sets the stub of ConfigurationElement.OnDeserializeUnrecognizedElement(String elementName, XmlReader reader)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.OnDeserializeUnrecognizedElementStringXmlReader">
+            <summary>Sets the stub of ConfigurationElement.OnDeserializeUnrecognizedElement(String elementName, XmlReader reader)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.OnRequiredPropertyNotFound(System.String)">
+            <summary>Sets the stub of ConfigurationElement.OnRequiredPropertyNotFound(String name)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.OnRequiredPropertyNotFoundString">
+            <summary>Sets the stub of ConfigurationElement.OnRequiredPropertyNotFound(String name)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.PostDeserialize">
+            <summary>Sets the stub of ConfigurationElement.PostDeserialize()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.PostDeserialize01">
+            <summary>Sets the stub of ConfigurationElement.PostDeserialize()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.PreSerialize(System.Xml.XmlWriter)">
+            <summary>Sets the stub of ConfigurationElement.PreSerialize(XmlWriter writer)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.PreSerializeXmlWriter">
+            <summary>Sets the stub of ConfigurationElement.PreSerialize(XmlWriter writer)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.PropertiesGet">
+            <summary>Sets the stub of ConfigurationElement.get_Properties()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.Reset(System.Configuration.ConfigurationElement)">
+            <summary>Sets the stub of ConfigurationElement.Reset(ConfigurationElement parentElement)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ResetConfigurationElement">
+            <summary>Sets the stub of ConfigurationElement.Reset(ConfigurationElement parentElement)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ResetModified">
+            <summary>Sets the stub of ConfigurationSection.ResetModified()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ResetModified01">
+            <summary>Sets the stub of ConfigurationSection.ResetModified()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.SerializeElement(System.Xml.XmlWriter,System.Boolean)">
+            <summary>Sets the stub of ConfigurationElement.SerializeElement(XmlWriter writer, Boolean serializeCollectionKey)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.SerializeElementXmlWriterBoolean">
+            <summary>Sets the stub of ConfigurationElement.SerializeElement(XmlWriter writer, Boolean serializeCollectionKey)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.SerializeSection(System.Configuration.ConfigurationElement,System.String,System.Configuration.ConfigurationSaveMode)">
+            <summary>Sets the stub of ConfigurationSection.SerializeSection(ConfigurationElement parentElement, String name, ConfigurationSaveMode saveMode)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.SerializeSectionConfigurationElementStringConfigurationSaveMode">
+            <summary>Sets the stub of ConfigurationSection.SerializeSection(ConfigurationElement parentElement, String name, ConfigurationSaveMode saveMode)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.SerializeToXmlElement(System.Xml.XmlWriter,System.String)">
+            <summary>Sets the stub of ConfigurationElement.SerializeToXmlElement(XmlWriter writer, String elementName)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.SerializeToXmlElementXmlWriterString">
+            <summary>Sets the stub of ConfigurationElement.SerializeToXmlElement(XmlWriter writer, String elementName)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.SetReadOnly">
+            <summary>Sets the stub of ConfigurationElement.SetReadOnly()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.SetReadOnly01">
+            <summary>Sets the stub of ConfigurationElement.SetReadOnly()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ShouldSerializeElementInTargetVersion(System.Configuration.ConfigurationElement,System.String,System.Runtime.Versioning.FrameworkName)">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializeElementInTargetVersion(ConfigurationElement element, String elementName, FrameworkName targetFramework)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ShouldSerializeElementInTargetVersionConfigurationElementStringFrameworkName">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializeElementInTargetVersion(ConfigurationElement element, String elementName, FrameworkName targetFramework)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ShouldSerializePropertyInTargetVersion(System.Configuration.ConfigurationProperty,System.String,System.Runtime.Versioning.FrameworkName,System.Configuration.ConfigurationElement)">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializePropertyInTargetVersion(ConfigurationProperty property, String propertyName, FrameworkName targetFramework, ConfigurationElement parentConfigurationElement)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ShouldSerializePropertyInTargetVersionConfigurationPropertyStringFrameworkNameConfigurationElement">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializePropertyInTargetVersion(ConfigurationProperty property, String propertyName, FrameworkName targetFramework, ConfigurationElement parentConfigurationElement)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ShouldSerializeSectionInTargetVersion(System.Runtime.Versioning.FrameworkName)">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializeSectionInTargetVersion(FrameworkName targetFramework)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ShouldSerializeSectionInTargetVersionFrameworkName">
+            <summary>Sets the stub of ConfigurationSection.ShouldSerializeSectionInTargetVersion(FrameworkName targetFramework)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.Unmerge(System.Configuration.ConfigurationElement,System.Configuration.ConfigurationElement,System.Configuration.ConfigurationSaveMode)">
+            <summary>Sets the stub of ConfigurationElement.Unmerge(ConfigurationElement sourceElement, ConfigurationElement parentElement, ConfigurationSaveMode saveMode)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.UnmergeConfigurationElementConfigurationElementConfigurationSaveMode">
+            <summary>Sets the stub of ConfigurationElement.Unmerge(ConfigurationElement sourceElement, ConfigurationElement parentElement, ConfigurationSaveMode saveMode)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.ElementProperty">
+            <summary>Sets the stub of ConfigurationElement.get_ElementProperty()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorPagesSection.Properties">
+            <summary>Sets the stub of ConfigurationElement.get_Properties()</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorWebSectionGroup">
+            <summary>Stub type of System.Web.WebPages.Razor.Configuration.RazorWebSectionGroup</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorWebSectionGroup.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorWebSectionGroup.InitializeStub">
+            <summary>Initializes a new instance of type StubRazorWebSectionGroup</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorWebSectionGroup.ShouldSerializeSectionGroupInTargetVersion(System.Runtime.Versioning.FrameworkName)">
+            <summary>Sets the stub of ConfigurationSectionGroup.ShouldSerializeSectionGroupInTargetVersion(FrameworkName targetFramework)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorWebSectionGroup.ShouldSerializeSectionGroupInTargetVersionFrameworkName">
+            <summary>Sets the stub of ConfigurationSectionGroup.ShouldSerializeSectionGroupInTargetVersion(FrameworkName targetFramework)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorWebSectionGroup.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorWebSectionGroup.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Configuration.Fakes.StubRazorWebSectionGroup.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs">
+            <summary>Shim type of System.Web.WebPages.Razor.CompilingPathEventArgs</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.#ctor(System.Web.WebPages.Razor.CompilingPathEventArgs)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.ConstructorStringWebPageRazorHost">
+            <summary>Sets the shim of CompilingPathEventArgs.CompilingPathEventArgs(String virtualPath, WebPageRazorHost host)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.HostGet">
+            <summary>Sets the shim of CompilingPathEventArgs.get_Host()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.HostSetWebPageRazorHost">
+            <summary>Sets the shim of CompilingPathEventArgs.set_Host(WebPageRazorHost value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.VirtualPathGet">
+            <summary>Sets the shim of CompilingPathEventArgs.get_VirtualPath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.VirtualPathSetString">
+            <summary>Sets the shim of CompilingPathEventArgs.set_VirtualPath(String value)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.AllInstances.HostGet">
+            <summary>Sets the shim of CompilingPathEventArgs.get_Host()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.AllInstances.HostSetWebPageRazorHost">
+            <summary>Sets the shim of CompilingPathEventArgs.set_Host(WebPageRazorHost value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.AllInstances.VirtualPathGet">
+            <summary>Sets the shim of CompilingPathEventArgs.get_VirtualPath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimCompilingPathEventArgs.AllInstances.VirtualPathSetString">
+            <summary>Sets the shim of CompilingPathEventArgs.set_VirtualPath(String value)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimPreApplicationStartCode">
+            <summary>Shim type of System.Web.WebPages.Razor.PreApplicationStartCode</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimPreApplicationStartCode.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimPreApplicationStartCode.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimPreApplicationStartCode.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimPreApplicationStartCode.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimPreApplicationStartCode.Start">
+            <summary>Sets the shim of PreApplicationStartCode.Start()</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider">
+            <summary>Shim type of System.Web.WebPages.Razor.RazorBuildProvider</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.#ctor(System.Web.WebPages.Razor.RazorBuildProvider)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AddVirtualPathDependencyString">
+            <summary>Sets the shim of RazorBuildProvider.AddVirtualPathDependency(String dependency)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AssemblyBuilderGet">
+            <summary>Sets the shim of RazorBuildProvider.get_AssemblyBuilder()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CodeCompilerTypeGet">
+            <summary>Sets the shim of RazorBuildProvider.get_CodeCompilerType()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CodeGenerationCompletedAddEventHandlerOfCodeGenerationCompleteEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.add_CodeGenerationCompleted(EventHandler`1&lt;CodeGenerationCompleteEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CodeGenerationCompletedInternalAddEventHandlerOfCodeGenerationCompleteEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.add_CodeGenerationCompletedInternal(EventHandler`1&lt;CodeGenerationCompleteEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CodeGenerationCompletedInternalRemoveEventHandlerOfCodeGenerationCompleteEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.remove_CodeGenerationCompletedInternal(EventHandler`1&lt;CodeGenerationCompleteEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CodeGenerationCompletedRemoveEventHandlerOfCodeGenerationCompleteEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.remove_CodeGenerationCompleted(EventHandler`1&lt;CodeGenerationCompleteEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CodeGenerationStartedAddEventHandler">
+            <summary>Sets the shim of RazorBuildProvider.add_CodeGenerationStarted(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CodeGenerationStartedInternalAddEventHandler">
+            <summary>Sets the shim of RazorBuildProvider.add_CodeGenerationStartedInternal(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CodeGenerationStartedInternalRemoveEventHandler">
+            <summary>Sets the shim of RazorBuildProvider.remove_CodeGenerationStartedInternal(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CodeGenerationStartedRemoveEventHandler">
+            <summary>Sets the shim of RazorBuildProvider.remove_CodeGenerationStarted(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CompilingPathAddEventHandlerOfCompilingPathEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.add_CompilingPath(EventHandler`1&lt;CompilingPathEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CompilingPathRemoveEventHandlerOfCompilingPathEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.remove_CompilingPath(EventHandler`1&lt;CompilingPathEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.Constructor">
+            <summary>Sets the shim of RazorBuildProvider.RazorBuildProvider()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CreateExceptionFromParserErrorRazorErrorString">
+            <summary>Sets the shim of RazorBuildProvider.CreateExceptionFromParserError(RazorError error, String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.CreateHost">
+            <summary>Sets the shim of RazorBuildProvider.CreateHost()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.EnsureGeneratedCode">
+            <summary>Sets the shim of RazorBuildProvider.EnsureGeneratedCode()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.GenerateCodeAssemblyBuilder">
+            <summary>Sets the shim of RazorBuildProvider.GenerateCode(AssemblyBuilder assemblyBuilder)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.GeneratedCodeGet">
+            <summary>Sets the shim of RazorBuildProvider.get_GeneratedCode()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.GeneratedCodeSetCodeCompileUnit">
+            <summary>Sets the shim of RazorBuildProvider.set_GeneratedCode(CodeCompileUnit value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.GetGeneratedTypeCompilerResults">
+            <summary>Sets the shim of RazorBuildProvider.GetGeneratedType(CompilerResults results)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.GetHostFromConfig">
+            <summary>Sets the shim of RazorBuildProvider.GetHostFromConfig()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.HostGet">
+            <summary>Sets the shim of RazorBuildProvider.get_Host()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.HostSetWebPageRazorHost">
+            <summary>Sets the shim of RazorBuildProvider.set_Host(WebPageRazorHost value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.InternalOpenReader">
+            <summary>Sets the shim of RazorBuildProvider.InternalOpenReader()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.OnBeforeCompilePathCompilingPathEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.OnBeforeCompilePath(CompilingPathEventArgs args)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.OnCodeGenerationCompletedCodeCompileUnit">
+            <summary>Sets the shim of RazorBuildProvider.OnCodeGenerationCompleted(CodeCompileUnit generatedCode)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.SetIncludeDebugInfoFlagCompilerType">
+            <summary>Sets the shim of RazorBuildProvider.SetIncludeDebugInfoFlag(CompilerType compilerType)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.VirtualPathDependenciesGet">
+            <summary>Sets the shim of RazorBuildProvider.get_VirtualPathDependencies()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.VirtualPathGet">
+            <summary>Sets the shim of RazorBuildProvider.get_VirtualPath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider._codeGenerationCompletedInternalAddEventHandlerOfCodeGenerationCompleteEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.add__codeGenerationCompletedInternal(EventHandler`1&lt;CodeGenerationCompleteEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider._codeGenerationCompletedInternalRemoveEventHandlerOfCodeGenerationCompleteEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.remove__codeGenerationCompletedInternal(EventHandler`1&lt;CodeGenerationCompleteEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider._codeGenerationStartedInternalAddEventHandler">
+            <summary>Sets the shim of RazorBuildProvider.add__codeGenerationStartedInternal(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider._codeGenerationStartedInternalRemoveEventHandler">
+            <summary>Sets the shim of RazorBuildProvider.remove__codeGenerationStartedInternal(EventHandler value)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.AddVirtualPathDependencyString">
+            <summary>Sets the shim of RazorBuildProvider.AddVirtualPathDependency(String dependency)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.AssemblyBuilderGet">
+            <summary>Sets the shim of RazorBuildProvider.get_AssemblyBuilder()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.CodeCompilerTypeGet">
+            <summary>Sets the shim of RazorBuildProvider.get_CodeCompilerType()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.CodeGenerationCompletedInternalAddEventHandlerOfCodeGenerationCompleteEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.add_CodeGenerationCompletedInternal(EventHandler`1&lt;CodeGenerationCompleteEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.CodeGenerationCompletedInternalRemoveEventHandlerOfCodeGenerationCompleteEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.remove_CodeGenerationCompletedInternal(EventHandler`1&lt;CodeGenerationCompleteEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.CodeGenerationStartedInternalAddEventHandler">
+            <summary>Sets the shim of RazorBuildProvider.add_CodeGenerationStartedInternal(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.CodeGenerationStartedInternalRemoveEventHandler">
+            <summary>Sets the shim of RazorBuildProvider.remove_CodeGenerationStartedInternal(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.CreateHost">
+            <summary>Sets the shim of RazorBuildProvider.CreateHost()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.EnsureGeneratedCode">
+            <summary>Sets the shim of RazorBuildProvider.EnsureGeneratedCode()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.GenerateCodeAssemblyBuilder">
+            <summary>Sets the shim of RazorBuildProvider.GenerateCode(AssemblyBuilder assemblyBuilder)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.GeneratedCodeGet">
+            <summary>Sets the shim of RazorBuildProvider.get_GeneratedCode()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.GeneratedCodeSetCodeCompileUnit">
+            <summary>Sets the shim of RazorBuildProvider.set_GeneratedCode(CodeCompileUnit value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.GetGeneratedTypeCompilerResults">
+            <summary>Sets the shim of RazorBuildProvider.GetGeneratedType(CompilerResults results)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.GetHostFromConfig">
+            <summary>Sets the shim of RazorBuildProvider.GetHostFromConfig()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.HostGet">
+            <summary>Sets the shim of RazorBuildProvider.get_Host()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.HostSetWebPageRazorHost">
+            <summary>Sets the shim of RazorBuildProvider.set_Host(WebPageRazorHost value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.InternalOpenReader">
+            <summary>Sets the shim of RazorBuildProvider.InternalOpenReader()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.OnBeforeCompilePathCompilingPathEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.OnBeforeCompilePath(CompilingPathEventArgs args)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.OnCodeGenerationCompletedCodeCompileUnit">
+            <summary>Sets the shim of RazorBuildProvider.OnCodeGenerationCompleted(CodeCompileUnit generatedCode)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.VirtualPathDependenciesGet">
+            <summary>Sets the shim of RazorBuildProvider.get_VirtualPathDependencies()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances.VirtualPathGet">
+            <summary>Sets the shim of RazorBuildProvider.get_VirtualPath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances._codeGenerationCompletedInternalAddEventHandlerOfCodeGenerationCompleteEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.add__codeGenerationCompletedInternal(EventHandler`1&lt;CodeGenerationCompleteEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances._codeGenerationCompletedInternalRemoveEventHandlerOfCodeGenerationCompleteEventArgs">
+            <summary>Sets the shim of RazorBuildProvider.remove__codeGenerationCompletedInternal(EventHandler`1&lt;CodeGenerationCompleteEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances._codeGenerationStartedInternalAddEventHandler">
+            <summary>Sets the shim of RazorBuildProvider.add__codeGenerationStartedInternal(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimRazorBuildProvider.AllInstances._codeGenerationStartedInternalRemoveEventHandler">
+            <summary>Sets the shim of RazorBuildProvider.remove__codeGenerationStartedInternal(EventHandler value)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost">
+            <summary>Shim type of System.Web.WebPages.Razor.WebCodeRazorHost</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.#ctor(System.Web.WebPages.Razor.WebCodeRazorHost)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.ConstructorString">
+            <summary>Sets the shim of WebCodeRazorHost.WebCodeRazorHost(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.ConstructorStringString">
+            <summary>Sets the shim of WebCodeRazorHost.WebCodeRazorHost(String virtualPath, String physicalPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.DetermineNamespaceString">
+            <summary>Sets the shim of WebCodeRazorHost.DetermineNamespace(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.GetClassNameString">
+            <summary>Sets the shim of WebCodeRazorHost.GetClassName(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.GetDirectoryString">
+            <summary>Sets the shim of WebCodeRazorHost.GetDirectory(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.PostProcessGeneratedCodeCodeGeneratorContext">
+            <summary>Sets the shim of WebCodeRazorHost.PostProcessGeneratedCode(CodeGeneratorContext context)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.StaticConstructor">
+            <summary>Sets the shim of WebCodeRazorHost.WebCodeRazorHost()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost._PostProcessGeneratedCodeb__6CodeMemberProperty">
+            <summary>Sets the shim of WebCodeRazorHost.&lt;PostProcessGeneratedCode&gt;b__6(CodeMemberProperty p)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.AllInstances.GetClassNameString">
+            <summary>Sets the shim of WebCodeRazorHost.GetClassName(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebCodeRazorHost.AllInstances.PostProcessGeneratedCodeCodeGeneratorContext">
+            <summary>Sets the shim of WebCodeRazorHost.PostProcessGeneratedCode(CodeGeneratorContext context)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost">
+            <summary>Shim type of System.Web.WebPages.Razor.WebPageRazorHost</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.#ctor(System.Web.WebPages.Razor.WebPageRazorHost)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AddGlobalImportString">
+            <summary>Sets the shim of WebPageRazorHost.AddGlobalImport(String ns)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.CheckForSpecialPage">
+            <summary>Sets the shim of WebPageRazorHost.CheckForSpecialPage()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.CodeLanguageGet">
+            <summary>Sets the shim of WebPageRazorHost.get_CodeLanguage()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.CodeLanguageSetRazorCodeLanguage">
+            <summary>Sets the shim of WebPageRazorHost.set_CodeLanguage(RazorCodeLanguage value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.Constructor">
+            <summary>Sets the shim of WebPageRazorHost.WebPageRazorHost()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.ConstructorString">
+            <summary>Sets the shim of WebPageRazorHost.WebPageRazorHost(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.ConstructorStringString">
+            <summary>Sets the shim of WebPageRazorHost.WebPageRazorHost(String virtualPath, String physicalPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.CreateMarkupParser">
+            <summary>Sets the shim of WebPageRazorHost.CreateMarkupParser()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.DefaultBaseClassGet">
+            <summary>Sets the shim of WebPageRazorHost.get_DefaultBaseClass()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.DefaultBaseClassSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_DefaultBaseClass(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.DefaultClassNameGet">
+            <summary>Sets the shim of WebPageRazorHost.get_DefaultClassName()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.DefaultClassNameSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_DefaultClassName(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.DefaultDebugCompilationGet">
+            <summary>Sets the shim of WebPageRazorHost.get_DefaultDebugCompilation()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.DefaultDebugCompilationSetBoolean">
+            <summary>Sets the shim of WebPageRazorHost.set_DefaultDebugCompilation(Boolean value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.DefaultPageBaseClassGet">
+            <summary>Sets the shim of WebPageRazorHost.get_DefaultPageBaseClass()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.DefaultPageBaseClassSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_DefaultPageBaseClass(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.DetermineCodeLanguageString">
+            <summary>Sets the shim of WebPageRazorHost.DetermineCodeLanguage(String fileName)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.GetClassNameString">
+            <summary>Sets the shim of WebPageRazorHost.GetClassName(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.GetCodeLanguage">
+            <summary>Sets the shim of WebPageRazorHost.GetCodeLanguage()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.GetGlobalImports">
+            <summary>Sets the shim of WebPageRazorHost.GetGlobalImports()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.GetLanguageByExtensionString">
+            <summary>Sets the shim of WebPageRazorHost.GetLanguageByExtension(String extension)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.GlobalAsaxTypeNameGet">
+            <summary>Sets the shim of WebPageRazorHost.get_GlobalAsaxTypeName()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.GlobalAsaxTypeNameSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_GlobalAsaxTypeName(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.InstrumentedSourceFilePathGet">
+            <summary>Sets the shim of WebPageRazorHost.get_InstrumentedSourceFilePath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.InstrumentedSourceFilePathSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_InstrumentedSourceFilePath(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.IsSpecialPageGet">
+            <summary>Sets the shim of WebPageRazorHost.get_IsSpecialPage()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.MapPhysicalPath">
+            <summary>Sets the shim of WebPageRazorHost.MapPhysicalPath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.PhysicalPathGet">
+            <summary>Sets the shim of WebPageRazorHost.get_PhysicalPath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.PhysicalPathSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_PhysicalPath(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.PostProcessGeneratedCodeCodeGeneratorContext">
+            <summary>Sets the shim of WebPageRazorHost.PostProcessGeneratedCode(CodeGeneratorContext context)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.RegisterSpecialFileStringString">
+            <summary>Sets the shim of WebPageRazorHost.RegisterSpecialFile(String fileName, String baseTypeName)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.RegisterSpecialFileStringType">
+            <summary>Sets the shim of WebPageRazorHost.RegisterSpecialFile(String fileName, Type baseType)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.SpecialPageBaseClassGet">
+            <summary>Sets the shim of WebPageRazorHost.get_SpecialPageBaseClass()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.StaticConstructor">
+            <summary>Sets the shim of WebPageRazorHost.WebPageRazorHost()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.VirtualPathGet">
+            <summary>Sets the shim of WebPageRazorHost.get_VirtualPath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.VirtualPathSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_VirtualPath(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost._GetGlobalImportsb__1KeyValuePairOfStringObject">
+            <summary>Sets the shim of WebPageRazorHost.&lt;GetGlobalImports&gt;b__1(KeyValuePair`2&lt;String,Object&gt; pair)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost._PostProcessGeneratedCodeb__4String">
+            <summary>Sets the shim of WebPageRazorHost.&lt;PostProcessGeneratedCode&gt;b__4(String s)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.CheckForSpecialPage">
+            <summary>Sets the shim of WebPageRazorHost.CheckForSpecialPage()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.CodeLanguageGet">
+            <summary>Sets the shim of WebPageRazorHost.get_CodeLanguage()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.CodeLanguageSetRazorCodeLanguage">
+            <summary>Sets the shim of WebPageRazorHost.set_CodeLanguage(RazorCodeLanguage value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.CreateMarkupParser">
+            <summary>Sets the shim of WebPageRazorHost.CreateMarkupParser()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.DefaultBaseClassGet">
+            <summary>Sets the shim of WebPageRazorHost.get_DefaultBaseClass()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.DefaultBaseClassSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_DefaultBaseClass(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.DefaultClassNameGet">
+            <summary>Sets the shim of WebPageRazorHost.get_DefaultClassName()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.DefaultClassNameSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_DefaultClassName(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.DefaultDebugCompilationGet">
+            <summary>Sets the shim of WebPageRazorHost.get_DefaultDebugCompilation()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.DefaultDebugCompilationSetBoolean">
+            <summary>Sets the shim of WebPageRazorHost.set_DefaultDebugCompilation(Boolean value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.DefaultPageBaseClassGet">
+            <summary>Sets the shim of WebPageRazorHost.get_DefaultPageBaseClass()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.DefaultPageBaseClassSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_DefaultPageBaseClass(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.GetClassNameString">
+            <summary>Sets the shim of WebPageRazorHost.GetClassName(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.GetCodeLanguage">
+            <summary>Sets the shim of WebPageRazorHost.GetCodeLanguage()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.GlobalAsaxTypeNameGet">
+            <summary>Sets the shim of WebPageRazorHost.get_GlobalAsaxTypeName()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.GlobalAsaxTypeNameSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_GlobalAsaxTypeName(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.InstrumentedSourceFilePathGet">
+            <summary>Sets the shim of WebPageRazorHost.get_InstrumentedSourceFilePath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.InstrumentedSourceFilePathSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_InstrumentedSourceFilePath(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.IsSpecialPageGet">
+            <summary>Sets the shim of WebPageRazorHost.get_IsSpecialPage()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.MapPhysicalPath">
+            <summary>Sets the shim of WebPageRazorHost.MapPhysicalPath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.PhysicalPathGet">
+            <summary>Sets the shim of WebPageRazorHost.get_PhysicalPath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.PhysicalPathSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_PhysicalPath(String value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.PostProcessGeneratedCodeCodeGeneratorContext">
+            <summary>Sets the shim of WebPageRazorHost.PostProcessGeneratedCode(CodeGeneratorContext context)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.RegisterSpecialFileStringString">
+            <summary>Sets the shim of WebPageRazorHost.RegisterSpecialFile(String fileName, String baseTypeName)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.RegisterSpecialFileStringType">
+            <summary>Sets the shim of WebPageRazorHost.RegisterSpecialFile(String fileName, Type baseType)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.SpecialPageBaseClassGet">
+            <summary>Sets the shim of WebPageRazorHost.get_SpecialPageBaseClass()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.VirtualPathGet">
+            <summary>Sets the shim of WebPageRazorHost.get_VirtualPath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebPageRazorHost.AllInstances.VirtualPathSetString">
+            <summary>Sets the shim of WebPageRazorHost.set_VirtualPath(String value)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory">
+            <summary>Shim type of System.Web.WebPages.Razor.WebRazorHostFactory</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.#ctor(System.Web.WebPages.Razor.WebRazorHostFactory)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.ApplyConfigurationToHostRazorPagesSectionWebPageRazorHost">
+            <summary>Sets the shim of WebRazorHostFactory.ApplyConfigurationToHost(RazorPagesSection config, WebPageRazorHost host)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.Constructor">
+            <summary>Sets the shim of WebRazorHostFactory.WebRazorHostFactory()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.CreateDefaultHostString">
+            <summary>Sets the shim of WebRazorHostFactory.CreateDefaultHost(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.CreateDefaultHostStringString">
+            <summary>Sets the shim of WebRazorHostFactory.CreateDefaultHost(String virtualPath, String physicalPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.CreateFactoryString">
+            <summary>Sets the shim of WebRazorHostFactory.CreateFactory(String typeName)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.CreateHostFromConfigCoreRazorWebSectionGroupStringString">
+            <summary>Sets the shim of WebRazorHostFactory.CreateHostFromConfigCore(RazorWebSectionGroup config, String virtualPath, String physicalPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.CreateHostFromConfigRazorWebSectionGroupString">
+            <summary>Sets the shim of WebRazorHostFactory.CreateHostFromConfig(RazorWebSectionGroup config, String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.CreateHostFromConfigRazorWebSectionGroupStringString">
+            <summary>Sets the shim of WebRazorHostFactory.CreateHostFromConfig(RazorWebSectionGroup config, String virtualPath, String physicalPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.CreateHostFromConfigString">
+            <summary>Sets the shim of WebRazorHostFactory.CreateHostFromConfig(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.CreateHostFromConfigStringString">
+            <summary>Sets the shim of WebRazorHostFactory.CreateHostFromConfig(String virtualPath, String physicalPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.CreateHostStringString">
+            <summary>Sets the shim of WebRazorHostFactory.CreateHost(String virtualPath, String physicalPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.DefaultTypeFactoryString">
+            <summary>Sets the shim of WebRazorHostFactory.DefaultTypeFactory(String typeName)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.EnsureAppRelativeString">
+            <summary>Sets the shim of WebRazorHostFactory.EnsureAppRelative(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.GetRazorSectionString">
+            <summary>Sets the shim of WebRazorHostFactory.GetRazorSection(String virtualPath)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.StaticConstructor">
+            <summary>Sets the shim of WebRazorHostFactory.WebRazorHostFactory()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory._ApplyConfigurationToHostb__0NamespaceInfo">
+            <summary>Sets the shim of WebRazorHostFactory.&lt;ApplyConfigurationToHost&gt;b__0(NamespaceInfo ns)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.ShimWebRazorHostFactory.AllInstances.CreateHostStringString">
+            <summary>Sets the shim of WebRazorHostFactory.CreateHost(String virtualPath, String physicalPath)</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.StubCompilingPathEventArgs">
+            <summary>Stub type of System.Web.WebPages.Razor.CompilingPathEventArgs</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubCompilingPathEventArgs.#ctor(System.String,System.Web.WebPages.Razor.WebPageRazorHost)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubCompilingPathEventArgs.InitializeStub">
+            <summary>Initializes a new instance of type StubCompilingPathEventArgs</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubCompilingPathEventArgs.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubCompilingPathEventArgs.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubCompilingPathEventArgs.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider">
+            <summary>Stub type of System.Web.WebPages.Razor.RazorBuildProvider</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.CodeCompilerTypeGet">
+            <summary>Sets the stub of RazorBuildProvider.get_CodeCompilerType()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.CreateHost">
+            <summary>Sets the stub of RazorBuildProvider.CreateHost()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.CreateHost01">
+            <summary>Sets the stub of RazorBuildProvider.CreateHost()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GenerateCode(System.Web.Compilation.AssemblyBuilder)">
+            <summary>Sets the stub of RazorBuildProvider.GenerateCode(AssemblyBuilder assemblyBuilder)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GenerateCodeAssemblyBuilder">
+            <summary>Sets the stub of RazorBuildProvider.GenerateCode(AssemblyBuilder assemblyBuilder)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GetCodeCompileUnit(System.Collections.IDictionary@)">
+            <summary>Sets the stub of BuildProvider.GetCodeCompileUnit(IDictionary&amp; linePragmasTable)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GetCodeCompileUnitIDictionaryOut">
+            <summary>Sets the stub of BuildProvider.GetCodeCompileUnit(IDictionary&amp; linePragmasTable)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GetCustomString(System.CodeDom.Compiler.CompilerResults)">
+            <summary>Sets the stub of BuildProvider.GetCustomString(CompilerResults results)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GetCustomStringCompilerResults">
+            <summary>Sets the stub of BuildProvider.GetCustomString(CompilerResults results)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GetGeneratedType(System.CodeDom.Compiler.CompilerResults)">
+            <summary>Sets the stub of RazorBuildProvider.GetGeneratedType(CompilerResults results)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GetGeneratedTypeCompilerResults">
+            <summary>Sets the stub of RazorBuildProvider.GetGeneratedType(CompilerResults results)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GetHostFromConfig">
+            <summary>Sets the stub of RazorBuildProvider.GetHostFromConfig()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GetHostFromConfig01">
+            <summary>Sets the stub of RazorBuildProvider.GetHostFromConfig()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GetResultFlags(System.CodeDom.Compiler.CompilerResults)">
+            <summary>Sets the stub of BuildProvider.GetResultFlags(CompilerResults results)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.GetResultFlagsCompilerResults">
+            <summary>Sets the stub of BuildProvider.GetResultFlags(CompilerResults results)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.InitializeStub">
+            <summary>Initializes a new instance of type StubRazorBuildProvider</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.OnBeforeCompilePath(System.Web.WebPages.Razor.CompilingPathEventArgs)">
+            <summary>Sets the stub of RazorBuildProvider.OnBeforeCompilePath(CompilingPathEventArgs args)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.OnBeforeCompilePathCompilingPathEventArgs">
+            <summary>Sets the stub of RazorBuildProvider.OnBeforeCompilePath(CompilingPathEventArgs args)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.ProcessCompileErrors(System.CodeDom.Compiler.CompilerResults)">
+            <summary>Sets the stub of BuildProvider.ProcessCompileErrors(CompilerResults results)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.ProcessCompileErrorsCompilerResults">
+            <summary>Sets the stub of BuildProvider.ProcessCompileErrors(CompilerResults results)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.VirtualPathDependenciesGet">
+            <summary>Sets the stub of RazorBuildProvider.get_VirtualPathDependencies()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.CodeCompilerType">
+            <summary>Sets the stub of RazorBuildProvider.get_CodeCompilerType()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubRazorBuildProvider.VirtualPathDependencies">
+            <summary>Sets the stub of RazorBuildProvider.get_VirtualPathDependencies()</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost">
+            <summary>Stub type of System.Web.WebPages.Razor.WebCodeRazorHost</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.#ctor(System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.#ctor(System.String,System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.AttachBackingFieldToCodeLanguage">
+            <summary>Attaches delegates to emulate StubWebCodeRazorHost.CodeLanguage as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.AttachBackingFieldToDefaultBaseClass">
+            <summary>Attaches delegates to emulate StubWebCodeRazorHost.DefaultBaseClass as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.AttachBackingFieldToDefaultClassName">
+            <summary>Attaches delegates to emulate StubWebCodeRazorHost.DefaultClassName as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.AttachBackingFieldToDefaultNamespace">
+            <summary>Attaches delegates to emulate StubWebCodeRazorHost.DefaultNamespace as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.AttachBackingFieldToDesignTimeMode">
+            <summary>Attaches delegates to emulate StubWebCodeRazorHost.DesignTimeMode as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.AttachBackingFieldToEnableInstrumentation">
+            <summary>Attaches delegates to emulate StubWebCodeRazorHost.EnableInstrumentation as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.AttachBackingFieldToGeneratedClassContext">
+            <summary>Attaches delegates to emulate StubWebCodeRazorHost.GeneratedClassContext as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.AttachBackingFieldToInstrumentedSourceFilePath">
+            <summary>Attaches delegates to emulate StubWebCodeRazorHost.InstrumentedSourceFilePath as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.AttachBackingFieldToStaticHelpers">
+            <summary>Attaches delegates to emulate StubWebCodeRazorHost.StaticHelpers as a property with a backing field.</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.CodeLanguageGet">
+            <summary>Sets the stub of WebPageRazorHost.get_CodeLanguage()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.CodeLanguageSetRazorCodeLanguage">
+            <summary>Sets the stub of WebPageRazorHost.set_CodeLanguage(RazorCodeLanguage value)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.CreateMarkupParser">
+            <summary>Sets the stub of WebPageRazorHost.CreateMarkupParser()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.CreateMarkupParser01">
+            <summary>Sets the stub of WebPageRazorHost.CreateMarkupParser()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DecorateCodeGenerator(System.Web.Razor.Generator.RazorCodeGenerator)">
+            <summary>Sets the stub of RazorEngineHost.DecorateCodeGenerator(RazorCodeGenerator incomingCodeGenerator)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DecorateCodeGeneratorRazorCodeGenerator">
+            <summary>Sets the stub of RazorEngineHost.DecorateCodeGenerator(RazorCodeGenerator incomingCodeGenerator)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DecorateCodeParser(System.Web.Razor.Parser.ParserBase)">
+            <summary>Sets the stub of RazorEngineHost.DecorateCodeParser(ParserBase incomingCodeParser)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DecorateCodeParserParserBase">
+            <summary>Sets the stub of RazorEngineHost.DecorateCodeParser(ParserBase incomingCodeParser)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DecorateMarkupParser(System.Web.Razor.Parser.ParserBase)">
+            <summary>Sets the stub of RazorEngineHost.DecorateMarkupParser(ParserBase incomingMarkupParser)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DecorateMarkupParserParserBase">
+            <summary>Sets the stub of RazorEngineHost.DecorateMarkupParser(ParserBase incomingMarkupParser)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DefaultBaseClassGet">
+            <summary>Sets the stub of WebPageRazorHost.get_DefaultBaseClass()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DefaultBaseClassSetString">
+            <summary>Sets the stub of WebPageRazorHost.set_DefaultBaseClass(String value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DefaultClassNameGet">
+            <summary>Sets the stub of WebPageRazorHost.get_DefaultClassName()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DefaultClassNameSetString">
+            <summary>Sets the stub of WebPageRazorHost.set_DefaultClassName(String value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DefaultNamespaceGet">
+            <summary>Sets the stub of RazorEngineHost.get_DefaultNamespace()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DefaultNamespaceSetString">
+            <summary>Sets the stub of RazorEngineHost.set_DefaultNamespace(String value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DesignTimeModeGet">
+            <summary>Sets the stub of RazorEngineHost.get_DesignTimeMode()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DesignTimeModeSetBoolean">
+            <summary>Sets the stub of RazorEngineHost.set_DesignTimeMode(Boolean value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.EnableInstrumentationGet">
+            <summary>Sets the stub of RazorEngineHost.get_EnableInstrumentation()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.EnableInstrumentationSetBoolean">
+            <summary>Sets the stub of RazorEngineHost.set_EnableInstrumentation(Boolean value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.GeneratedClassContextGet">
+            <summary>Sets the stub of RazorEngineHost.get_GeneratedClassContext()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.GeneratedClassContextSetGeneratedClassContext">
+            <summary>Sets the stub of RazorEngineHost.set_GeneratedClassContext(GeneratedClassContext value)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.GetClassName(System.String)">
+            <summary>Sets the stub of WebCodeRazorHost.GetClassName(String virtualPath)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.GetClassNameString">
+            <summary>Sets the stub of WebCodeRazorHost.GetClassName(String virtualPath)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.GetCodeLanguage">
+            <summary>Sets the stub of WebPageRazorHost.GetCodeLanguage()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.GetCodeLanguage01">
+            <summary>Sets the stub of WebPageRazorHost.GetCodeLanguage()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.InitializeStub">
+            <summary>Initializes a new instance of type StubWebCodeRazorHost</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.InstrumentedSourceFilePathGet">
+            <summary>Sets the stub of WebPageRazorHost.get_InstrumentedSourceFilePath()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.InstrumentedSourceFilePathSetString">
+            <summary>Sets the stub of WebPageRazorHost.set_InstrumentedSourceFilePath(String value)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.PostProcessGeneratedCode(System.Web.Razor.Generator.CodeGeneratorContext)">
+            <summary>Sets the stub of WebCodeRazorHost.PostProcessGeneratedCode(CodeGeneratorContext context)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.PostProcessGeneratedCode(System.CodeDom.CodeCompileUnit,System.CodeDom.CodeNamespace,System.CodeDom.CodeTypeDeclaration,System.CodeDom.CodeMemberMethod)">
+            <summary>Sets the stub of RazorEngineHost.PostProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.PostProcessGeneratedCodeCodeCompileUnitCodeNamespaceCodeTypeDeclarationCodeMemberMethod">
+            <summary>Sets the stub of RazorEngineHost.PostProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.PostProcessGeneratedCodeCodeGeneratorContext">
+            <summary>Sets the stub of WebCodeRazorHost.PostProcessGeneratedCode(CodeGeneratorContext context)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.StaticHelpersGet">
+            <summary>Sets the stub of RazorEngineHost.get_StaticHelpers()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.StaticHelpersSetBoolean">
+            <summary>Sets the stub of RazorEngineHost.set_StaticHelpers(Boolean value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.CodeLanguage">
+            <summary>Sets the stub of WebPageRazorHost.get_CodeLanguage()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DefaultBaseClass">
+            <summary>Sets the stub of WebPageRazorHost.get_DefaultBaseClass()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DefaultClassName">
+            <summary>Sets the stub of WebPageRazorHost.get_DefaultClassName()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DefaultNamespace">
+            <summary>Sets the stub of RazorEngineHost.get_DefaultNamespace()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.DesignTimeMode">
+            <summary>Sets the stub of RazorEngineHost.get_DesignTimeMode()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.EnableInstrumentation">
+            <summary>Sets the stub of RazorEngineHost.get_EnableInstrumentation()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.GeneratedClassContext">
+            <summary>Sets the stub of RazorEngineHost.get_GeneratedClassContext()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.InstrumentedSourceFilePath">
+            <summary>Sets the stub of WebPageRazorHost.get_InstrumentedSourceFilePath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebCodeRazorHost.StaticHelpers">
+            <summary>Sets the stub of RazorEngineHost.get_StaticHelpers()</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost">
+            <summary>Stub type of System.Web.WebPages.Razor.WebPageRazorHost</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.#ctor(System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.#ctor(System.String,System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.AttachBackingFieldToCodeLanguage">
+            <summary>Attaches delegates to emulate StubWebPageRazorHost.CodeLanguage as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.AttachBackingFieldToDefaultBaseClass">
+            <summary>Attaches delegates to emulate StubWebPageRazorHost.DefaultBaseClass as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.AttachBackingFieldToDefaultClassName">
+            <summary>Attaches delegates to emulate StubWebPageRazorHost.DefaultClassName as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.AttachBackingFieldToDefaultNamespace">
+            <summary>Attaches delegates to emulate StubWebPageRazorHost.DefaultNamespace as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.AttachBackingFieldToDesignTimeMode">
+            <summary>Attaches delegates to emulate StubWebPageRazorHost.DesignTimeMode as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.AttachBackingFieldToEnableInstrumentation">
+            <summary>Attaches delegates to emulate StubWebPageRazorHost.EnableInstrumentation as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.AttachBackingFieldToGeneratedClassContext">
+            <summary>Attaches delegates to emulate StubWebPageRazorHost.GeneratedClassContext as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.AttachBackingFieldToInstrumentedSourceFilePath">
+            <summary>Attaches delegates to emulate StubWebPageRazorHost.InstrumentedSourceFilePath as a property with a backing field.</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.AttachBackingFieldToStaticHelpers">
+            <summary>Attaches delegates to emulate StubWebPageRazorHost.StaticHelpers as a property with a backing field.</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.CodeLanguageGet">
+            <summary>Sets the stub of WebPageRazorHost.get_CodeLanguage()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.CodeLanguageSetRazorCodeLanguage">
+            <summary>Sets the stub of WebPageRazorHost.set_CodeLanguage(RazorCodeLanguage value)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.CreateMarkupParser">
+            <summary>Sets the stub of WebPageRazorHost.CreateMarkupParser()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.CreateMarkupParser01">
+            <summary>Sets the stub of WebPageRazorHost.CreateMarkupParser()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DecorateCodeGenerator(System.Web.Razor.Generator.RazorCodeGenerator)">
+            <summary>Sets the stub of RazorEngineHost.DecorateCodeGenerator(RazorCodeGenerator incomingCodeGenerator)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DecorateCodeGeneratorRazorCodeGenerator">
+            <summary>Sets the stub of RazorEngineHost.DecorateCodeGenerator(RazorCodeGenerator incomingCodeGenerator)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DecorateCodeParser(System.Web.Razor.Parser.ParserBase)">
+            <summary>Sets the stub of RazorEngineHost.DecorateCodeParser(ParserBase incomingCodeParser)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DecorateCodeParserParserBase">
+            <summary>Sets the stub of RazorEngineHost.DecorateCodeParser(ParserBase incomingCodeParser)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DecorateMarkupParser(System.Web.Razor.Parser.ParserBase)">
+            <summary>Sets the stub of RazorEngineHost.DecorateMarkupParser(ParserBase incomingMarkupParser)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DecorateMarkupParserParserBase">
+            <summary>Sets the stub of RazorEngineHost.DecorateMarkupParser(ParserBase incomingMarkupParser)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DefaultBaseClassGet">
+            <summary>Sets the stub of WebPageRazorHost.get_DefaultBaseClass()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DefaultBaseClassSetString">
+            <summary>Sets the stub of WebPageRazorHost.set_DefaultBaseClass(String value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DefaultClassNameGet">
+            <summary>Sets the stub of WebPageRazorHost.get_DefaultClassName()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DefaultClassNameSetString">
+            <summary>Sets the stub of WebPageRazorHost.set_DefaultClassName(String value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DefaultNamespaceGet">
+            <summary>Sets the stub of RazorEngineHost.get_DefaultNamespace()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DefaultNamespaceSetString">
+            <summary>Sets the stub of RazorEngineHost.set_DefaultNamespace(String value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DesignTimeModeGet">
+            <summary>Sets the stub of RazorEngineHost.get_DesignTimeMode()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DesignTimeModeSetBoolean">
+            <summary>Sets the stub of RazorEngineHost.set_DesignTimeMode(Boolean value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.EnableInstrumentationGet">
+            <summary>Sets the stub of RazorEngineHost.get_EnableInstrumentation()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.EnableInstrumentationSetBoolean">
+            <summary>Sets the stub of RazorEngineHost.set_EnableInstrumentation(Boolean value)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.GeneratedClassContextGet">
+            <summary>Sets the stub of RazorEngineHost.get_GeneratedClassContext()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.GeneratedClassContextSetGeneratedClassContext">
+            <summary>Sets the stub of RazorEngineHost.set_GeneratedClassContext(GeneratedClassContext value)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.GetClassName(System.String)">
+            <summary>Sets the stub of WebPageRazorHost.GetClassName(String virtualPath)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.GetClassNameString">
+            <summary>Sets the stub of WebPageRazorHost.GetClassName(String virtualPath)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.GetCodeLanguage">
+            <summary>Sets the stub of WebPageRazorHost.GetCodeLanguage()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.GetCodeLanguage01">
+            <summary>Sets the stub of WebPageRazorHost.GetCodeLanguage()</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.InitializeStub">
+            <summary>Initializes a new instance of type StubWebPageRazorHost</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.InstrumentedSourceFilePathGet">
+            <summary>Sets the stub of WebPageRazorHost.get_InstrumentedSourceFilePath()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.InstrumentedSourceFilePathSetString">
+            <summary>Sets the stub of WebPageRazorHost.set_InstrumentedSourceFilePath(String value)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.PostProcessGeneratedCode(System.Web.Razor.Generator.CodeGeneratorContext)">
+            <summary>Sets the stub of WebPageRazorHost.PostProcessGeneratedCode(CodeGeneratorContext context)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.PostProcessGeneratedCode(System.CodeDom.CodeCompileUnit,System.CodeDom.CodeNamespace,System.CodeDom.CodeTypeDeclaration,System.CodeDom.CodeMemberMethod)">
+            <summary>Sets the stub of RazorEngineHost.PostProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.PostProcessGeneratedCodeCodeCompileUnitCodeNamespaceCodeTypeDeclarationCodeMemberMethod">
+            <summary>Sets the stub of RazorEngineHost.PostProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.PostProcessGeneratedCodeCodeGeneratorContext">
+            <summary>Sets the stub of WebPageRazorHost.PostProcessGeneratedCode(CodeGeneratorContext context)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.StaticHelpersGet">
+            <summary>Sets the stub of RazorEngineHost.get_StaticHelpers()</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.StaticHelpersSetBoolean">
+            <summary>Sets the stub of RazorEngineHost.set_StaticHelpers(Boolean value)</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.CodeLanguage">
+            <summary>Sets the stub of WebPageRazorHost.get_CodeLanguage()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DefaultBaseClass">
+            <summary>Sets the stub of WebPageRazorHost.get_DefaultBaseClass()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DefaultClassName">
+            <summary>Sets the stub of WebPageRazorHost.get_DefaultClassName()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DefaultNamespace">
+            <summary>Sets the stub of RazorEngineHost.get_DefaultNamespace()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.DesignTimeMode">
+            <summary>Sets the stub of RazorEngineHost.get_DesignTimeMode()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.EnableInstrumentation">
+            <summary>Sets the stub of RazorEngineHost.get_EnableInstrumentation()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.GeneratedClassContext">
+            <summary>Sets the stub of RazorEngineHost.get_GeneratedClassContext()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.InstrumentedSourceFilePath">
+            <summary>Sets the stub of WebPageRazorHost.get_InstrumentedSourceFilePath()</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebPageRazorHost.StaticHelpers">
+            <summary>Sets the stub of RazorEngineHost.get_StaticHelpers()</summary>
+        </member>
+        <member name="T:System.Web.WebPages.Razor.Fakes.StubWebRazorHostFactory">
+            <summary>Stub type of System.Web.WebPages.Razor.WebRazorHostFactory</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebRazorHostFactory.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebRazorHostFactory.CreateHost(System.String,System.String)">
+            <summary>Sets the stub of WebRazorHostFactory.CreateHost(String virtualPath, String physicalPath)</summary>
+        </member>
+        <member name="F:System.Web.WebPages.Razor.Fakes.StubWebRazorHostFactory.CreateHostStringString">
+            <summary>Sets the stub of WebRazorHostFactory.CreateHost(String virtualPath, String physicalPath)</summary>
+        </member>
+        <member name="M:System.Web.WebPages.Razor.Fakes.StubWebRazorHostFactory.InitializeStub">
+            <summary>Initializes a new instance of type StubWebRazorHostFactory</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebRazorHostFactory.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebRazorHostFactory.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Web.WebPages.Razor.Fakes.StubWebRazorHostFactory.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+    </members>
+</doc>

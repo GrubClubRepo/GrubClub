@@ -1,0 +1,68 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="robots" content="noindex" />
+
+<title>GA Internal Traffic Segmenting</title>
+<style type="text/css">
+<!--
+body {
+	font: 100% Verdana, Arial, Helvetica, sans-serif;
+	background: #fff;
+	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
+	padding: 0;
+	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
+	color: #000000;
+}
+.oneColElsCtr #container {
+	width: 900px;
+	background: #FFFFFF;
+	margin: 0 auto; /* the auto margins (in conjunction with a width) center the page */
+	text-align: left; /* this overrides the text-align: center on the body element. */
+}
+.oneColElsCtr #mainContent {
+	padding: 0 20px; /* remember that padding is the space inside the div box and margin is the space outside the div box */
+}
+
+img: {border: none}
+-->
+</style>
+<title>GA Internal Traffic Segmenting</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36514914-1']);
+  _gaq.push(['_setCustomVar', 1, 'internal', 'Yes', 1]);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script></head>
+
+<body class="oneColElsCtr">
+
+<div id="container">
+  <div id="mainContent">
+    <h1>Google Analytics - Filter Internal Traffic Page</h1>
+    <p>Visiting this page will set a cookie in your browser. This will work in combination with a Custom Segment set up in Google 
+
+Analytics to segment (not exclude) traffic from anyone visiting this page <u>before</u> browsing the rest of the site.</p>
+
+<h2>Technical Details</h2>
+
+<p>It is a persistent cookie, so you'll only need to visit this page once for the cookie to be effective for future visits.</p>
+
+<p>If you delete your browser cookies you will need to revisit this page to set it again.</p>
+
+<p>The cookie will expire after 2 years of being set.</p>
+
+  </div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /Content/css/
+Disallow: /Content/js/
+Disallow: /Content/themes/
+Disallow: /Scripts/
+Disallow: /bin/
+Disallow: /App_Start/
+Disallow: /App_Data/
+Sitemap: http://grubclub.com/sitemap/sitemap.xml
+Sitemap: http://grubclub.com/video-sitemap.xml

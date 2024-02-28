@@ -1,0 +1,19 @@
+﻿body {
+    background: url(../images/postpayment-bg.jpg) no-repeat center center fixed; 
+   -webkit-background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+    background-size: cover;
+}
+h2#voucherhead {color: #fff !important;}
+div.control-group {border-bottom: 1px solid #fffaaa; background: #fffccc; border-radius: 10px; margin-bottom: 10px; padding: 10px; height: 140px;}
+ input {border: 1px solid #ccc !important; margin-top:5px; margin-bottom: 0px !important; border-radius: 5px;}
+ input:hover {border: 1px solid #ffd800 !important;}
+ input[type="number"] {width: 60px;}
+label, .inline {display: inline;}
+legend { color: #900; border-bottom-color: #fffaaa; text-align:center;}
+form, form button, form button:hover {font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif; color: #ff6a00 !important; background: #fff !important; border: 1px solid #ffd800; margin-top:5px;}
+form {background-color: rgba(255, 240, 178, 0.7) !important;}
+.btn, .btn:hover { font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif !important; width: 100%;margin-bottom: 5px;}
+.btn:hover {background: #aa6a33 !important;}
+.has-error {color: #ff0000;}

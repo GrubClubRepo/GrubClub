@@ -1,0 +1,236 @@
+﻿@model SupperClub.Domain.Review
+
+@section PageSpecificScripts {
+    <script src="@Url.Content("~/Scripts/old/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/old/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        function RankEvent(rank) {
+            $('#Rating').val(rank);
+            $("#stars").children().each(function (i) {
+                if (i < rank) {
+                    $(this).attr("src", "/Content/images/yellow_star.png");
+                }
+                else {
+                    $(this).attr("src", "/Content/images/grey_star.png");
+                }
+            });
+        }
+
+    </script>
+
+}
+<!--  Page Title -->
+<div class="container pattern-design2 pattern-photo">
+ 	<div class="sub-title-pattern">
+        <div class="h2-position">
+    	    <h2>Tell us about your event</h2>
+	    </div>
+    </div>
+</div>
+<!-- Page Title End -->
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+
+    <div class="container sub-title2">
+        <h2>@Model.Event.Name</h2>
+    </div>
+
+    <!-- 960 Container Start -->
+    <div class="container">
+        @using (Html.BeginForm(((string)ViewBag.Title).Replace(" ", ""), "Event", FormMethod.Post, new { id = "ReviewForm", style = "margin-bottom: 0px;", enctype = "multipart/form-data" }))
+        {
+            <div class="six columns">
+                <div class="small-slider slider">
+                    <div class="item-img">
+                        <a href="@Url.Content(SupperClub.Code.ServerMethods.EventImagePath + Model.Event.ImagePath)" rel="imagebox" title="@Model.Event.Name">
+                            <img src="@Url.Content(SupperClub.Code.ServerMethods.EventImagePath + Model.Event.ImagePath)" alt="@Model.Event.Name | Grubclub" />
+                            <div class="overlay zoom">
+                            </div>
+                        </a>
+                    </div>
+
+                    <p></p>
+
+                    <div class="details-timings-container timings-info">
+                    <h6 style="display: inline;">DATE: </h6> @Model.Event.Start.ToString("ddd, d MMM yyyy")
+                    <br />
+                    <h6 style="display: inline;">TIME: </h6>@(Model.Event.Start.ToShortTimeString() + " - " + Model.Event.End.ToShortTimeString())
+                    <br />
+                    <h6 style="display: inline;">SEATS: </h6>@Model.Event.Guests
+                    </div>
+                    <p></p>
+
+                    <!-- Ranking Section for guests to provide a ranking -->
+                    <br />
+                    <h5 style="text-align:center">RATE THIS EVENT</h5>
+                    @Html.HiddenFor(m => m.Rating)
+                    @Html.Partial("DisplayTemplates/Ranking", new SupperClub.Models.RankingModel(Model.Id, false, Model.Rating, Model.Event.NumberGuestRanks))
+
+                </div>
+                <div class="portfolio-item-meta">
+                    <p></p>
+
+
+                    <!-- Hosted By Section -->
+                    <div class="hosted-by">
+                        <h5>Hosted By:</h5>
+
+                        <div class="meta-image">
+                            <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)" >
+                                <img style="width: 65px" src="@Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + Model.Event.SupperClub.ImagePath)" alt="@Model.Event.SupperClub.Name | GrubClub" />
+                            </a>
+                        </div>
+
+                 	    <div class="meta-copy">
+                            <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)" style="color: #3F8FAF">@Model.Event.SupperClub.Name</a>
+                            <div>
+                                @if (Model.Event.SupperClub.Summary.Length > 75)
+                                {
+                                    @(Model.Event.SupperClub.Summary.Substring(0, 75) + "...")
+                                }
+                                else
+                                {
+                                    @Model.Event.SupperClub.Summary
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="nine columns event-info">
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.EventId)
+                @Html.HiddenFor(m => m.UserId)
+                @Html.HiddenFor(m => m.DateCreated)
+                @Html.HiddenFor(m => m.Publish)
+                @Html.HiddenFor(m => m.Rating)
+                @Html.HiddenFor(m => m.FoodRating)
+                @Html.HiddenFor(m => m.AmbienceRating)
+                @Html.HiddenFor(m => m.Anonymous)
+                @Html.HiddenFor(m => m.PublicReview)
+                @Html.HiddenFor(m => m.PrivateReview)
+                @Html.HiddenFor(m => m.Title)
+                <!-- Hidden Validation Summary --->
+                <div style="display:none">
+                    @Html.ValidationSummary()
+                </div>
+
+                <!-- Tabs Content -->
+                <div class="tabs-container" style="margin-top:-36px;">
+
+                    <div style="display: block;" class="tab-content" id="tab1">
+
+                        <div class="details-column">
+                            <h5>Description</h5>
+                            <div class="display field">
+                                <p>@if (Model.Event.EventDescription.Length > 200)
+                                   {
+                                       @Html.DisplayWithBreaks(Model.Event.EventDescription.Substring(0, 200))
+                                       @Html.Raw("...")
+                                   }
+                                   else
+                                   {
+                                       @Html.DisplayWithBreaks(Model.Event.EventDescription)
+                                   }
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="border2px"></div>
+
+                        <div class="details-column">
+                            <h5>Review Title</h5>
+                            <div class="field">
+                                @Html.DisplayFor(m => m.Title)
+                            </div>
+                        </div>
+
+                        <div class="details-column">
+                            <h5>Public Comments</h5>
+                            <div class="field">
+                                @Html.DisplayFor(m => m.PublicReview)
+                            </div>
+                        </div>
+
+                        @if (SupperClub.Code.UserMethods.IsAdmin && @Model.PrivateReview != null && @Model.PrivateReview.Length > 0)
+                        {
+                            <div class="details-column">
+                                <h5>Private Comments</h5>
+                                <div class="field">
+                                    @Html.DisplayFor(m => m.PrivateReview)
+                                </div>
+                            </div>
+                        }
+                        <div class="details-column">
+                        @if (SupperClub.Code.UserMethods.UserId == Model.Event.SupperClub.UserId)
+                        {
+                            <h5>Response from the Host</h5>
+                            @Html.ValidationMessageFor(m => m.HostResponse)
+                            <div class="field">
+                                @Html.EditorFor(m => m.HostResponse)
+                            </div>
+                        }
+                        else if (@Model.HostResponse != null && @Model.HostResponse.Length > 0)
+                        {
+                            <h5>Response from the Host</h5>
+                            <div class="field">
+                                @Html.DisplayFor(m => m.HostResponse)
+                            </div>
+                            @Html.HiddenFor(m => m.HostResponse)
+                            @Html.HiddenFor(m => m.HostResponseDate)
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(m => m.HostResponse)
+                            @Html.HiddenFor(m => m.HostResponseDate)
+                        }
+                        </div>
+                        <div class="details-column">
+                            @if (SupperClub.Code.UserMethods.IsAdmin)
+                            {
+                                <h5>Response from Grubclub</h5>
+                                @Html.ValidationMessageFor(m => m.AdminResponse)
+                                <div class="field">
+                                    @Html.EditorFor(m => m.AdminResponse)
+                                </div>
+                            }
+                            else if (@Model.AdminResponse != null && @Model.AdminResponse.Length > 0)
+                            {
+                                <h5>Response from Grubclub</h5>
+                                <div class="field">
+                                    @Html.DisplayFor(m => m.AdminResponse)
+                                </div>
+                                @Html.HiddenFor(m => m.AdminResponse)
+                                @Html.HiddenFor(m => m.AdminResponseDate)
+                            }
+                            else
+                            {
+                                @Html.HiddenFor(m => m.AdminResponse)
+                                @Html.HiddenFor(m => m.AdminResponseDate)
+                            }
+
+                        </div>
+                        <div class="details-column">
+                            <br />
+                            <input type="submit" id="btnUpdate" value="Post It" class="button medium orange" style="float: left" />
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        }
+    </div>
+}

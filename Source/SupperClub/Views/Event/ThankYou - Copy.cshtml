@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Thank You!";
+}
+
+<!--  Page Title -->
+<div class="pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>
+</div>
+<!-- Page Title End -->
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <!-- 960 Container Start -->
+    <div class="container">
+        <div class="sixteen columns">
+
+            <div class="container sub-title2">
+                <h2>@ViewBag.Title</h2>
+            </div>
+            <p>You’re on your way! <br />Thank you for taking the time to create your Grub Club.</p>
+            <h2>Next steps:</h2>
+            <ul>
+                <li>We’ll review your submission asap here at Grub Club HQ and let you know the outcome</li>
+                <li>We’ll call you if we have any further questions</li>
+                <li>
+                    If approved, we'll come back to you with your newly created event URL/booking link for you
+                    to send to your users and start marketing
+                </li>
+                <li>
+                    This is your Profile URL, to which all approved events will be added: <a href="@ViewBag.SupperClubURL">@ViewBag.SupperClubURL</a>
+                    <ul>
+                        <li>You will also find your Grub Club (event) URL(s) under: My Events</li>
+                    </ul>
+                </li>
+                <li>You can see all Grub Club profile details under: My Account > My Grub Club details</li>
+            </ul>
+            <h2>And if you get approved, you'll need to think about:</h2>
+            <h3>Marketing</h3>
+            <ul>
+                <li>
+                    Don’t forget to share your event on Social Media: Facebook, Twitter, Pinterest, Google +, etc.
+                    <ul>
+                        <li><b>Include @@grub_club in your tweets</b> so we can retweet</li>
+                        <li><b>Add “Chef @@Grub_Club” to your Twitter Description</b> so people know you are a coveted host</li>
+                        <li><b>Tag GrubClub1 on your Facebook Page </b>so we can share – the more you include us, the more we’ll share your grub clubs with the wider world!</li>
+                        
+                    </ul>
+                </li>
+                <li>
+                    And get as much coverage as you can: your blog, someone else’s blog, a relevant publication
+                    – anyone who would share your interest and have a similar user-base
+                </li>
+                <li><a href="@Url.Action("marketingtips", "event")">Click here</a> to see some Marketing tips we created for you, to help you along the way.</li>
+            </ul>
+
+            <h2>Need Help?</h2>
+            <p>
+                Feel free to <a href="/contact-us">Contact Us</a> if you have any questions or need any help in any way! <br />We will be in touch soon!
+            </p>
+            <p> <em>Grub Love x</em></p>
+            
+        </div>
+    </div>
+    <!-- 960 Container End -->
+}

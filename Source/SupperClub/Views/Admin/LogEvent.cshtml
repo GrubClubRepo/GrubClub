@@ -1,0 +1,75 @@
+﻿@model SupperClub.Domain.Log
+
+@{
+    ViewBag.Title = "Log4Net";
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+        <h4 class="headline">Log Event Details</h4>
+        <table class="standard-table">
+            <tr>
+                <th>
+                    Column
+                </th>
+                <th>
+                    Detail
+                </th>
+            </tr>
+
+            <tr>
+                <td>
+                    Date
+                </td>
+                <td>
+                    @Model.Date.ToString("dd/MM/yy HH:mm:ss.ms")
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Level
+                </td>
+                <td>
+                    @Model.Level
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Source
+                </td>
+                <td>
+                    @Model.Logger
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Message
+                </td>
+                <td>
+                    @Model.Message
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Exception
+                </td>
+                <td>
+                    @Html.DisplayWithBreaksFor(m => m.Exception)
+                </td>
+            </tr>
+        </table>
+	</div>
+</div>

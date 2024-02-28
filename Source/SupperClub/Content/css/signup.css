@@ -1,0 +1,69 @@
+
+
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+body {
+   background-image: url("../images/bg pattern 2.gif");
+   padding-top: 20px;
+  
+}
+label, button, form, h1, p {
+    width: 90%;
+    margin: auto;
+    text-align: center;
+}
+
+.logoContainer {
+    margin: auto;
+    padding: 0;
+    border-top: 1px solid #F47521;
+    background-color: #eee;
+}
+
+.jumbotron {
+    padding-top: 10px;
+    border: 1px solid #444;
+    background-color: #FFFfee;
+   -webkit-box-shadow: 0px 5px 5px 0px rgba(50, 50, 50, 0.5);
+-moz-box-shadow:    0px 5px 5px 0px rgba(50, 50, 50, 0.5);
+box-shadow:         0px 5px 5px 0px rgba(50, 50, 50, 0.5);
+}
+.smallPrint {
+    width: 80%;
+    text-align: center;
+    background: #FFF;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+.container h1 {
+    color: #F47521;
+    font-family: 'Lobster', cursive;
+}
+.btn-lg {
+  background-color: #F47521;
+  border: 1px solid white;
+  font-family: 'Lobster', cursive;
+  font-size: 36px;
+}
+
+.btn-lg:hover {
+    background-color: yellow;
+    color: #333;
+    border: 1px solid #F47521;
+    
+}
+
+
+
+
+
+
+
+
+
+

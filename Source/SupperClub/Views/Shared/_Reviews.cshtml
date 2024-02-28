@@ -1,0 +1,136 @@
+﻿
+
+
+<div>
+    @foreach (SupperClub.Domain.Review review in ViewBag.Reviews)
+    {
+        
+        <div class="flag flag--top flag--flush flag--responsive mb">
+            <div class="flag__img ph">
+                <img src="@Url.Content("~/Content/images/")placeholder-img2.jpg" alt="">
+            </div>
+            <div class="flag__body">
+                <h3 class="h6 type-semibold">
+                    @if (review.User != null)
+                    {
+                        <span itemprop="author">@review.User.FirstName</span>}
+
+                    else if (!string.IsNullOrEmpty(review.GuestName))
+                    {  <span itemprop="author">@review.GuestName</span>}
+                    else if (!string.IsNullOrEmpty(review.Email))
+                    { <span itemprop="author">_supperClubRepository.GetGuestName(@review.Email)</span>}
+                    else
+                    {<span itemprop="author">Guest</span> }
+
+                    <meta itemprop="datePublished" content="@review.DateCreated.ToString("yyyy-MM-ddThh:mm")"><time>@review.DateCreated.ToString("ddd, d MMM yyyy")</time>
+                </h3>
+                <h3 class="h6 type-semibold"><span itemprop="name">@review.Title</span></h3>
+
+                @if (review.Rating == 5)
+                {
+                    <ul class="rating ">
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    </ul>
+                }
+                @if (review.Rating == 4)
+                {
+                    <ul class="rating ">
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    </ul>
+                }
+                @if (review.Rating == 3)
+                {
+                    <ul class="rating ">
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    </ul>
+                }
+                @if (review.Rating == 2)
+                {
+                    <ul class="rating ">
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    </ul>
+                }
+                @if (review.Rating == 1)
+                {
+                    <ul class="rating ">
+                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    </ul>
+                }
+                @if (review.Rating == 0)
+                {
+                    <ul class="rating ">
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    </ul>
+                }
+
+                <p class="type-light">@review.PublicReview</p>
+                @if (review.HostResponse != null)
+                {
+                    <span>Response from our Host</span>
+                    <p class="type-light">
+                        @review.HostResponse  @review.HostResponseDate.ToString("ddd, d MMM yyyy")
+                        @if (review.Event.SupperClub.UserId == SupperClub.Code.UserMethods.UserId)
+                        {
+                            <a href="/Event/EditReviewResponse?eventid=@review.EventId&reviewid=@review.Id">(edit)</a>
+                        }
+                    </p>
+                }
+                else
+                {
+                    if (review.Event.SupperClub.UserId == SupperClub.Code.UserMethods.UserId)
+                    {
+                        <a href="/Event/EditReviewResponse?eventid=@review.EventId&reviewid=@review.Id">(Respond to guest)</a>
+                    }
+                }
+
+                @if (review.AdminResponse != null)
+                {
+                    <span>Response from Grubclub</span>
+                    <p class="type-light">
+                        @review.AdminResponse  @review.AdminResponseDate.ToString("ddd, d MMM yyyy")
+                        @if (SupperClub.Code.UserMethods.IsAdmin)
+                        {
+                            <a href="/Event/EditReviewResponse?eventid=@review.EventId&reviewid=@review.Id">(edit)</a>
+                        }
+                    </p>
+                }
+                else
+                {
+                    if (SupperClub.Code.UserMethods.IsAdmin)
+                    {
+                        <a href="/Event/EditReviewResponse?eventid=@review.EventId&reviewid=@review.Id">(Respond to guest)</a>
+                    }
+                }
+
+            </div>
+        </div>
+
+    }
+
+
+</div>
+

@@ -1,0 +1,86 @@
+﻿@model IList<SupperClub.Domain.EventWaitList>
+
+@{
+    ViewBag.Title = "Waiting List";
+}
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <!-- 960 Container Start -->
+    <div class="container">
+        <h4 class="headline">@ViewBag.Title</h4>
+        @if (Model != null && Model.Count > 0)
+                    {
+                        
+            <table class="standard-table" style="margin-bottom:0px;margin-top:20px;text-align:left">
+
+            <thead>
+                <tr>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Full Name
+                    </th>
+                    <th>Contact Number</th>
+                    <th>Date Added to Waitlist</th>                   
+                    <th>
+                        Booked tickets after waitlist
+                    </th>
+
+                </tr>
+             </thead>
+             <tbody>
+            @foreach (SupperClub.Domain.EventWaitList ewl in Model.ToList())
+                        {
+                        <tr>                        
+                        <td>
+                            @ewl.Email
+                        </td>
+                            <td>
+                            @if (@ewl.User != null)
+                            {
+                                <span>@ewl.User.FirstName @ewl.User.LastName</span>
+                            }
+                            </td>
+                        <td style="padding-left:10px;">
+                           @if (@ewl.User != null && @ewl.User.ContactNumber != null)
+                           {
+                              @String.Format("{0:+44(####)-######}", double.Parse(@ewl.User.ContactNumber))
+                           }
+                        </td>                        
+                        <td style="padding-left:10px;">
+                            @ewl.AddedDate
+                        </td>
+                        <td>
+                            @if (@ewl.User != null)
+                            {
+                                if (ewl.Event.EventAttendees != null && ewl.Event.EventAttendees.Where(ea => ea.UserId == ewl.UserId).Max(ea=>ea.BookingDate) > ewl.AddedDate)
+                                {<span>Yes</span>}
+                                else
+                                {<span>No</span>}
+                            }
+                            else
+                            {<span>Not registered</span>}                            
+                        </td>
+                    </tr>
+                     }
+                     
+            </tbody></table>
+            <br />
+            <a href="@Url.Action("DownloadWaitList", new { eventId = Model[0].EventId })" class="btn btn--primary btn--medium">Download Waiting List</a>
+            <br />@*<br />
+    <a href="@Url.Action("DetailsByIdWithName", new { eventId = Model.Id, eventSeoFriendlyName = Model.UrlFriendlyName })" style="float:left;text-underline-position:below;">< Back to Event</a>*@
+                    }
+            </div>
+    
+    <!-- 960 Container End -->
+      
+}

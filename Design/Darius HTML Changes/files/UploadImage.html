@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html class=" js no-flexbox flexbox-legacy canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface no-generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>Upload Image</title>
+        <link rel="stylesheet" type="text/css" href="event-edit_files/style.css">
+        <link href="UploadImage_data/imageupload.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="event-edit_files/supperclubcustom.css">
+    
+    <link href="UploadImage_data/ImageArea.css" rel="stylesheet">
+
+    </head>
+
+    <body>
+        <div class="page">
+       
+  
+                
+
+
+<form action="/Image/UploadImage" enctype="multipart/form-data" method="post"><input data-val="true" data-val-number="The field X must be a number." data-val-range="The field X must be between 0 and 2147483647." data-val-range-max="2147483647" data-val-range-min="0" data-val-required="The X field is required." id="X" name="X" value="0" type="hidden"><input data-val="true" data-val-number="The field Y must be a number." data-val-range="The field Y must be between 0 and 2147483647." data-val-range-max="2147483647" data-val-range-min="0" data-val-required="The Y field is required." id="Y" name="Y" value="0" type="hidden"><input data-val="true" data-val-number="The field Width must be a number." data-val-range="The field Width must be between 1 and 2147483647." data-val-range-max="2147483647" data-val-range-min="1" data-val-required="The Width field is required." id="Width" name="Width" value="1" type="hidden"><input data-val="true" data-val-number="The field Height must be a number." data-val-range="The field Height must be between 1 and 2147483647." data-val-range-max="2147483647" data-val-range-min="1" data-val-required="The Height field is required." id="Height" name="Height" value="1" type="hidden">    <div id="upload-choices">          
+            
+            <div class="field">
+                <p>Choose your image, then Upload it before Updating/Creating</p>
+                <input id="File" name="File" type="file">
+                <input value="Upload" id="btnUpload" class="button medium green" style="display: none; width: 100px; float: right;" type="submit">
+                <br>
+                <div class="validation-summary-valid" data-valmsg-summary="true"><ul><li style="display:none"></li>
+</ul></div>
+            </div>
+            <br>
+            <div class="field">
+                <img alt="Field for image cutting" id="preview" style="max-width: 480px; max-height: 480px;" src="UploadImage_data/empty.png">
+            </div>
+    </div>
+</form>
+    
+       
+        </div>
+
+        <script type="text/javascript" src="event-edit_files/jquery-1.js"></script>
+        <script type="text/javascript" src="UploadImage_data/modernizr-2.js"></script>­<style>@font-face {font-family:"font";src:url("https://")}@media (touch-enabled),(-webkit-touch-enabled),(-moz-touch-enabled),(-o-touch-enabled),(-ms-touch-enabled),(modernizr){#touch{top:9px;position:absolute}}@media (transform-3d),(-webkit-transform-3d),(-moz-transform-3d),(-o-transform-3d),(-ms-transform-3d),(modernizr){#csstransforms3d{left:9px;position:absolute;height:3px;}}#generatedcontent:after{content:":)";visibility:hidden}</style>
+
+        
+    <script src="UploadImage_data/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Get the checkboxes and disable them
+            var boxes = $('input[type=checkbox]').attr('disabled', true);
+            $('#btnUpload').hide();
+
+            //Get the preview image and set the onload event handler
+            var preview = $('#preview').load(function () {
+                setPreview();
+                ias.setOptions({
+                    x1: 0,
+                    y1: 0,
+                    x2: $(this).width(),
+                    y2: $(this).height(),
+                    show: true
+                });
+            });
+
+            //Set the 4 coordinates for the cropping
+            var setPreview = function (x, y, w, h) {
+                $('#X').val(x || 0);
+                $('#Y').val(y || 0);
+                $('#Width').val(w || preview[0].naturalWidth);
+                $('#Height').val(h || preview[0].naturalHeight);
+            };
+
+            //Initialize the image area select plugin
+            var ias = preview.imgAreaSelect({
+                handles: true,
+                instance: true,
+                parent: 'body',
+                onSelectEnd: function (s, e) {
+                    var scale = preview[0].naturalWidth / preview.width();
+                    var _f = Math.floor;
+                    setPreview(_f(scale * e.x1), _f(scale * e.y1), _f(scale * e.width), _f(scale * e.height));
+                }
+            });
+
+            //Check one of the checkboxes
+            var setBox = function (filter) {
+                $('#btnUpload').attr('disabled', false);
+                boxes.attr('checked', false).filter(filter).attr({ 'checked': true, 'disabled': false });
+            };
+
+            //Initial state of X, Y, Width and Height is 0 0 1 1
+            setPreview(0, 0, 1, 1);
+
+            //What happens if the URL changes?
+//            $('#Url').change(function () {
+//                setBox('#IsUrl');
+//                preview.attr('src', this.value);
+//            });
+
+            //What happens if the File changes?
+            $('#File').change(function (evt) {
+                var f = evt.target.files[0];
+                var reader = new FileReader();
+
+                if (!f.type.match('image.*')) {
+                    alert("The selected file does not appear to be an image.");
+                    return;
+                }
+
+                //setBox('#IsFile');
+                $('#btnUpload').show().attr('disabled', true).val('Please wait');
+                reader.onload = function (e) {
+                        preview.attr('src', e.target.result);
+                        $('#btnUpload').attr('disabled', false).val('Upload');
+                    };
+                reader.readAsDataURL(f);
+                
+            });
+
+            //What happens if any checkbox is checked ?!
+            //boxes.change(function () {
+                //setBox(this);
+            //    $('#' + this.id.substr(2)).change();
+            //});
+            
+            $('form').submit(function () {
+                $('#btnUpload').attr('disabled', true).val('Please wait');
+            });
+        });
+    </script>
+
+    
+<div style="position: absolute; overflow: hidden; z-index: 2; left: 0px; top: 0px; width: 0px; height: 0px;"><div class="imgareaselect-selection" style="position: absolute; font-size: 0px; width: 0px; height: 0px; left: 0px; top: 0px;"></div><div class="imgareaselect-border1" style="position: absolute; font-size: 0px; left: 0px; top: 0px; width: 0px; height: 0px;"></div><div class="imgareaselect-border2" style="position: absolute; font-size: 0px; left: 0px; top: 0px; width: 0px; height: 0px;"></div><div class="imgareaselect-border3" style="position: absolute; font-size: 0px; left: 0px; top: 0px; width: 0px; height: 0px;"></div><div class="imgareaselect-border4" style="position: absolute; font-size: 0px; left: 0px; top: 0px; width: 0px; height: 0px;"></div><div style="position: absolute; font-size: 0px; z-index: 1; width: 5px; height: 5px; left: 0px; top: 0px;" class="imgareaselect-handle"></div><div style="position: absolute; font-size: 0px; z-index: 1; width: 5px; height: 5px; left: -5px; top: 0px;" class="imgareaselect-handle"></div><div style="position: absolute; font-size: 0px; z-index: 1; width: 5px; height: 5px; left: -5px; top: -5px;" class="imgareaselect-handle"></div><div style="position: absolute; font-size: 0px; z-index: 1; width: 5px; height: 5px; left: 0px; top: -5px;" class="imgareaselect-handle"></div><div style="position: absolute; font-size: 0px; z-index: 1; width: 5px; height: 5px; left: -3px; top: 0px;" class="imgareaselect-handle"></div><div style="position: absolute; font-size: 0px; z-index: 1; width: 5px; height: 5px; left: -5px; top: -3px;" class="imgareaselect-handle"></div><div style="position: absolute; font-size: 0px; z-index: 1; width: 5px; height: 5px; left: -3px; top: -5px;" class="imgareaselect-handle"></div><div style="position: absolute; font-size: 0px; z-index: 1; width: 5px; height: 5px; left: 0px; top: -3px;" class="imgareaselect-handle"></div></div><div class="imgareaselect-outer" style="position: absolute; overflow: hidden; z-index: 0; width: 0px;"></div><div class="imgareaselect-outer" style="position: absolute; overflow: hidden; z-index: 0; width: 0px; height: 0px;"></div><div class="imgareaselect-outer" style="position: absolute; overflow: hidden; z-index: 0;"></div><div class="imgareaselect-outer" style="position: absolute; overflow: hidden; z-index: 0; width: 0px;"></div></body></html>

@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "Thank You!";
+}
+
+@*<div class="pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>
+</div>*@
+<!-- Page Title End -->
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+
+
+    <div class="container">
+        @*<h1 class="type-light color-dark mb">Nearly there...</h1>
+        <div class="justifize">
+            <div class="justifize__box">
+                <p class="h6 type-semibold mb">Your event can only be hosted once you have completed your profile in full.</p>
+            </div>
+            <div class="justifize__box">
+                <a href="" class="btn btn--primary btn--radius btn--h44 mb">View and complete profile</a>
+            </div>
+        </div>*@
+        <h2 class="h4 type-bold mb">Thank you!</h2>
+        <p class="mb pb-">We’ll review your Grub Club within 2 working days and will get back to you if we have further questions. You can view your pending event <a href="/account/myprofile"><span class="text-underline">here</span></a>. There will be one of two outcomes...</p>
+        <div class="layout mb+">
+            <div class="layout__item large-and-up-1/2">
+                <div class="flag flag--responsive">
+                    <div class="flag__img">
+                        <img src="@Url.Content("~/Content/images/")grubclub-face1.png" alt="">
+                    </div>
+                    <div class="flag__body">
+                        <img src="@Url.Content("~/Content/images/")img-yes.png" alt="" class="mb-">
+                        <p>We’ll send you a link to your Grub Club page so you can start taking bookings.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="layout__item large-and-up-1/2">
+                <div class="flag flag--responsive">
+                    <div class="flag__img">
+                        <img src="@Url.Content("~/Content/images/")grubclub-face2.png" alt="">
+                    </div>
+                    <div class="flag__body">
+                        <img src="@Url.Content("~/Content/images/")img-maybe.png" alt="" class="mb-">
+                        <p>If your submission does not meet our criteria, we’ll be in touch to help you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class"mb pb-">And as a reminder, <a href="http://host-journey.grubclub.com/" target="_blank" style="color:#f47400 !important;font-weight:bold;text-decoration:underline;">here is an overview of your journey as Grub Club host.</a> We're excited that you have joined the Dining Revolution! </p>
+        <hr class="hr hr--dots mb+">
+        <h2 class="h1 text-center type-light color-dark mb+">Give yourself the best chance to be a Top Host</h2>
+        <div class="layout mb+">
+            <div class="layout__item large-and-up-1/3 medium-1/2 text-center mb pb-">
+
+                <svg role="img" class="icon icon--38x35 mb">
+                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-megaphone2"></use>
+                </svg>
+                <h3 class="h6 type-semibold mb-">Marketing Tips</h3>
+                <a href="http://host-marketing-tips.grubclub.com/" target="_blank" class="text-underline">http://host-marketing-tips.grubclub.com/ </a>
+                <p>Top tips on giving you the best chance to reach your target audience and improve your chances of getting bookings</p>
+</div>
+            <div class="layout__item large-and-up-1/3 medium-1/2 text-center mb pb-">
+
+                <svg role="img" class="icon icon--29x34 mb">
+                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-note"></use>
+                </svg>
+                <h3 class="h6 type-semibold mb-">Admin Tips</h3>
+                <a href="http://admin-tips.grubclub.com/" target="_blank" class="text-underline">http://admin-tips.grubclub.com/ </a>
+                <p>This page will help you understand the Grub Club portal so you can make the most of the features and support </p>
+</div>
+            <div class="layout__item large-and-up-1/3 medium-1/2 text-center mb pb-">
+
+                <svg role="img" class="icon icon--38x35 mb">
+                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-megaphone2"></use>
+                </svg>
+                <h3 class="h6 type-semibold mb-">Hosting Tips </h3>
+                <a href="http://grub-club-hosting-tips.grubclub.com/" target="_blank" class="text-underline">http://grub-club-hosting-tips.grubclub.com/ </a>
+                <p>You need to portray yourself Online to get bookings, but Hosting the actual event is where the magic happens. Useful tips here</p>
+</div>
+            <div class="layout__item large-and-up-1/3 medium-1/2 text-center mb pb-">
+
+                <svg role="img" class="icon icon--38x35 mb">
+                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-megaphone2"></use>
+                </svg>
+                <h3 class="h6 type-semibold mb-">Photography Tips </h3>
+                <a href="http://grubclub.com/blog/food-photography-with-instagram/" target="_blank" class="text-underline">http://grubclub.com/blog/food-photography-with-instagram/ </a>
+                <p>People DO judge a book by its cover… Here are some helpful and easy tips on taking great food photography from your phone, to portray your events in the best light </p>
+</div>
+            <div class="layout__item large-and-up-1/3 medium-1/2 text-center mb pb-">
+
+                <svg role="img" class="icon icon--38x35 mb">
+                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-megaphone2"></use>
+                </svg>
+                <h3 class="h6 type-semibold mb-">Getting Reviews </h3>
+                <a href="http://grubclub.com/blog/rosies-secret-sauce/" target="_blank" class="text-underline">http://grubclub.com/blog/rosies-secret-sauce/ </a>
+                <p>One of our highest rated hosts shares her tips on ways to engage with your diners, which helps drive consistently good reviews  to build your profile</p>
+</div>
+            <div class="layout__item large-and-up-1/3 medium-1/2 text-center mb pb-">
+
+                <svg role="img" class="icon icon--38x35 mb">
+                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-megaphone2"></use>
+                </svg>
+                <h3 class="h6 type-semibold mb-">Shared Access to Resources </h3>
+                <a href="http://grubclub.economyofhours.com/" target="_blank" class="text-underline">http://grubclub.economyofhours.com/ </a>
+                <p>Echo is a new skill and resource sharing network for Grub Club members. Echo provides a way for you to share skills and resources, saving money and making new connections in the process.</p>
+</div>
+        </div>
+    </div>
+    
+}
+
+    <!-- this variable is for footer top img -->
+   
+
+
+
+
+
+
+
+

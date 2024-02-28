@@ -1,0 +1,185 @@
+﻿@model SupperClub.Domain.Tag
+
+@{
+    ViewBag.Title = "Edit Tag";
+}
+@section PageSpecificScripts {
+     <script type="text/javascript">
+         $(document).ready(function () {
+             $("#EditTagForm").submit(function () {
+                $("#EditTagForm").validate();                 
+             });
+             $("#TagsDL").change(function () {
+                 var selectedTag = parseInt($("#TagsDL option:selected").val());
+                 $("#Id").val(selectedTag);
+                 if (selectedTag > 0) {
+                     $.ajax({
+                         url: '@Url.Action("GetTag", "Admin")',
+                         type: "GET",
+                         data: {tagId: selectedTag},
+                         success: function (_tag) {
+                             $("#Name").val(_tag.Name);
+                             $("#UrlFriendlyName").val(_tag.UrlFriendlyName);
+                             $("#MetaTitle").val(_tag.MetaTitle);
+                             $("#MetaDescription").val(_tag.MetaDescription);
+                             $("#H2Tag").val(_tag.H2Tag);
+                             $("#TagDescription").val(_tag.TagDescription);
+                             $("#Private").val(_tag.Private);
+                             $("#TargetUser").val(_tag.TargetUser);
+                             if (_tag.Private == true)
+                                 $("#rdPrivate").attr('checked', true);
+                             else
+                                 $("#rdPublic").attr('checked', true);
+                             if (_tag.TargetUser == 1)
+                                 $("#rdAdmin").attr('checked', true);
+                             else
+                                 $("#rdHost").attr('checked', true);
+                             
+                         },
+                         error: function () {
+                             alert("Failed to get tag details.");
+                         }
+                     });
+                 }
+             });
+
+             $("input[type='radio'][name='TagType']").change(function () {
+                 debugger;
+                 if ($(this).val() == "0")
+
+                     $("#MainContainer").show();
+                 else
+                     window.location = '@Url.Action("EditProfileTag", "Admin")';
+
+             });
+
+             $("input[type='radio'][name='TagUser']").change(function () {
+
+
+                 $("#TargetUser").val($(this).val())
+
+
+             });
+
+             $("input[type='radio'][name='TagPrivate']").change(function () {
+                 if ($(this).val() == 1) {
+                     $("#Private").attr('checked', true);
+                     $("#Private").val(true);
+
+                 }
+                 else {
+                     $("#Private").removeAttr('checked');
+                     $("#Private").val(false);
+                 }
+
+                
+                
+             });
+
+
+             });
+    
+         
+         </script>
+}
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+<div id="divTagType">
+
+<input type="radio" name="TagType" value="0">Event
+
+<input type="radio" name="TagType" value="1">Profile
+
+</div>
+
+
+<div class="container" id="MainContainer" style="display:block;">
+    <div class="sixteen columns">
+        <h4 class="headline">Edit your tag here</h4>
+        @using (Html.BeginForm("EditTag", "Admin", FormMethod.Post, new { id = "EditTagForm", enctype = "multipart/form-data" }))
+        {
+            <div class="field">
+                @Html.DropDownList("TagsDL", (SelectList)ViewBag.Tags, "- Select Tag -", new { @class = "custom_select" })
+            </div>
+            @Html.HiddenFor(m => m.Id)
+            <div class="field">
+                <label>Tag name</label>
+                @Html.ValidationMessageFor(m => m.Name)
+                @Html.EditorFor(m => m.Name)
+            </div>
+            <div class="field">
+                <label>SEO name</label>
+                @Html.ValidationMessageFor(m => m.UrlFriendlyName)
+                @Html.EditorFor(m => m.UrlFriendlyName)
+            </div>
+            <div class="field">
+                <label>Meta Title</label>
+                @Html.ValidationMessageFor(m => m.MetaTitle)
+                @Html.EditorFor(m => m.MetaTitle)
+            </div>
+            <div class="field">
+                <label>Meta Description</label>
+                @Html.ValidationMessageFor(m => m.MetaDescription)
+                @Html.EditorFor(m => m.MetaDescription)
+            </div>
+            <div class="field">
+                <label>Search Page Title</label>
+                @Html.ValidationMessageFor(m => m.H2Tag)
+                @Html.EditorFor(m => m.H2Tag)
+            </div>
+            <div class="field">
+                <label>Tag description</label>
+                @Html.ValidationMessageFor(m => m.TagDescription)
+                @Html.EditorFor(m => m.TagDescription)
+            </div>
+            <div class="field">
+                <label>Tag Visibility</label>
+                @Html.ValidationMessageFor(m => m.Private)
+               <div style="display:none;">
+                   @Html.EditorFor(m => m.Private)
+               </div>
+               
+              <input type="radio"id="rdPrivate" name="TagPrivate" value="1" >
+              <label for="rdPrivate">Private</label>
+
+              <input type="radio" name="TagPrivate" id="rdPublic" value="0">
+              <label for="rdPublic">Public</label>
+               
+                                                               
+
+
+            </div>
+              <div class="field">
+                <label>Target User<label>
+                @Html.ValidationMessageFor(m => m.TargetUser)
+                @Html.HiddenFor(m => m.TargetUser)
+                  
+                  
+                     <input type="radio" id="rdAdmin" name="TagUser" value="1" >
+                     <label for="rdAdmin">Admin</label>
+
+                      <input type="radio" id="rdHost" name="TagUser" value="2">
+                      <label for="rdHost">Host</label>
+                    
+
+
+
+                  
+
+            </div>
+            <input type="submit" value="Update Tag" class="button small green" />
+        }
+    </div>
+</div>

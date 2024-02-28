@@ -1,0 +1,104 @@
+﻿@model SupperClub.Models.ContactUsModel
+@{
+    ViewBag.Title = "Want to Learn More about Pop Up Restaurants?|Contact Grub Club";
+    ViewBag.Description = "Get in touch with Grub Club, we would love to hear from you.";
+}
+
+    @*<div class="container mb+">
+        <ul class="breadcrumbs list-inline list-inline--delimited pt-- mb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Chefs </a></li>
+            <li><a href="#">User Profile </a></li>
+            <li class="current"><a href="#">Adam Walden</a></li>
+        </ul>
+
+    </div>*@
+
+    @if (ViewBag.Notification != null)
+    {
+        @Html.Partial("_Notification", (SupperClub.Models.NotificationModel)ViewBag.Notification);
+    }
+    <div class="container">
+        
+        <h1 class="type-light mb">Information</h1>
+        <div class="layout">
+          @Html.Partial("_LeftNavigation")
+
+            <div class="layout__item large-and-up-3/4 medium-1/2">
+                <h2 class="h3 mb pb-">Contact Us</h2>
+@using (Html.BeginForm())
+{
+                <div class="layout">
+                    <div class="layout__item large-and-up-1/2">
+                        <form action="" class="mb+">
+                            @*<input type="text" class="input--primary input--large input--full color-gray-7 type-semibold type-default mb- pl pr" placeholder="Full Name">*@
+                            @Html.ValidationMessageFor(m => m.Name)
+                            @Html.TextBoxFor(m => m.Name, new { @class = "input--primary input--large input--full color-gray-7 type-semibold type-default mb- pl pr", placeholder = "Full Name" })
+                           <!-- <div class="select select--medium select--full inline-block mb-">
+                                <select class="select__item color-gray-7 type-semibold type-default pl">
+                                    <option value="">Select tickets</option>
+                                    <option value="">1 Ticket</option>
+                                    <option value="">2 Tickets</option>
+                                    <option value="">3 Tickets</option>
+                                    <option value="">4 Tickets</option>
+                                    <option value="">5 Tickets</option>
+                                </select>
+                                <div class="select__icon">
+                                    <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+                                  
+                                </div>
+                            </div>-->
+                            @Html.ValidationMessageFor(m => m.Email)
+                            @Html.TextBoxFor(m => m.Email, new {@class = "input--primary input--large input--full color-gray-7 type-semibold type-default mb- pl pr", placeholder = "Email Address", type="email"})
+                            @*<input type="email" class="input--primary input--large input--full color-gray-7 type-semibold type-default mb- pl pr" placeholder="Email Address">*@
+                            @*<textarea class="input--primary input--textarea input--full pl pr mb-" placeholder="Your Message"></textarea>*@
+
+                            @Html.ValidationMessageFor(m => m.Message)
+                            @Html.TextAreaFor(m => m.Message, new { @class = "input--primary input--textarea input--full pl pr mb-", placeholder = "Your Message" })
+                            
+                            <span style="margin-left:70px;">    <button class="btn btn--primary btn--large float-center">Send</button></span>
+                            
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                    <div class="layout__item large-and-up-1/2">
+                        <h3 class="type-large type-semibold">Social Media</h3>
+                        <div class="footer-main__social mb">
+                            <span class="inline-block mr--">
+                                <a  target="_blank" href="http://www.twitter.com/Grub_Club" class="icon-wrap text-center bgr-twitter">
+                                    <svg role="img" class="icon color-white icon--16x13">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-twitter"></use>
+                                    </svg>
+                                </a>
+                            </span>
+                            <span class="inline-block mr--">
+                                <a target="_blank"  href="http://www.facebook.com/GrubClub1" class="icon-wrap text-center bgr-facebook">
+                                    <svg role="img" class="icon color-white icon--9x17">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-facebook"></use>
+                                    </svg>
+                                </a>
+                            </span>
+                            <span class="inline-block mr--">
+                                <a target="_blank" href="http://instagram.com/grub_club/" class="icon-wrap text-center bgr-instagram">
+                                    <svg role="img" class="icon color-white icon--15x15">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-instagram"></use>
+                                    </svg>
+                                </a>
+                            </span>
+                  
+                        </div>
+                        <ul class="list-bare">
+                            @*<li>T: Call Liv on: (44) 781 311 7125</li>*@
+                            <li>E: eat@grubclub.com</li>
+                            <li>A: Camden Collective, <br />110 Hampstead Road,<br/>London, NW1 2LS</li>
+                           <li> Opening Hours: we check emails<br/> Monday - Friday, 9.30 - 17.30</li>
+                        </ul>
+                    </div>
+                </div>
+}
+
+            </div>
+
+        </div>
+
+    </div>

@@ -1,0 +1,377 @@
+﻿@model SupperClub.Models.ChooseTicketsModel
+@{
+    ViewBag.Title = "Choose Tickets";
+}
+@section PageSpecificScripts {
+    <script src="@Url.Content("~/Scripts/old/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/old/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#BookingModel_numberOfTickets').change(function() { 
+                updateTotal();           
+            });
+
+            // Force change in case of refresh
+            $('#BookingModel_numberOfTickets').change();
+
+            // Set selected seatingTime 
+            $("input[name='seatingTime']").change(function () {                
+                var selectedVal= $("input[type='radio'][name='seatingTime']:checked").val();
+                if(selectedVal >=0)
+                    $('#BookingModel_seatingId').val(selectedVal);
+                if($(".bmmNumSelect").length == 0)
+                    updateTotal();
+                else
+                    updateMenuTickets(); 
+            });
+
+            // Get ticket count for each menu option and update it in booking model
+            $(".bmmNumSelect").change(function() {  
+                var toggleEnabled = "@Model.BookingModel.ToggleMenuSelection";
+                var minMaxEnabled = "@Model.BookingModel.MinMaxBookingEnabled";
+                if(toggleEnabled.toUpperCase() =="TRUE" && minMaxEnabled.toUpperCase() =="TRUE")
+                {
+                    var myClass = $(this).attr("name");   
+                    var index = $(this).prop("selectedIndex");                             
+                    $("select").each(function() { this.selectedIndex = 0 });
+                    $(this).prop("selectedIndex", index);
+                }
+                updateMenuTickets();          
+            });
+
+            function updateTotal() {
+                var selectedNumberOfTickets = $('#BookingModel_numberOfTickets option:selected').text();
+                var costPerTicket = @Model.BookingModel.totalTicketCost;
+                var currency = "@Model.BookingModel.currency";
+                var seatId = @Model.BookingModel.seatingId;
+                var str = "";
+                if($("input[name='seatingTime']").length > 0)
+                {
+                    var selectedVal = $("input[type='radio'][name='seatingTime']:checked").val();
+                    if(selectedVal >= 0)
+                        seatId = selectedVal;
+                }
+                
+                    $.getJSON('@Url.Action("UpdateTickets", "Booking")', { numberTicketsRequested: selectedNumberOfTickets, seatingId : seatId, strBmm : str}, function (updateTickets) {
+                        if (updateTickets.Success == false) {
+                            $( "#reviewTickets" ).prop( "disabled", true );
+                            // Session Timed out or no basket found (no cookie)
+                            if(updateTickets.NumberTicketsAllocated == 0) {
+                                window.location = '@Url.Action("SessionExpired", "Booking")';
+                                return;
+                            }
+                            if(updateTickets.NumberTicketsAvailable == 0)
+                            {
+                                // Sold out
+                                if(seatId > 0)
+                                    alert("Sorry but we were not able to allocate the number of tickets you wanted for this seating. You can try to book a different seating!");
+                                else
+                                    alert("Sorry but we were not able to allocate the number of tickets you wanted. They've been snapped up!");
+                                    
+                                return;
+                            }
+                            else if(updateTickets.NumberTicketsAvailable < selectedNumberOfTickets)
+                            {
+                                if(seatId > 0)
+                                    alert("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets available for this seating. You can try to book a different seating or reduce total seats!");
+                                else
+                                    alert("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets left for this event!");
+                                    
+                                return;
+                            }
+                            // Set the selected value back to its previous value
+                            $('#BookingModel_numberOfTickets').val(updateTickets.NumberTicketsAllocated);
+                            // Update the dropdownlist length if required
+                            var options = $('#BookingModel_numberOfTickets > option').length;
+                            if(options > updateTickets.NumberTicketsAvailable) {
+                                var optionsToRemove = (updateTickets.NumberTicketsAvailable - 1); // -1 for index
+                                $('#BookingModel_numberOfTickets').find('option:gt(' + optionsToRemove + ')').remove(); // :gt uses index, remove options with index greater than x
+                            }                        
+                        }
+                        else
+                        {
+                            $( "#reviewTickets" ).prop( "disabled", false );
+                        }
+                    // Update the cost. TODO: Currency symbol conversion
+                    var numberOfTickets = $('#BookingModel_numberOfTickets option:selected').text();
+                    if (Number(numberOfTickets)) {
+                        var totalDue = numberOfTickets * costPerTicket;
+                        $("#totalDue").html("£" + totalDue.toFixed(2));
+                    }                    
+                });            
+            }          
+
+            function updateMenuTickets() {  
+                    var seatId = @Model.BookingModel.seatingId;
+                    if($("input[name='seatingTime']").length > 0)
+                    {
+                        var selectedVal = $("input[type='radio'][name='seatingTime']:checked").val();
+                        if(selectedVal >= 0)
+                            seatId = selectedVal;
+                    }           
+                    var totalAmt = 0;
+                    var numOfTickets = 0;
+                    var num_tr = $('#menuSel tr').length-1;
+                    var t = document.getElementById('menuSel');                  
+                    var rate = 0;
+                    rate = 0*1.0;
+                    var qty = 0;
+                    var amount = 0;
+                    var myStr = "";
+                                       
+                    for(var i = 1; i < num_tr;i++) {                                                      
+                            var rate1 = $(t.rows[i].cells[4]).closest('tr').find('.bmmTicketCost').text();
+                            
+                            var menuId = parseInt($.trim($(t.rows[i].cells[4]).closest('tr').find('.bmmId').text()));
+                                                        
+                            rate1= rate1.toString().replace("£","");
+                            rate=parseFloat(rate1);
+                            qty = parseInt($(t.rows[i].cells[0]).closest('tr').find('select').val());
+                           
+                            amount = qty * rate;
+                            
+                            //alert(menuId + "," + qty + "," + rate + "," +amount);
+                            
+                            $(t.rows[i].cells[3]).html("£" + amount.toFixed(2)); // output the values
+                            totalAmt += amount;
+                            numOfTickets += qty;
+                            if(myStr.length > 0)
+                                myStr += ",";                                
+                            myStr += menuId + "|"+ qty;
+                         }
+                    $('#bmmTotalDue').html("£" + totalAmt.toFixed(2));  
+                //var obj = JSON.stringify(myObj);  
+                    if(numOfTickets > 0)
+                    {
+                        $.getJSON('@Url.Action("UpdateTickets", "Booking")', { numberTicketsRequested: numOfTickets, seatingId : seatId, strBmm : myStr }, function (updateTickets) {
+                            if (updateTickets.Success == false) 
+                            {
+                                $( "#reviewTickets" ).prop( "disabled", true );
+                                if(updateTickets.NumberTicketsAvailable == 0)
+                                {
+                                    // Sold out
+                                    if(seatId > 0)
+                                        alert("Sorry but we were not able to allocate the number of tickets you wanted for this seating. You can try to book a different seating!");
+                                    else
+                                        alert("Sorry but we were not able to allocate the number of tickets you wanted. They've been snapped up!");
+                                    
+                                    return;
+                                }
+                                else if(updateTickets.NumberTicketsAvailable < numOfTickets)
+                                {
+                                    if(seatId > 0)
+                                        alert("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets available for this seating. You can try to book a different seating or reduce total seats!");
+                                    else
+                                        alert("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets left for this event!");
+                                    
+                                    return;
+                                }
+
+                                // Session Timed out or no basket found (no cookie)
+                                if(updateTickets.NumberTicketsAllocated == 0) {
+                                    window.location = '@Url.Action("SessionExpired", "Booking")';
+                                    return;
+                                }
+                        
+                                $("input[class='bmmNumSelect']").each(function() {
+                                    // Update the dropdownlist length if required
+                                    var options = $(this).children('option').length;
+                                    if(options > updateTickets.NumberTicketsAvailable) 
+                                    {
+                                        var optionsToRemove = (updateTickets.NumberTicketsAvailable - 1); // -1 for index
+                                        $(this).find('option:gt(' + optionsToRemove + ')').remove(); // :gt uses index, remove options with index greater than x
+                                    }
+                                });
+                            }    
+                            else{
+                                
+                                $( "#reviewTickets" ).prop( "disabled", false );
+                            }
+                        });  
+                    }
+                    else
+                    {
+                        alert("Sorry but total number of tickets can not be zero!");                          
+                    }
+            }
+                        
+            $("#chooseTicketForm").submit(function() { 
+                return checkSeating();                
+                 });
+            
+            function checkSeating() {            
+                    var seatId = @Model.BookingModel.seatingId;
+                    var numOfTickets = @Model.BookingModel.numberOfTickets;
+                if($("input[name='seatingTime']").length > 0)
+                {
+                    seatId = $("input[type='radio'][name='seatingTime']:checked").val();
+                    if(seatId <= 0)
+                    {
+                        $( "#reviewTickets" ).prop( "disabled", true );
+                        alert("Please choose a seating before continuing!"); 
+                        return false;
+                    }
+                    if(numOfTickets <= 0)
+                    {
+                        $( "#reviewTickets" ).prop( "disabled", true );
+                        alert("You have not selected any tickets! Please add tickets and proceed.");  
+                        return false;
+                    }                        
+                }   
+                else
+                {
+                    $( "#reviewTickets" ).prop( "disabled", false );
+                    return true;
+                }
+                }
+        });
+    </script>
+}
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <!-- 960 Container Start -->
+    <div class="container">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "chooseTicketForm" }))
+        {
+            <div class="sixteen columns">
+                <ul id="breadcrumbs">
+                    <li class="active" style="color: #F60">Tickets <span>-</span></li>
+                    <li>Review <span>-</span></li>
+                    <li>Payment</li>
+                </ul>
+
+                <!-- TODO: Short Event Summary -->
+                
+                @if (Model.BookingModel.bookingSeatingModel != null && Model.BookingModel.bookingSeatingModel.Count > 0)
+                {
+                    <br />
+                    <div class="container sub-title2">
+                    <h2>1. Which Seating would you like?</h2>
+                    </div>
+                    @Html.HiddenFor(x => x.BookingModel.seatingId)
+                    foreach (SupperClub.Models.BookingSeatingModel bsm in Model.BookingModel.bookingSeatingModel.OrderBy(x => x.start))
+                    {                        
+                            <input type="radio" name="seatingTime" id="@bsm.seatingId" value="@bsm.seatingId" style="display:inline;"><label for="@bsm.seatingId" style="display:inline;font-size:16px;">@bsm.start.ToShortTimeString()    </label></input>                                
+                    } 
+                     <input type="radio" name="seatingTime" id="none" value="-1" style="display:none;" checked="checked"><label for="none" style="display:none;font-size:16px;">None    </label></input>                                
+                    
+                    <div class="container sub-title2">
+                        <h2>2. How many seats do you want?</h2>
+                    </div>                   
+                }
+                else
+                
+                {
+                    <div class="container sub-title2">
+                        <h2>How many seats do you want?</h2>
+                    </div>
+                }
+
+                @if (Model.BookingModel.bookingMenuModel == null || Model.BookingModel.bookingMenuModel.Count == 0)
+                {           
+                              
+                    <table class="standard-table">
+				        <tbody>
+                            <tr>
+                                <th>Event</th>
+					            <th>Number of Tickets</th>
+					            <th>Cost per Ticket</th>
+					            <th>Total</th>
+				            </tr>
+
+				            <tr>
+					            <td>
+                                    Event: @Model.BookingModel.EventName
+                                    <br />
+                                    Date and Time: @Model.BookingModel.EventDateAndTime
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(x => x.BookingModel.numberOfTickets, Model.NumberTicketsList, new { @class = "custom_select", style = "margin-bottom: 0px;" })
+                                </td>
+					            <td id="ticketCost">@Html.DisplayFor(x => x.BookingModel.totalTicketCost)</td>
+					            <td id="totalDue">@Html.DisplayFor(x => x.BookingModel.totalDue)</td>
+				            </tr>
+			            </tbody>
+                    </table>
+                }
+                else
+                {
+                    <span>Event: @Model.BookingModel.EventName</span>
+                    <br />
+                    <span>Date and Time: @Model.BookingModel.EventDateAndTime</span>                    
+                    <br /><br />                    
+                    <table class="standard-table" id="menuSel">
+				        <tbody>
+                            <tr>
+                                <th>Menu Option</th>
+					            <th>Number of Tickets</th>
+                                <th>Cost per Ticket</th>                                
+					            <th>Total</th>
+                                <th></th>
+				            </tr>
+                            @for (int i = 0; i < Model.BookingModel.bookingMenuModel.Count; i++)
+                            {
+                                
+				                <tr class="menuCountSlect">
+					                <td class="bmmMenuTitle">
+                                        @Html.DisplayFor(x => x.BookingModel.bookingMenuModel[i].menuTitle)
+                                    </td>                                    
+                                    <td>
+                                      <select class="bmmNumSelect" name="@i" style="margin-bottom:0px;width:120px;">
+                                         @for (int j = 0; j < Model.NumberTicketsList.Count; j++)
+                                         {
+                                             if (int.Parse(Model.NumberTicketsList[j].Value) == Model.BookingModel.bookingMenuModel[i].numberOfTickets)
+                                             {
+                                                <option value="@Model.NumberTicketsList[@j].Value" selected="selected">@Model.NumberTicketsList[@j].Value</option>
+                                             }
+                                             else
+                                             {
+                                                 <option value="@Model.NumberTicketsList[@j].Value">@Model.NumberTicketsList[@j].Value</option>
+                                             }
+                                         }                                            
+                                      </select>
+                                    </td>
+					                <td class="bmmTicketCost">£@SupperClub.Domain.CostCalculator.CostToGuest(Model.BookingModel.bookingMenuModel[i].baseTicketCost)</td>
+					                <td class="bmmCost">£@SupperClub.Domain.CostCalculator.CostToGuest(Model.BookingModel.bookingMenuModel[i].baseTicketCost * Model.BookingModel.bookingMenuModel[i].numberOfTickets)</td>
+                                    <td class="bmmId" style="display:none;">@Html.DisplayFor(x => x.BookingModel.bookingMenuModel[i].menuOptionId)</td>
+				                </tr>                                
+                            }
+                            <tr>
+                            <td colspan="3">Total</td>
+                            <td colspan="2" id="bmmTotalDue">@Html.DisplayFor(x => x.BookingModel.totalDue)</td>
+                            </tr>
+			            </tbody>
+                    </table>
+                }
+                @Html.HiddenFor(x => x.BookingModel.eventId)
+                @Html.HiddenFor(x => x.BookingModel.currency)
+                <br />
+                <div class="field">
+                    <label>Special requirements (Mention specific diet needs and allergies here)</label>
+                    @Html.ValidationMessageFor(x => x.BookingModel.bookingRequirements)
+                    @Html.TextAreaFor(x => x.BookingModel.bookingRequirements)
+                </div>
+            </div>
+        
+            <div class="sixteen columns">
+                <a href="@Url.Action("CancelBooking", "Booking", new { eventId = Model.BookingModel.eventId })" class="button medium red" style="">
+                    <i class="icon-remove icon-white"></i>Cancel Booking</a>
+                <input type="submit" value="Confirm Tickets" class="button medium green" style="float: right" id="reviewTickets" />
+            </div>
+        }
+    </div>
+    <!-- 960 Container End -->
+}

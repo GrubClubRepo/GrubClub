@@ -1,0 +1,15 @@
+﻿@model SupperClub.Domain.PressRelease
+<article class='mb'>
+    <div class="flag flag--responsive">
+        <a href="@Model.Url">
+            <div class="flag__img">
+                <img src="@Url.Content(SupperClub.Code.ServerMethods.PressReleaseImagePath + Model.LogoImageUrl)" alt="Grubclub" style="height:60px;width:150px;"/>
+            </div>
+        </a>
+            
+            <div class="flag__body">
+                @*<h2 class="type-bold h4"><span class="order-number mr-- bgr-orange">2</span> Book it</h2>*@
+                <p class="type-large text-justifize">"@Model.Content"</p>
+            </div>
+        </div>
+</article>

@@ -1,0 +1,215 @@
+﻿@{
+    ViewBag.Title = "Give your foodie friend a perfect gift";
+    ViewBag.Description = "Buy a gift voucher from Grub Club and spread Grub Love";
+}
+
+
+
+   
+    <script type="text/javascript">
+        
+    $(document).ready(function () {
+
+        function validateEmail($email) {
+            var emailReg = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            return emailReg.test($email);
+        }
+
+        $('#modalBtn').click(function () {
+
+            var voucherVal = parseFloat($('#VoucherValue').val());
+            if (isNaN(voucherVal) || voucherVal <= 0)
+                alert("Please enter a valid voucher value!");
+            else {
+                //if ($('#giftvoucherform').valid()) {
+                var name = $('#yourName').val();
+                var email = $('#yourEmail').val();
+                var voucher = $('#VoucherValue').val();
+
+                window.location.href = "@Url.Action("BuyGiftVoucher", "home")" + "?name=" + name + "&email=" + email + "&voucher=" + voucher;
+            }
+            //  }
+            //  else {
+            //    alert('Vaoucher value must be greater than 0.');
+            //  }
+            //}
+        });
+
+        //// ($('#checkVoucherRecipient').attr('checked'))(function ()
+        // //  {
+        // debugger;
+        //     if($('#checkVoucherRecipient').attr('checked'))
+        //     {
+
+
+        //     ('#tblRecipient').show(); }
+        // else
+        //     {
+        //         ('#tblRecipient').hide();
+        //     }
+
+
+
+        //  }); #703928
+
+
+
+
+
+        // validation initiation for form
+        $("#VoucherValue").keydown(function (event) {
+            // Allow only backspace and delete
+            if (event.keyCode == 46 || event.keyCode == 8) {
+                // let it happen, don't do anything
+            }
+            else {
+                // Ensure that it is a number and stop the keypress
+                if (event.keyCode < 48 || event.keyCode > 57) {
+                    event.preventDefault();
+                }
+            }
+        });
+        $('#yourName').keypress(function (e) {
+            var regex = new RegExp("^[a-zA-Z]+$");
+            var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+            if (regex.test(str)) {
+                return true;
+            }
+
+            e.preventDefault();
+            return false;
+        });
+        $("#btnLoginBookNow").click(function (e) {
+            e.preventDefault();
+            debugger;
+            
+            var name = $('#yourName').val();
+            var email = $('#yourEmail').val();
+            var voucher = $('#VoucherValue').val();
+            if (!validateEmail(email)) {
+                alert("Please enter a valid e-mail address!");
+                return false;
+            }
+            //debugger;
+            var tem = "@Url.Action("buygiftvoucher", "home")";
+            var _url = encodeURIComponent(tem + "?name=" + name + "&email=" + email + "&voucher=" + voucher);
+            $("#RedirectURL").val(_url);
+            $('#login-dialog').load("@Url.Action("loginRegister", "account", new {})" + "?returnUrl=" + _url);
+            $($(this).attr("href")).show();
+        });
+        
+    });
+
+
+
+
+    </script>
+
+<div align="center" style="margin: 10px 10px 10px 10px;height:550px; width:97%;background-size:cover; background-repeat: no-repeat;background-image:url(@Url.Content("~/Content/images/gift-voucher-page.jpg"));  ">
+
+    <div class="container">
+        <div class="layout">
+            <div class="layout__item large-and-up medium-1/2">
+                <form role="form" class="form-horizontal" id="giftvoucherform">
+
+                    <table class="center-block mb mt+">
+                        <tr>
+                            <td colspan="2" align="center">
+                                <h2 style="color:white !important;">   "You know this is going to make you really popular right?" </h2>
+                                <h3 style="color:white !important; font-size:20px !important;"> Once you buy the voucher we'll email it to you so that you can pass on the Grub Love </h3>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="color:white !important; padding-top:20px;">
+                        <tr style="text-align:center;" class="mb">
+                            @*<td style="vertical-align:top; width:150px;">
+                                    <label for="VoucherValue" style="position:relative;"> Value of Voucher</label>
+                                </td>*@
+                            <td>
+                                <span class="mb-" style="padding-left:-10px;">£</span>
+                                <input type="number" class="form-control required input--primary input--large input--full color-gray-7 type-semibold type-default mb- pl pr" name="VoucherValue" id="VoucherValue" placeholder="How much would you like to give? e.g. 50">
+                            </td>
+                        </tr>
+                        <tr style="text-align:center;" class="mb">
+                            <td>
+                                <input type="text" class="form-control required input--primary input--large input--full color-gray-7 type-semibold type-default mb- pl pr" name="yourName" id="yourName" placeholder="Tell us your friend's name">
+
+                            </td>
+                        </tr>
+                        <tr style="text-align:center;" class="mb">
+                            @*<td style="vertical-align:top;">
+                                    <label for="yourEmail" style="position:relative;">Your Email</label>
+                                </td>*@
+                            <td style="vertical-align:middle">
+
+                                <input type="text" class="form-control required input--primary input--large input--full color-gray-7 type-semibold type-default mb- pl pr" name="yourEmail" id="yourEmail" placeholder="What's your friend's email?">
+
+                            </td>
+                        </tr>
+
+                        @*<tr>
+                                <td colspan="2">
+                                    <input type="checkbox" class="form-control" name="checkVoucherRecipient" id="checkVoucherRecipient" >
+                                Select this option to send voucher to the recipient on a specified  date
+
+
+                                    <table style="margin-left:30px;margin-top:10px;" id="tblRecipient">
+                                        <tr>
+                                            <td style="margin-top=-10px;">
+
+                                                <label for="recipientName">Recipient Name</label>
+                                            </td>
+
+                                            <td>
+                                                <input type="text" class="form-control required" name="recipientName" id="recipientName" placeholder="Recipient Name">
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="margin-top=-10px;">
+
+                                                <label for="recipientEmail">Email id of Recipient</label>
+                                            </td>
+
+                                            <td>
+                                                <input type="text" class="form-control required" name="recipientEmail" id="recipientEmail" placeholder="Recipient Email">
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="margin-top=-10px;">
+
+                                                <label for="emailDate">Email Sending Date</label>
+                                            </td>
+
+                                            <td>
+                                                <input type="date" class="form-control required" name="emailDate" id="emailDate" placeholder="When to send it">
+
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </td>
+                            </tr>*@
+                        <tr style="height: 45px; vertical-align:bottom;">
+                            @*<td>&nbsp;</td>*@
+
+                            <td align="center">
+                                @if (SupperClub.Code.UserMethods.IsLoggedIn)
+                                {
+                                    <button type="button" class="btn btn--primary btn--huge float-center" id="modalBtn">Buy Now</button>
+                                }
+                                else
+                                {
+                                    <a id="btnLoginBookNow" href="#login-dialog" class="btn btn--primary btn--huge mb- open-popup">Book Now</a>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+            </div>
+            </form>
+
+        </div>
+    </div>
+</div>

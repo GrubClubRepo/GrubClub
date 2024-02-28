@@ -1,0 +1,16 @@
+﻿@model SupperClub.Models.UserRankingModel
+@if (Model.UserRanking == null)
+{
+    <a href="#" onclick="RankAttendee(@Model.EventId, '@Model.UserId', 1);" class="button small white positive"><i class="icon-thumbs-up"></i>+1</a>
+    <a href="#" onclick="RankAttendee(@Model.EventId, '@Model.UserId', -1);" class="button small white negative"><i class="icon-thumbs-down"></i>-1</a>
+}
+else if (Model.UserRanking == 1)
+{
+    <a href="#" onclick="RankAttendee(@Model.EventId, '@Model.UserId', 1);" class="button small green positive"><i class="icon-thumbs-up icon-white"></i>+1</a>
+    <a href="#" onclick="RankAttendee(@Model.EventId, '@Model.UserId', -1);" class="button small white negative"><i class="icon-thumbs-down"></i>-1</a>
+}
+else if (Model.UserRanking == -1)
+{
+    <a href="#" onclick="RankAttendee(@Model.EventId, '@Model.UserId', 1);" class="button small white positive"><i class="icon-thumbs-up"></i>+1</a>
+    <a href="#" onclick="RankAttendee(@Model.EventId, '@Model.UserId', -1);" class="button small red negative"><i class="icon-thumbs-down icon-white"></i>-1</a>    
+}

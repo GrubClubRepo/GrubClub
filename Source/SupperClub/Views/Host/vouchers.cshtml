@@ -1,0 +1,218 @@
+﻿@model SupperClub.Domain.Voucher
+@{
+    ViewBag.Title = "Create Voucher";
+}
+@section PageSpecificScripts {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/bootstrap.min.css")" />
+    <script src="@Url.Content("~/Scripts/home/bootstrap.min.js")" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/vouchers.css")" />
+    <script src="@Url.Content("~/Scripts/jquery.multiselect.min.js")" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/jquery.multiselect.css")" />
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+}
+<script>
+    $(document).ready(function () {
+        $("#StartDate").datepicker({ 
+            dateFormat: "dd/mm/yy",
+            minDate: new Date(@DateTime.Now.Year, @DateTime.Now.Month - 1, @DateTime.Now.Day)
+        }).datepicker("setDate", new Date());
+        $("#ExpiryDate").datepicker({
+            dateFormat: "dd/mm/yy",
+            minDate: new Date(@DateTime.Now.Year, @DateTime.Now.Month - 1, @DateTime.Now.Day)
+        });
+        $("select").multiselect({
+            close: function (event, ui) {
+                $('#voucherForm').valid();
+            },
+            click: function (event, ui) {                
+                var str = "";
+                $(".selectEvent option:selected").each(function() {
+                    str += $(this).val() + ",";
+                });                
+                $("#EventList").val(str);
+            }
+        });
+        
+        
+        $("#ApplyToAll").on('click', function() { 
+            if($('#ApplyToAll').is(":checked"))
+                $("select").multiselect("disable");
+        });
+
+        // radio conditional messaging
+        $('#type-0').bind('click', function(e){              
+            $("#value-help-block").html("<p>the voucher money off value: enter an a whole number. E.g 30 = a £30 off voucher</p>");          
+        });
+        $('#type-1').bind('click', function(e){
+            $("#value-help-block").html("<p>the voucher % off value: enter an a whole number between 1 & 100. E.g 30 = a 30% discount voucher</p>");          
+        });
+    
+
+        // Adding validation to form.
+        $('#voucherForm').validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3
+                },
+                type: {
+                    required: true
+                },
+                value: {
+                    required: true,
+                    digits: true
+                },
+                multipleEvents: {
+                    required: true
+                }
+            },
+            ignore: ':hidden:not("#multipleEvents")',
+            highlight: function (element) {
+                $(element).closest('.control-group').removeClass('has-success').addClass('has-error');
+            },
+            success: function (element) {
+                $(element).closest('.control-group').removeClass('has-error').addClass('has-success');
+            },
+            errorClass: 'help-block'
+        });
+        //some user feedback before form submit for number only input
+        $('input[type="number"]').keyup(function () {     
+            this.value = this.value.replace(/[^0-9\.]/g,'');
+        });
+        // in case you want to do some other checking or prevent default and server-side check before form submit...
+        var formResult = {
+            Name: $("#name").val(),
+            StartDate: $("#startDate").val(),
+            EndDate: $("#endDate").val(),
+            Value: $("#value").val(),
+            MinOrder: $("#minOrder").val(),
+            Limit: $("#quantity").val(),
+            Events: $("#multipleEvents").val(),
+            MoneyOff: $('#type-0').is(':checked') ? true : null,
+            PercentOff: $('#type-1').is(':checked') ? true : null
+        };
+        $("#voucherForm").submit(function () {
+            $("#TypeId").val($("input:radio[name=voucherType]:checked").val());
+            if($('#ApplyToAll').is(":checked") == false)
+            {
+                if($('#EventList').length == 0 || $('#EventList').val() == "")
+                    return false;
+            }
+        });
+    });
+</script>
+
+<div class="container">
+    <h2 id="voucherhead">Use the following form to create vouchers for guests to use:</h2>
+    <form class="form-horizontal" id="voucherForm">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Voucher Creation Form </legend>
+
+            <div class="col-sm-6">
+                <!-- Text input-->
+                <div class="control-group">
+                    <label class="control-label" for="Description">Voucher description<span style="color: #ff0000">*</span></label>
+                    @Html.ValidationMessageFor(m => m.Description)
+                    <div class="controls">
+                        <p class="help-block">The voucher description, a short description of the voucher for guests and host</p>
+                        @Html.TextBoxFor(m => m.Description, new {@class="input-xlarge", placeholder = "Some name here..." } )  
+                    </div>                   
+                </div>
+                <!-- Text input-->
+                <div class="control-group">
+                    <label class="control-label" for="Code">Voucher code partial<span style="color: #ff0000">*</span></label>
+                    @Html.ValidationMessageFor(m => m.Code)
+                    <div class="controls">
+                        <p class="help-block">N.B we append a 3 letter id code, e.g MARCHPERCENT-<span style="font-style: italic">ad3</span>. We will show you the final code after form submission </p>
+                        @Html.TextBoxFor(m => m.Code, new {@class="input-xlarge", placeholder = "e.g MARCHPERCENT" } )                     
+                    </div>                    
+                </div>
+                <!-- Multiple Radios -->
+                <div class="control-group">
+                    @Html.HiddenFor(m => m.TypeId)
+                    <label class="control-label" for="type">Voucher type<span style="color: #ff0000">*</span></label>
+                    <div class="controls">
+                        <input type="radio" name="voucherType" id="valueOff" value="2" checked="checked"><label for="valueOff" class="radio">£ value off</label></input>                                
+                        <input type="radio" name="voucherType" id="percentOff" value="1"><label for="percentOff" class="radio">% off</label></input>                                
+                        <input type="radio" name="voucherType" id="partialPercentOff" value="4"><label for="partialPercentOff" class="radio">Partial % off on basket</label></input>  
+                        <input type="radio" name="voucherType" id="freeTicket" value="3"><label for="freeTicket" class="radio">Free ticket offer</label></input>                                                                                     
+                    </div>
+                </div>
+
+                <!-- Number input-->
+                <div class="control-group">
+                    <label class="control-label" for="value">Voucher value<span style="color: #ff0000">*</span></label>
+                    @Html.ValidationMessageFor(m => m.OffValue)
+                    <div class="controls">
+                        <p class="help-block" id="helpBlockOffValue">The voucher value, whole number between 1 and 100 off<span style="font-style: italic">ad3</span>. We will show you the final code after form submission </p>
+                        @Html.TextBoxFor(m => m.OffValue, new {@class="input-xlarge", placeholder = "0" } )                     
+                    </div>                     
+                </div>
+                <!-- Number input-->
+                <div class="control-group">
+                    <label class="control-label" for="minOrder">Minimum order value</label>
+                    @Html.ValidationMessageFor(m => m.MinBookingAmount)
+                    <div class="controls">
+                        <p class="help-block">Minimum required expenditure in order for the voucher to qualify.</p>
+                        @Html.TextBoxFor(m => m.MinBookingAmount, new {@class="input-xlarge", placeholder = "0" } )                     
+                    </div>                    
+                </div>
+
+            </div>
+            <div class="col-sm-6">
+                <!-- date input-->
+                <div class="control-group">
+                    <label class="control-label" for="startDate">Start date</label>
+                    @Html.ValidationMessageFor(m => m.StartDate)
+                    <div class="controls">
+                        <p class="help-block">The date from when the voucher is valid</p>
+                        @Html.TextBoxFor(m => m.StartDate, new {@class="input-xlarge", placeholder = "" } )                     
+                    </div>                     
+                </div>
+                <!-- date input-->
+                <div class="control-group">
+                    <label class="control-label" for="endDate">End date</label>
+                    <div class="controls">
+                        <p class="help-block">The date when the voucher expires</p>
+                        @Html.TextBoxFor(m => m.ExpiryDate, new {@class="input-xlarge", placeholder = "" } )                     
+                    </div>                     
+                </div>
+
+                <!-- Select Multiple -->
+                <div class="control-group">
+                    <label class="control-label" for="multipleEvents">Apply to one or more events<span style="color: #ff0000">*</span></label>
+                    @Html.EditorFor(m => m.ApplyToAll)
+                    @Html.LabelFor(m => m.ApplyToAll)
+                    @Html.HiddenFor(m => m.EventList)
+                    @Html.HiddenFor(m => m.SupperClubList)
+                    <div class="controls">
+                        <p class="help-block"> Select at least one event for which the voucher may be used</p>
+                        <select class="selectEvent" multiple="multiple" name="selectEvent">
+                            @foreach (SupperClub.Domain.Event e in ViewBag.Events)
+                            {
+                                <option value="@e.Id">@e.Name @e.Start.ToShortDateString()</option>                           
+                            }
+                        </select>  
+                    </div>
+                </div>
+
+                <!-- Number input-->
+                <div class="control-group">
+                    <label class="control-label" for="quantity">Qty. of uses</label>
+                    <div class="controls">
+                        <input id="quantity" name="quantity" type="number" placeholder="" class="input-xlarge" min="1">
+                        <p class="help-block">Limit this voucher to the specified no. of uses, e.g 10 = can be used by 10 people only</p>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-sm-offset-4"><button type="submit" class="btn btn-lg btn-default">Submit</button></div> <br />
+
+            </div>
+
+            
+        </fieldset>
+        
+    </form>
+</div>

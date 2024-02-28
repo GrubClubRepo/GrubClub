@@ -1,0 +1,278 @@
+﻿@model SupperClub.Models.UserDetailModel
+
+@{
+    ViewBag.Title = "User Details";
+}
+
+@section PageSpecificScripts {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/datepicker/jquery-ui-1.8.23.custom.css")" />
+    
+    <style type="text/css">
+    #dob
+    {
+        placeholder: "dd/mm/yyyy";
+    }
+
+        .field textarea {
+            width: 100%;
+            height: 160px;
+            margin-right: -200px;
+        }
+
+        #BookingModel_bookingRequirements {
+            width: 919px;
+        }
+
+        #Message {
+            width: 615px;
+            margin-bottom: 0px;
+        }
+
+        .field input {
+            width: 240px;
+        }
+
+        .field:focus {
+            border: 1px solid #ddd;
+        }
+
+        .field label span {
+            color: #ea1c1c;
+        }
+
+        .field .validation-error,
+        .field .validation-error:focus {
+            border: 1px solid #f2c4c2;
+            background: #ffeceb;
+        }
+
+        .field-validation-error {
+            display: inline-block;
+        }
+        .label heading{
+            width: 100px !important;
+        }
+    </style>
+
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    @*This script handles additional custom date validation on dd/MM/yy*@
+    <script src="@Url.Content("~/Scripts/jquery.validate.custom.js")" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.date').datepicker({ dateFormat: "dd/mm/yy" });
+            $("#userDetails").submit(function () {
+                var phone = $("#ContactNumber").val();
+                if (phone.trim().length > 0) {
+                    if (IsPhoneNumber(phone)) {                        
+                        return true;
+                    }
+                    else {
+                        alert("Please enter a valid phone number!");
+                        return false;
+                    }
+                }
+            });
+            function IsPhoneNumber(phoneNumber) {
+                var regex = /^\(?(?:(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?\(?(?:0\)?[\s-]?\(?)?|0)(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}|\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4}|\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3})|\d{5}\)?[\s-]?\d{4,5}|8(?:00[\s-]?11[\s-]?11|45[\s-]?46[\s-]?4\d))(?:(?:[\s-]?(?:x|ext\.?\s?|\#)\d+)?)$/;                
+                return regex.test(phoneNumber);
+            }
+        });
+    </script>
+}
+
+@*<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->*@
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+<!-- 960 Container Start -->
+<div class="container">
+
+    <div class="container sub-title2">
+        <h2 class="h3 mb pb-">Account: @Model.user.Email</h2>
+    </div>
+
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "userDetails" }))
+    {
+        @Html.HiddenFor(m => m.user.FBUserOnly)
+        @Html.HiddenFor(m => m.user.FBJson)
+        @Html.HiddenFor(m => m.user.FacebookId)
+        @Html.HiddenFor(m => m.user.Id)
+    <div class="mb+">
+        <h2>Your Details</h2>
+        
+        <table>
+            <tr>
+                <td><label>Email</label> </td>
+                <td>
+                   @Html.TextBoxFor(m => m.user.Email, new { @class = "input--primary input--full input--h44 border-gray mb--", @readonly = "readonly", placeholder = "Username..." })
+                   </td>
+            </tr>
+            <tr>
+                <td> </td>
+                <td>
+                    <div class="mb"><span> * Your username is your email address. If you would like to change this, please email <a href="mailto:eat@grubclub.com">eat@grubclub.com</a> </span></div>
+                </td>
+            </tr>
+            <tr>
+                <td><label>First Name</label> </td>
+                <td>
+                    @Html.TextBoxFor(m => m.user.FirstName, new { @class = "input--primary input--medium input--full color-gray-7 type-semibold type-default mb- pl pr" })
+                    @Html.ValidationMessageFor(m => m.user.FirstName)
+                </td>
+            </tr>
+            <tr>
+                <td><label class="label heading">Last Name </label></td>
+                <td>
+                    @Html.TextBoxFor(m => m.user.LastName, new { @class = "input--primary input--medium input--full color-gray-7 type-semibold type-default mb- pl pr" })
+                    @Html.ValidationMessageFor(m => m.user.LastName)
+                </td>
+            </tr>
+
+
+            <tr>
+                <td> <label class="label heading">Date Of Birth</label></td>
+                <td>                    
+                    @Html.EditorFor(m => m.user.DateOfBirth, "String", new { @class = "input--primary input--medium input--full color-gray-7 type-semibold type-default mb- pl pr" })
+                    @Html.ValidationMessageFor(m => m.user.DateOfBirth)
+                </td>
+            </tr>
+            @*<div class="mb+">*@
+            <tr>
+                <td>  <label class="label heading">Gender</label></td>
+
+                <td>
+                    <div class="select select--medium select--medium inline-block">
+
+                        
+                        @Html.DropDownListFor(m => m.user.Gender, (SelectList)ViewBag.GenderList, "Select", new { @class = "select__item pl", placeholder = "Gender" })
+                        @Html.ValidationMessageFor(m => m.user.Gender)
+                        <div class="select__icon">
+                            <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+
+                <td>     @Html.LabelFor(m => m.user.ContactNumber)</td>
+                <td>
+                    
+                    @Html.TextBoxFor(m => m.user.ContactNumber, new { @class = "input--primary input--medium input--full color-gray-7 type-semibold type-default mb- pl pr" })
+                    @Html.ValidationMessageFor(m => m.user.ContactNumber)
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <h2>Your Location</h2>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.user.Address)
+                </td>
+                <td>
+                    @Html.TextBoxFor(m => m.user.Address, new { @class = "input--primary input--medium input--full color-gray-7 type-semibold type-default mb- pl pr"})
+                    @Html.ValidationMessageFor(m => m.user.Address)
+
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.user.Country)
+                </td>
+                <td>
+                    
+                    @Html.TextBoxFor(m => m.user.Country, new { @class = "input--primary input--medium input--full color-gray-7 type-semibold type-default mb- pl pr" })
+                    @Html.ValidationMessageFor(m => m.user.Country)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Post Code</label>
+                </td>
+                <td>
+                    
+                    @Html.TextBoxFor(m => m.user.PostCode, new { @class = "input--primary input--medium input--full color-gray-7 type-semibold type-default mb- pl pr" })
+                    @Html.ValidationMessageFor(m => m.user.PostCode)
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+
+                    <h2> Change Password</h2>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <p>New passwords are required to be a minimum of @Membership.MinRequiredPasswordLength characters in length.</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.changePasswordModel.OldPassword)
+                </td>
+                <td>
+                    
+                    @Html.PasswordFor(m => m.changePasswordModel.OldPassword, new { @class = "input--primary input--medium input--full color-gray-7 type-semibold type-default mb- pl pr"})
+                    @Html.ValidationMessageFor(m => m.changePasswordModel.OldPassword)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.changePasswordModel.NewPassword)
+                </td>
+                <td>
+                    
+                    @Html.PasswordFor(m => m.changePasswordModel.NewPassword, new { @class = "input--primary input--medium input--full color-gray-7 type-semibold type-default mb- pl pr" })
+                    @Html.ValidationMessageFor(m => m.changePasswordModel.NewPassword)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.changePasswordModel.ConfirmPassword)
+                </td>
+                <td>
+                    
+                    @Html.PasswordFor(m => m.changePasswordModel.ConfirmPassword, new { @class = "input--primary input--medium input--full color-gray-7 type-semibold type-default mb- pl pr" })
+                    @Html.ValidationMessageFor(m => m.changePasswordModel.ConfirmPassword)
+
+                </td>
+            </tr>
+
+
+
+        </table>
+    
+    <div class="col-sm-12">
+        <input type="submit" value="Update Account" class="button medium green"  />
+    </div>
+    
+</div>
+<!-- 960 Container End -->
+    }
+    </div>
+}
+    

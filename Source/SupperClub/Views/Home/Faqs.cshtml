@@ -1,0 +1,383 @@
+﻿@{
+    ViewBag.Title = "Learn How to Eat Out with Grub Club |Grub Club FAQs";
+    ViewBag.Description = "Find out Everything you need to know before you attend a Pop Up Restaurant or Supperclub.";
+}
+
+
+
+    @*<div class="container mb+">
+        <ul class="breadcrumbs list-inline list-inline--delimited pt-- mb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Chefs </a></li>
+            <li><a href="#">User Profile </a></li>
+            <li class="current"><a href="#">Adam Walden</a></li>
+        </ul>
+
+    </div>*@
+
+    <div class="container">
+
+        <h1 class="type-light mb">Information</h1>
+        <div class="layout">
+          @Html.Partial("_LeftNavigation")
+            <div class="layout__item large-and-up-3/4">
+                <h2 class="h3 mb pb-">FAQs General</h2>
+                <div class="accordion">
+                    <article class='accordion--active'>
+                        <h3>
+                            How do I join Grub Club? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>Joining Grub Club is free and easy: just Connect with Facebook or fill out our Registration Form. Easy peasy! </p>                        </div>
+                    </article>
+                    <article>
+                        <h3>
+                            Is there any cost to sign up?<span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>There are absolutely no sign up costs or any monthly fees. You only pay for the Grub Clubs that you want to attend.</p>
+                        </div>
+                    </article>
+                    <article>
+                        <h3>
+                            How do I book / make a reservation? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            
+                            <p>Simply search through our listings, choose the Grub Club that screams 'book me!' Simply fill in your details, then pay online and you’ll receive an email to confirm your place. </p>
+                        </div>
+                    </article>
+                    <article>
+                        <h3>
+                            How do I pay? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                           <p>You can pay by credit card / debit card online. If you have any issues, please do contact us and we’ll be more than happy to help. </p>
+                        </div>
+                    </article>
+                    <article>
+                        <h3>
+                            What if I need to cancel my booking? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            
+                            <p>
+                                Unlike restaurants, supper club chefs carefully plan their budget and ingredients around the number of guests that have booked. Therefore, cancellations have a huge impact on chefs and leave empty spaces around the table which isn’t fun for other diners.
+                            </p>
+
+                             <p>   Therefore, if you must cancel, please contact Grub Club as soon as possible to let us know. There's two ways we can handle the cancellation:
+                            </p>
+
+                            <p>1.) You can pass your ticket onto a friend (but don't forget to send them all the details!) </p>
+
+                            <p>
+                                2.) You can't find anyone to take your place... </p>
+
+                            <p>
+                                If the event you've booked for is over two weeks away, you'll receive a voucher total to the cost of the ticket you purchased.
+                            </p>
+                            <p>
+                                If the event is less than two weeks away, we will attempt to resell your ticket(s) and if they are resold, we will offer a voucher.
+                            </p>
+                        </div>
+                    </article>
+                    <article>
+                        <h3>
+                            Can I leave reviews on the Grub Clubs I attend? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>Of course, we actually encourage it! Grub Club is a community of food lovers
+
+and passionate chefs, and reviews help not just others, but also yourself find
+
+the best Chefs on the site.</p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3>
+                            What time does a Grub Club usually take place?<span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                The date and time are up to the Hosts and will be posted on the event page;
+
+                                make sure the time fits in with your schedule before booking, as it would be
+
+                                very difficult to cancel a confirmed place.
+                            </p>
+                        </div>
+                    </article>
+
+
+                    <article>
+                        <h3>
+                            What happens on the day of the Grub Club? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>After booking, you will receive an email to confirm your place and with more
+
+information about the event (i.e. the location/ what time to arrive).
+
+When arriving at the Grub Club, show the host your unique booking reference,
+
+then you will have some time to socialise before the event. After everyone has
+
+had the chance to mingle, the courses will begin, so just sit back and enjoy.
+                            </p>
+                        </div>
+                    </article>
+
+
+                    <article>
+                        <h3>
+                            How do I find out about the location? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                On every Grub Club event page, you will be given a rough idea of where the
+
+                                event will take place. Once booked, you will receive an email before the
+
+                                event, giving you the exact location (address and map will be provided) of the
+
+                                Grub Club you’re attending.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3>
+                            Who else will be there? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                Grub Clubs can include anywhere between 4 and 100 people. Everyone has
+
+                                chosen the specific night to sign up to, so will have the same interests in the
+
+                                night as you.
+                            </p>
+                        </div>
+                    </article>
+                    <article>
+                        <h3>
+                            Can I bring my own alcohol? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                This will be indicated in the description of the Grub Club you attend. Some
+
+                                hosts cook in their own houses or venues that don’t tend to have a liquor
+
+                                licence, in this case you can bring your own alcohol.
+                            </p>
+                            <p>In other cases the event might be in a venue which has a licence and you can
+
+buy alcohol from them on the night.</p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3>
+                            Is there a dress code? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                Unless specified on the page of the specific Grub Club, people usually dress
+
+                                casually. However, there might be some themed events where you will have
+
+                                the chance to dress up.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3>
+                            Can I come on my own? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                Absolutely! People sign up to Grub Clubs because they love both food and
+
+                                socialising, they have a warm atmosphere and the chefs are always
+
+                                welcoming regardless of who you arrive with.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3>
+                            Can I smoke?<span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                It varies from venue to venue, make sure you ask you host on the night!
+                            </p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3>
+                            How do I know if there are newly added events? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                You can subscribe to our mailing list, search directly on Grub Club or follow us
+
+                                on Facebook or Twitter to see the latest updates.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3>
+                            Can I book a private dinner party of birthday? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                Most definitely! Contact us and we can make every effort to arrange it for you.
+
+                                Please provide us with the group size, price range, area and cuisine you are
+
+                                looking for or any special requirements so we can get an indication of your
+
+                                preferences.
+                            </p>
+                        </div>
+                    </article>
+
+
+                    <article>
+                        <h3>
+                            What sort of cuisine is it?<span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                All sorts! Food from all around the world can be found on our site! Our
+
+                                passionate chefs hail from all different background, so there really is wide
+
+                                variety available!
+                            </p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3>
+                            Who cooks the food? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                Chefs with a passion to bring you the best cuisine available! Grub Clubs are a
+
+                                real labour of love, and this is something that really comes out in the food!
+                            </p>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3>
+                            What if I have specific dietary requirements? <span>
+                                <svg role="img" class="icon color-white">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                                </svg>
+                            </span>
+                        </h3>
+                        <div>
+                            <p>
+                                Please make sure you make any dietary requirements i.e. vegetarian,
+
+                                allergies, etc. known to your chef before you book. Failure to do so means the
+
+                                host may not be able to provide for you, as they needs to prepare everything
+
+                                in advance.
+                            </p>
+                        </div>
+                    </article>
+
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    
+

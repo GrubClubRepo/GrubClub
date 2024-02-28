@@ -1,0 +1,1033 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    @*<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">*@
+
+    <title>Buy A Private Supper Club With A GrubClub Chef</title>
+    @*<meta name="author" content="Joshua Crittenden" />
+    <meta name="description" content="private grubclubs, a grubclub supper club pop-up restaurant" />
+    <meta name="keywords" content="supperclub,pop-up restaurant, grubclub" />*@
+
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../Scripts/jquery.fullPage.css" />
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+    @*<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>*@
+    <script src="../Scripts/home//bootstrap.min.js"></script>
+    <script src="../Content/css/bxslider/jquery.bxslider.min.js"></script>
+    <link href="../Content/css/bxslider/jquery.bxslider.css" rel="stylesheet" />
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../Scripts/jquery.fullPage.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.js"></script>
+
+    <style>
+
+	/* Style for our header texts
+	* --------------------------------------- */
+	h1, h2, h3, h4, h5, h6 {
+
+		font-family: helvetica, san-serif;
+		color: #fff;
+		margin:0;
+		padding:0;
+	}
+	/* Styling introductory paragraphs that are not headers*/
+	.intro p {
+		color: #fff;
+		font-size: 24px;
+	}
+	/* basic anchor link styling */
+	a {
+		color: #ab3c3c ;
+	}
+
+	/*Some adjustments for small screens beyond bootstrap responsiveness */
+	@@media screen and (max-width: 650px) {
+		body {
+			padding-bottom: 120px !important;
+		}
+		.intro2 {
+			padding-top: 10px;
+		}
+		.intro p {
+			font-size: 18px;
+		}
+		.intro h1, .intro a {
+			font-size: 24px !important;
+		}
+		#section0 .btn {
+			width: 100%;
+			margin: auto;
+		}
+		#section0 .container, #section0 .intro  {
+			max-width: 320px;
+		}
+	}
+	@@media screen and (max-width: 768px) {
+		div.navbar-collapse {
+			background: #eee;
+			border-bottom: 1px solid #aaa;
+			box-shadow: 2px 0px 2px black;
+		}
+		div.navbar-collapse li {
+			border-bottom: 1px solid #fff;
+
+		}
+		div.navbar-collapse li:last-child {
+			border-bottom: none;
+		}
+		div.navbar-collapse li a {
+			margin: 10px;
+		}
+	}
+	@@media screen and (max-width: 1200px) {
+		#section0 {
+			padding-top: 70px;
+		}
+	}
+
+	/* Section styles
+	* --------------------------------------- */
+	body {
+		background: #ff7400;
+
+	}
+
+	.section {
+		text-align:center;
+		color: #fff;
+		border-bottom: 3px solid #ff7400;
+	}
+
+	/* Fixed header and footer.
+	* --------------------------------------- */
+	.navbar, footer{
+		position:fixed;
+		display:block;
+		width: 100%;
+		background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMC43Ii8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+		background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(255,255,255,0.7)));
+		background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,0.7) 100%);
+		background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,0.7) 100%);
+		background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,0.7) 100%);
+		background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(255,255,255,0.7) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#b3ffffff',GradientType=0 );
+		z-index: 9;
+		text-align: center;
+		box-shadow: 0 2px #ab3c3c;
+	}
+	.navbar {
+		top:0px;
+		height: 70px;
+		border-top: 3px solid #ff7400;
+		font-size: 14px;
+	}
+	.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+		color: #ff7400;
+		background-color: inherit;
+	}
+
+	.navbar-fixed-top img {
+		position: fixed;
+		top: 0;
+	}
+	.navbar-fixed-top li {
+		margin-top: 0px;
+		border-left:  1px solid #fff;
+		height: 60px;
+	}
+	.navbar-fixed-top li:last-child {
+		border-right: 1px solid #fff;
+	}
+	.navbar i.fa {
+
+		margin-top: 5px;
+		font-size: 20px;
+	}
+	.navbar-collapse {
+		overflow-y: visible;
+	}
+	footer{
+		bottom:0px;
+		min-height: 40px;
+		border-top: 3px solid #ff7400;
+	}
+	footer p {
+		margin-top: 7px;
+	}
+	body {
+		padding-bottom: 50px;
+	}
+
+	/* Button styling */
+	.btn {
+		border: none;
+		border-radius: 0px 0px 10px 10px;
+		font-family: inherit;
+		font-size: inherit;
+		color: inherit;
+		cursor: pointer;
+		padding: 25px 25px;
+		display: inline-block;
+		margin: 15px 30px;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		font-weight: 700;
+		outline: none;
+		position: relative;
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		transition: all 0.3s;
+	}
+
+	.btn-primary {
+		background: #008080;
+		color: #fff;
+		box-shadow: 0 6px #004040;
+	}
+	.btn-book {
+		width: 100%;
+		padding: 10px;
+		font-size: 20px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 0px;
+
+		background: #008080;
+		box-shadow: 0 6px #004040;
+	}
+	.btn-primary:hover{
+		box-shadow: 0 4px #ab3c3c;
+		background-color: #ff5200;
+		top: 2px;
+	}
+
+	.btn-primary i {
+		color: #004040;
+	}
+	.btn-primary:hover > i {
+		color: #ff4100;
+		text-shadow: 0px 1px 0px #ff898b;
+	}
+	.btn-primary:focus {
+		background: #008080;
+
+	}
+
+	.btn.btn-lg {
+		font-size: 24px;
+	}
+	.alt-link {
+		font-size: 24px;
+		color: #ff7400;
+		font-weight: bold;
+		text-shadow: 0px 1px 0px black;
+		text-transform: uppercase;
+		border-bottom: 1px solid #ff7400;
+	}
+	.alt-link:hover, .alt-link:visited {
+		text-decoration: none;
+	}
+
+	/* Section styling*/
+	div.intro {
+		border: 2px solid #fff;
+		border-radius: 10px;
+		padding: 15px;
+		background: rgba(255,255,255,0.6);
+		text-shadow: 0px 1px 1px #fff;
+	}
+	div.intro p, div.intro h1 {
+		color: #222;
+	}
+	/* Event panel styling */
+	.section div.panel {
+		min-height: 550px;
+		border-radius: 10px;
+		background: rgba(255,255,255, 0.6);
+		border: 2px solid #fff;
+		padding: 20px;
+
+	}
+
+	.section div.panel p {
+		margin-bottom: 15px;
+	}
+	.section div.panel h3 {
+		color: #ab3c3c;
+	}
+	.section div.panel img {
+		width: 100%;
+		min-height: 314px;
+		margin-bottom: 10px;
+		border-radius: 7px;
+		border: 1px solid #ff7400;
+	}
+	.event blockquote, .event p {
+		border-left: none;
+		color: #ff7400;
+		margin-bottom: 0;
+		font-size: 18px;
+	}
+	.event p.leadline {
+		font-size: 18px;
+		color: #ab3c3c;
+	}
+	.event hr {
+		margin: 5px 0px;
+	}
+	.panelInner {
+		height: 100px;
+		overflow: hidden;
+	}
+
+	.event .eventImg {
+		height: 200px;
+		width: 100%;
+		overflow: hidden;
+		margin-bottom: 10px;
+		}
+		#section0 {
+			background: #282537;
+		 background: url('../Content/images/undergroundbg3.jpg') no-repeat center center;
+		 -webkit-background-size: cover;
+		 -moz-background-size: cover;
+		 -o-background-size: cover;
+		 background-size: cover;
+		}
+		#section0 .btn {
+			margin-top: 0px;
+		}
+
+		#section0 blockquote{
+			border-left: none;
+			color: black;
+			margin-bottom: 0;
+		}
+
+		#section1 {
+			background: #ff7400;
+			background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNzUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZjc0MDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmY4OThiIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L3JhZGlhbEdyYWRpZW50PgogIDxyZWN0IHg9Ii01MCIgeT0iLTUwIiB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+			background: -moz-radial-gradient(center, ellipse cover,  #ff7400 0%, #ff898b 100%);
+			background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#ff7400), color-stop(100%,#ff898b));
+			background: -webkit-radial-gradient(center, ellipse cover,  #ff7400 0%,#ff898b 100%);
+			background: -o-radial-gradient(center, ellipse cover,  #ff7400 0%,#ff898b 100%);
+			background: -ms-radial-gradient(center, ellipse cover,  #ff7400 0%,#ff898b 100%);
+			background: radial-gradient(ellipse at center,  #ff7400 0%,#ff898b 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff7400', endColorstr='#ff898b',GradientType=1 );
+
+		}
+
+		#section2, #section3 {
+		 background: #fcce00;
+		 background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNzUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmY2NlMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmY3NDAwIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L3JhZGlhbEdyYWRpZW50PgogIDxyZWN0IHg9Ii01MCIgeT0iLTUwIiB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+		 background: -moz-radial-gradient(center, ellipse cover,  #fcce00 0%, #ff7400 100%);
+		 background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#fcce00), color-stop(100%,#ff7400));
+		 background: -webkit-radial-gradient(center, ellipse cover,  #fcce00 0%,#ff7400 100%);
+		 background: -o-radial-gradient(center, ellipse cover,  #fcce00 0%,#ff7400 100%);
+		 background: -ms-radial-gradient(center, ellipse cover,  #fcce00 0%,#ff7400 100%);
+		 background: radial-gradient(ellipse at center,  #fcce00 0%,#ff7400 100%);
+		 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcce00', endColorstr='#ff7400',GradientType=1 );
+		 padding-top: 70px;
+		 padding-bottom: 70px;
+		}
+		#section3 {
+			border-top: 1px solid #ff5200;
+		}
+
+		#section2 h1, #section3 h1 {
+			margin: 10px;
+		}
+		.leadline {
+			text-transform: uppercase;
+			font-weight: bold;
+		}
+
+		/*slider styling*/
+		li {
+			list-style-type: none;
+		}
+		.bx-wrapper .bx-viewport {
+			background: transparent;
+			border: none;
+			box-shadow: none;
+			color: inherit;
+
+		}
+		#section0 .bxsliderv2, #section0 .bxsliderv2 h1, #section0 .bxsliderv2 p {
+			color: #ff7400;
+			text-shadow: 0px 0px 1px black;
+		}
+
+		/*Modal styling*/
+		#evModal .center-block {
+			width: 250px;
+		}
+		#evModal h1 {
+			color: #ff7400;
+		}
+		#evModal .modal-body {
+			/*Fix for weird modal bug on content replacment*/
+			min-height: 200px;
+		}
+		#evModal .modal-content {
+			background: #ffeaaa;
+			border: 2px solid white;
+		}
+		#evModal label, #evModal .modal-title {
+			color: #008080;
+		}
+		#evModal label {
+			font-weight: normal
+		}
+		#evModal .error {
+			color: #ff7400;
+		}
+		#evModal label.required:after{
+			content: '*';
+			color: #ff7400;
+		}
+    </style>
+    <!-- IE9 SVG grdient stuff-->
+    <!--[if gte IE 9]>
+        <style type="text/css">
+          .gradient {
+             filter: none;
+          }
+        </style>
+    <![endif]-->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+      <![endif]-->
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#noPeople").keydown(function (e) {
+                // Allow: backspace, delete, tab, escape, enter and .
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                    // Allow: Ctrl+A
+                    (e.keyCode == 65 && e.ctrlKey === true) ||
+                    // Allow: home, end, left, right
+                    (e.keyCode >= 35 && e.keyCode <= 39)) {
+                    // let it happen, don't do anything
+                    return;
+                }
+                // Ensure that it is a number and stop the keypress
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+
+      	//set up the full page scroll effect plugin
+      	$('#fullpage').fullpage({
+      		verticalCentred: true,
+      		autoScrolling: false,
+      		resize: false,
+      		anchors: ['about', 'in-the-chefs-place', 'at-your-place'],
+      		css3: true,
+      		menu: '#top-nav'
+      	});
+
+       	// Adjust the text content of button(s) for small screens
+       	$( window ).resize(function() {
+       		if ($(window).width()<650) {
+       			$('#showMeChefs').text('Show Me');
+       		} else {
+       			$('#showMeChefs').text('Show Me The Chefs');
+       		}
+       			// reload the slider for responsiveness bug-fixing
+       			slider.reloadSlider();
+       	});
+
+
+       var slider =	$('.bxslider').bxSlider({
+       		auto: true,
+       		responsive: false,
+       		controls: false
+       	});
+
+
+       // setting up the modal and form contents
+       	$('input.required').parent().siblings('.col-sm-4').children('label').addClass('required');
+        var min = null;
+        var max = null;
+        // set up on clicks that loads the modal
+        $('.btn-book').click(function () {
+            $("#modalBtn").removeAttr("disabled");
+            if ($(this).hasClass('athome')) {
+                $('.location').show();
+                $('.postCode').show();
+                $("#postCode, #locationChoice").rules("add", {
+                            required: true
+                });
+                $("#postCode").rules("remove");
+                min = 1;
+                max = 500;
+            } else {
+                $('.location').hide();
+                $('.postCode').hide();
+                $("#postCode, #locationChoice").rules("remove");
+               // $('.locationChoice').rules("remove");
+                // traverse the DOM to the nearest values and get
+                $(this).parent().siblings().each(function () {
+
+                    if ($(this).find('.minSeats').is('.minSeats')) {
+                        min = $(this).find('.minSeats').text();
+                    }
+                    if ($(this).find('.maxSeats').is('.maxSeats')) {
+                        max = $(this).find('.maxSeats').text();
+                    }
+                });
+            }
+
+            // set form values and validation accordingly
+            $('.modal-title').text($(this).parent().parent().find('.chefName').text() + ' Enquiry Form');
+            $('.chef-price').text($(this).parent().parent().find('.price').text());
+            $('.chef-loc').text($(this).parent().parent().find('.chef-location').text());
+            $('#noPeople').attr({
+                min: min,
+                max: max
+            });
+            $("#noPeople").rules("add", {
+                required: true,
+                digits: true,
+                range: [min, max]
+            });
+            
+            validator.resetForm();
+          
+            //reset form values to empty
+            $('#privategcform')[0].reset();
+          
+       
+            // make sure the form will be visible in case of second submission by a visitor
+            $('#privategcform').show();
+           
+            // make sure the success messgage from last submit is removed
+            $('#successMsg').hide();
+            // show the modal
+            $('#evModal').modal();
+        }) // END of set up on click
+
+		// validation initiation for form
+		validator = $("#privategcform").validate({
+			  rules: {
+			     yourName: {
+			      required: true
+			    },
+			    yourEmail: {
+			      required: true,
+			      email: true
+			    }
+			  }
+			});
+
+		// form submission logic
+		$('#privategcform').submit(function(e) {
+			e.preventDefault();
+			// comment out these two lines once tested
+			//$('#successMsg').show();
+			//$('#privategcform').hide();
+			if ($('#privategcform').valid()) {
+			    $("#modalBtn").attr("disabled", "disabled");
+			    privateRequest();
+
+			}
+		})
+		function privateRequest() {
+
+		    
+		    $('.modalBtn').attr("disabled", "disabled");
+		    
+			var chefName = $('.modal-title').text();
+			var name = $('#yourName').val();
+            var emailAddress = $('#yourEmail').val();
+            var numOfguests = $('#noPeople').val();
+            var dateChoice = $('#dateChoice').val();
+            var postCode = $('#postCode').val();
+            var locationChoice//; = $('input[name=location]:checked').val();
+            var venue;
+            if ($('.chef-loc').text() == null || $('.chef-loc').text() == '') {
+                if (postCode == null || postCode == '') {
+                    locationChoice = $('input[name=location]:checked').val()
+                }
+                else {
+                    locationChoice = $('input[name=location]:checked').val() + "(" + postCode + ")";
+                }
+                venue = "Guest's Place";
+            }
+            else {
+                locationChoice = $('.chef-loc').text();
+                venue = "Chef's Venue";
+            }
+                        
+            var price = $('.chef-price').text();
+           
+            var otherRequirements = $('#otherReq').val();
+            var form = $('#privategcform');
+            $.ajax({
+                type: 'POST',
+                // this url needs to be changed accordingly to the right URL - whatever the controller/routing expects
+                url: '@Url.Action("PrivateGrubClubSubmit", "home")',
+                data: {venue:venue, chefName : chefName, guestName: name, email : emailAddress, pricePerHead:price, numberOfGuests : numOfguests, dateChoice : dateChoice, locationChoice : locationChoice, postCode: postCode, otherRequirements : otherRequirements},
+                cache: false,
+                dataType: 'json text',
+                traditional: true,
+                success: function (result) {
+                    if(result)
+                    {
+                        $('#privategcform').hide();
+
+                        $('#successMsg').show();
+
+                        form[0].reset();
+                        validator.resetForm();
+
+                        return true;
+                    }
+                 
+                    else
+                        alert('Sorry, there was an error submitting your request. Please check for errors and try again!');
+
+                  
+                },
+                error: function (result) {
+                    alert('Sorry, there was an error submitting your request. Please check for errors and try again!');
+                }
+            });
+        }
+       });
+    </script>
+
+</head>
+<body>
+    <div class="modal fade" id="evModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>close </span><span>&times;</span></button>
+                    <h4 class="modal-title">Enquiry Form</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- This is the success msg, change as you wish, but keep display none - it's set in the js accordingly -->
+                    <div class="col-sm-12" id="successMsg" style="display: none">
+                        <h1 class="text-center">Submission Successful!</h1>
+                        <p class="text-center">Thank you for submitting your request. We’ll look into this and get back to you as soon as possible</p>
+                    </div>
+                    <!-- One form which is adjusted by js to fit whichever event call to action btn that is clicked
+                         make sure to keep the id's and classes the same as those in the js, for it to work
+                     -->
+                    <form role="form" class="form-horizontal" id="privategcform" novalidate="novalidate">
+                        <span class="chef-price" style="display:none;"></span><span class="chef-loc" style="display:none;"></span>
+                        <div class="form-group">
+                            <div class="col-sm-4"><label for="yourName">Your name</label></div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control required" name="yourName" id="yourName" placeholder="Enter your name here">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4"><label for="yourEmail">Your email address</label></div>
+                            <div class="col-sm-8">
+                                <input type="email" class="form-control required" name="yourEmail" id="yourEmail" placeholder="Enter your email address">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4"><label for="noPeople">Number of guests</label></div>
+                            <div class="col-sm-8">
+                                @*<input type="number" class="form-control required" name="noPeople" id="noPeople" placeholder="Tell us the no. of dinner guests">*@
+                                <input type="number" class="form-control required" name="noPeople" id="noPeople" placeholder="Tell us the no. of dinner guests">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-4"><label for="dateChoice">When</label></div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control required" name="dateChoice" id="dateChoice" placeholder="give us a date or at least a rough idea when...">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 location"><label for="location">Where in London</label></div>
+                            <div class="col-sm-8 location">
+                                <div class="radio radio-inline">
+                                    <label>
+
+                                        <input type="radio" name="location" id="north" value="north" checked>
+                                        North
+                                    </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                    <label>
+
+                                        <input type="radio" name="location" id="south" value="south">
+                                        South
+                                    </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                    <label>
+
+                                        <input type="radio" name="location" id="east" value="east">
+                                        East
+                                    </label>
+                                </div>
+                                <div class="radio radio-inline">
+                                    <label>
+
+                                        <input type="radio" name="location" id="west" value="west">
+                                        West
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="form-group postCode">
+                            
+                            <div class="col-sm-4"><label for="postCode">Post code</label></div>
+                                
+                                <div class="col-sm-8">
+                                   <input type="text" class="form-control required" name="postCode" id="postCode" placeholder="Let us know the post code if you have it">
+                                </div>
+                            </div>*@
+
+                        <div class="form-group postCode">
+
+                            <div class="col-sm-4"><label for="postCode">Post code</label></div>
+
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="postCode" id="postCode" placeholder="Let us know the post code if you have it">
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="col-sm-12">
+                                <p><label for="other">Other comments &amp; requirements</label></p>
+                                <textarea class="form-control" name="other" id="otherReq" rows="3" placeholder="Please share any info that will help us look into your request"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="center-block">
+
+                            <button type="submit" id="modalBtn" class="btn btn-primary">Submit Request</button>
+                        </div>
+                    </form>
+                    <!-- This message is shown accordingly by the js -->
+                    <div class="center-block"><p class="hidden">Thanks, we will get back to you shortly!</p></div>
+                </div>
+
+            </div><!-- END modal-content -->
+        </div><!--  END modal-dialog -->
+    </div><!-- END modal -->
+
+    <div class="navbar navbar-default navbar-fixed-top gradient" role="navigation" id="top-nav">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://grubclub.com" target="blank"><img src="../Content/images/Grubclub logo.png" width="160px" height="auto" alt="Grubclub logo"></a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li data-menuanchor="about" class="active" data-toggle="collapse" data-target=".navbar-collapse">
+                        <a href="#about"><i class="fa fa-question-circle"></i>  What Is A<br>Private GrubClub</a>
+                    </li>
+                    <li data-menuanchor="in-the-chefs-place" data-toggle="collapse" data-target=".navbar-collapse">
+                        <a href="#in-the-chefs-place"><i class="fa fa-sign-out"></i><i class="fa fa-spoon"></i>  Have One <br>In A Chef's Place</a>
+                    </li>
+                    <li data-menuanchor="at-your-place" data-toggle="collapse" data-target=".navbar-collapse">
+                        <a href="#at-your-place"><i class="fa fa-cutlery"> </i>  Have One <br>In Your Place</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div> <!-- END nav -->
+    <!-- This is the page footer (the one fixed to bottom of viewport) -->
+    <footer class="gradient">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <p>
+                        Follow Us On
+                        <a href="http://www.facebook.com/GrubClub1" target="blank"><img src="../Content/images/facebook.jpg" alt="facebook" width="20" height="20"></a>
+                        &amp;
+                        <a href="http://www.twitter.com/Grub_Club" target="blank"><img src="../Content/images/twitter.png" alt="twitter" width="20" height="20"></a>
+                    </p>
+
+                </div>
+                <div class="col-sm-4">
+                    <p><a href="http://grubclub.com/signup" target="blank">Or Sign Up For Our Newsletter</a></p>
+                </div>
+                <div class="col-sm-4">
+                    <p>&copy; <a href="http://grubclub.com" target="blank">Grubclub.</a> All Rights Reserved.</p>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="fullpage">
+        <div class="section " id="section0">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2 intro">
+
+                        <div>
+                            <h1>Get top chefs in London all to yourself...</h1>
+                            <p>A Private Grub Club is like a dinner party but a lot more fun! <br>Our handpicked Chefs serve up the most delicious food to you and your guests, at the chef's or your place...</p>
+
+                        </div>
+                        </p>
+                        <ul class="bxslider">
+                            <li>
+                                <blockquote>"Grub Club connects food lovers and creative cooks across London"</blockquote>
+                                <p>- Stylist</p>
+                            </li>
+                            <li>
+                                <blockquote>"Sometimes, the simplest ideas are the best"</blockquote>
+                                <p>- TimeOut London</p>
+                            </li>
+                            <li>
+                                <blockquote>"Looking for something a little more experimental? Then check out GrubClub"</blockquote>
+                                <p>- The Independent</p>
+                            </li>
+                            <li>
+                                <blockquote>"Those who want more than just their imaginations to be nourished should head to GrubClub"</blockquote>
+                                <p>- London Evening Standard</p>
+                            </li>
+                        </ul>
+                        <p>
+                            <a href="#in-the-chefs-place" class="btn btn-primary btn-lg" id="showMeChefs">
+                                <i class="fa fa-caret-square-o-down"></i> Show Me The Chefs <i class="fa fa-caret-square-o-down"></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section gradient" id="section2">
+            <div class="container">
+                <div class="col-sm-12">
+                    <h1>1. Grub Club in a chef's space</h1>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="panel event">
+                            <div class="eventImg"><img src="../Content/images/pratap.png" alt="Pratap - that hungry chef"></div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3 class="chefName"> Pratap - That Hungry Chef</h3>
+                                    <div class="panelInner">
+                                        <p>
+                                            Michelin trained chef with his own magical twist on modern Indian cuisine, in the most beautiful home.
+                                            <br>
+                                            <a href="http://grubclub.com/that-hungry-chef" target="blank">Read More</a>
+                                        </p>
+
+                                    </div>
+                                    <hr>
+                                    <p class="leadline"><span>Location:</span><span class="chef-location"> Central London</span></p>
+                                    <hr>
+                                    <!-- For these 3 chefs' places events keep the minseats and maxseats wrappers, which the js hooks to; replace values inside accordingly -->
+                                    @*<p class="leadline">Caters for: <span class="minSeats">12</span> to <span class="maxSeats">14</span></p>*@
+                                    <p class="leadline">Caters for:  upto <span class="maxSeats">14</span></p>
+                                    <hr>
+                                    <p class="leadline">From £<span class="price">35</span> per person</p>
+                                    <hr>
+                                    <p><a class="btn btn-book btn-primary">Enquire Now</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel event">
+                            @*<div class="eventImg"><img src="../Content/images/christabel's 3.jpg" alt="Christabel of Christabel's"></div>*@
+                            <div class="eventImg"><img src="../Content/images/Burmese2.jpg" alt="Christabel of Christabel's"></div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3 class="chefName">Dine with Kyi</h3>
+                                    <div class="panelInner">
+                                        <p>
+                                            One of your only chances to try Burmese cuisine outside of Burma. Not to be missed!
+                                            <br>
+                                            <a href="http://grubclub.com/dine-with-kyi" target="blank">Read More</a>
+
+                                        </p>
+
+                                    </div>
+                                    <hr>
+                                    <p class="leadline"><span>Location:</span><span class="chef-location"> East London</span></p>
+                                    <hr>
+                                    <p class="leadline">Caters for: upto <span class="maxSeats">35</span></p>
+                                    <hr>
+                                    <p class="leadline">From £<span class="price">30</span> per person </p>
+                                    <hr>
+                                    <p><a class="btn btn-book btn-primary">Enquire Now</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel event">
+                            <div class="eventImg"><img src="../Content/images/stairway2.jpg" alt="Stairway To Heaven Kitchen"></div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3 class="chefName">Stairway to Heaven's Kitchen</h3>
+                                    <div class="panelInner">
+
+                                        <p>
+                                            Michelin trained chef from Italy. Heaven on a plate
+                                            <br>
+                                            <a href="http://grubclub.com/stairway-to-heavens-kitchen" target="blank">Read More</a>
+
+                                        </p>
+
+                                    </div>
+                                    <hr>
+                                    <p class="leadline"><span>Location:</span><span class="chef-location"> Central London</span></p>
+                                    <hr>
+                                    <p class="leadline">Caters for: upto <span class="maxSeats">12</span></p>
+                                    <hr>
+                                    <p class="leadline">From £<span class="price">33</span> per person</p>
+                                    <hr>
+                                    <p><a class="btn btn-book btn-primary">Enquire Now</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section gradient" id="section3">
+
+
+            <div class="container">
+                <div class="col-sm-12">
+                    <h1>2. Grub Club in a venue of your choice</h1>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="panel event">
+                            <div class="eventImg"><img src="../Content/images/qq.png" alt="Quinto Quarto"></div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3 class="chefName">Adha - Quinto Quarto</h3>
+                                    <div class="panelInner">
+                                        <p>
+                                            Roman style cooking - The King of Gnocchi, with so much more to offer!
+                                            <br>
+                                            <a href="http://grubclub.com/quintoquarto" target="blank">Read More</a>
+                                        </p>
+
+                                    </div>
+                                    <hr>
+                                    <p class="leadline"><span>Location:</span> Around London</p>
+                                    <hr>
+                                    <p class="leadline">
+                                        No. of people: up to you
+                                        <!-- N.B you can uncomment the wrappers for these 3 if you ammend the js appropriately to introduce min and max for 'at home' events
+                                        <span class="minSeats">10</span> to <span class="maxSeats">20</span> -->
+                                    </p>
+                                    <hr>
+                                    <p class="leadline">From £<span class="price">30</span> per person</p>
+                                    <hr>
+                                    <p><a class="btn btn-book btn-primary athome">Enquire Now</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel event">
+                            <div class="eventImg"><img src="../Content/images/david 3.png" alt="David - HMS Plate &amp; Shaker"></div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3 class="chefName">David - HMS Plate &amp; Shaker</h3>
+                                    <div class="panelInner">
+                                        <p>
+                                            Learn to mix cocktails, served with matching food and hosted by an award-winning mixologist
+                                            <br>
+                                            <a href="http://grubclub.com/hms-plate--shaker" target="blank">Read More</a>
+
+                                        </p>
+
+                                    </div>
+                                    <hr>
+                                    <p class="leadline"><span>Location:</span> Around London</p>
+                                    <hr>
+                                    <p class="leadline">
+                                        No. of people: up to you
+                                        <!-- <span class="minseats">10</span> to <span class="maxSeats">20</span> -->
+                                    </p>
+                                    <hr>
+                                    <p class="leadline">From £<span class="price">30</span> per person</p>
+                                    <hr>
+                                    <p><a class="btn btn-book btn-primary athome">Enquire Now</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel event">
+                            <div class="eventImg"><img src="../Content/images/taste.jpg" alt="Chris Jordan - Taste"></div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3 class="chefName">Chris Jordan - Taste </h3>
+                                    <div class="panelInner">
+
+                                        <p>
+                                            Fine Dining Australian chef with a twist on delicious seasonal British food
+                                            <br>
+                                            <a href="http://grubclub.com/a-taste" target="blank">Read More</a>
+
+                                        </p>
+
+                                    </div>
+                                    <hr>
+                                    <p class="leadline"><span>Location:</span> Around London</p>
+                                    <hr>
+                                    <p class="leadline">
+                                        No. of people: up to you
+                                        <!-- <span class="minSeats">10</span> to <span class="maxSeats">20</span> -->
+                                    </p>
+                                    <hr>
+                                    <p class="leadline">From £<span class="price">30</span> per person</p>
+                                    <hr>
+                                    <p><a class="btn btn-book btn-primary athome">Enquire Now</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div>
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

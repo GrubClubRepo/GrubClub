@@ -1,0 +1,8 @@
+﻿@model SupperClub.Domain.Menu
+<div class="editor-label">
+    @Html.LabelFor(model => model.MenuItem)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.MenuItem)
+    @Html.ValidationMessageFor(model => model.MenuItem)
+</div>

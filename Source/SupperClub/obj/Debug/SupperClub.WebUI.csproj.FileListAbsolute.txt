@@ -1,0 +1,183 @@
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\obj\Debug\SupperClub.WebUI.csprojResolveAssemblyReference.cache
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SupperClub.dll.config
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SupperClub.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SupperClub.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\Braintree-2.44.0.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\DataAnnotationsExtensions.ClientValidation.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\DataAnnotationsExtensions.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\EntityFramework.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\Facebook.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\log4net.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\Microsoft.Web.Infrastructure.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\Newtonsoft.Json.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\Ninject.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\PayPalMvc.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\plUploadHandler.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SagePayMvc.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SupperClub.Data.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SupperClub.Domain.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SupperClub.Logger.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.Abstractions.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.ApplicationServices.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.DynamicData.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.Entity.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.Extensions.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.Helpers.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.Razor.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.Routing.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.Services.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.WebPages.Deployment.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\WebActivator.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\CodeFirstStoredProcs.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\PayPalMvc.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SagePayMvc.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SupperClub.Data.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SupperClub.Domain.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\SupperClub.Logger.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\EntityFramework.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\Facebook.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\log4net.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\Ninject.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\plUploadHandler.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\obj\Debug\SupperClub.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\obj\Debug\SupperClub.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.Mvc.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.WebPages.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\System.Web.WebPages.Razor.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\Analytics.NET.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub\bin\Newtonsoft.Json.xml
+G:\Grubclub\try upgrade\Source\SupperClub\obj\Debug\SupperClub.WebUI.csprojResolveAssemblyReference.cache
+G:\Grubclub\try upgrade\Source\SupperClub\obj\Debug\SupperClub.dll
+G:\Grubclub\try upgrade\Source\SupperClub\obj\Debug\SupperClub.pdb
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SupperClub.dll.config
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SupperClub.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SupperClub.pdb
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Analytics.NET.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Braintree.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\CodeFirstStoredProcs.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\DataAnnotationsExtensions.ClientValidation.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\DataAnnotationsExtensions.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\EntityFramework.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\EntityFramework.SqlServer.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Facebook.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\FiftyOne.Foundation.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\log4net.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Microsoft.Web.Helpers.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Microsoft.Web.Infrastructure.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Newtonsoft.Json.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Ninject.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Ninject.Web.Common.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Ninject.Web.Mvc.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\PayPalMvc.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\plUploadHandler.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SagePayMvc.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SupperClub.Data.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SupperClub.Domain.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SupperClub.Logger.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.Abstractions.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.ApplicationServices.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.DynamicData.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.Entity.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.Helpers.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.Mvc.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.Razor.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.Routing.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.Services.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.WebPages.Deployment.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.WebPages.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.WebPages.Razor.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\WebActivator.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\WebActivatorEx.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\WebMatrix.Data.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\WebMatrix.WebData.dll
+G:\Grubclub\try upgrade\Source\SupperClub\bin\PayPalMvc.pdb
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SagePayMvc.pdb
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SupperClub.Data.pdb
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SupperClub.Domain.pdb
+G:\Grubclub\try upgrade\Source\SupperClub\bin\SupperClub.Logger.pdb
+G:\Grubclub\try upgrade\Source\SupperClub\bin\EntityFramework.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\EntityFramework.SqlServer.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Facebook.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\log4net.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Newtonsoft.Json.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Ninject.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Ninject.Web.Common.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\Ninject.Web.Mvc.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\plUploadHandler.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.Helpers.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.Mvc.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.Razor.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.WebPages.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.WebPages.Deployment.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\System.Web.WebPages.Razor.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\WebMatrix.WebData.xml
+G:\Grubclub\try upgrade\Source\SupperClub\bin\WebMatrix.Data.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\obj\Debug\SupperClub.WebUI.csprojResolveAssemblyReference.cache
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\obj\Debug\SupperClub.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\obj\Debug\SupperClub.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SupperClub.dll.config
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SupperClub.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SupperClub.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Analytics.NET.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Braintree.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\CodeFirstStoredProcs.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\DataAnnotationsExtensions.ClientValidation.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\DataAnnotationsExtensions.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\EntityFramework.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\EntityFramework.SqlServer.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Facebook.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\FiftyOne.Foundation.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\log4net.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Microsoft.Web.Helpers.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Microsoft.Web.Infrastructure.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Newtonsoft.Json.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Ninject.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Ninject.Web.Common.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Ninject.Web.Mvc.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\PayPalMvc.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\plUploadHandler.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SagePayMvc.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SupperClub.Data.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SupperClub.Domain.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SupperClub.Logger.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.Abstractions.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.ApplicationServices.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.DynamicData.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.Entity.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.Helpers.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.Mvc.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.Razor.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.Routing.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.Services.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.WebPages.Deployment.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.WebPages.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.WebPages.Razor.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\WebActivator.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\WebActivatorEx.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\WebMatrix.Data.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\WebMatrix.WebData.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\PayPalMvc.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SagePayMvc.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SupperClub.Data.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SupperClub.Domain.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\SupperClub.Logger.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\EntityFramework.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\EntityFramework.SqlServer.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Facebook.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\log4net.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Newtonsoft.Json.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Ninject.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Ninject.Web.Common.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\Ninject.Web.Mvc.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\plUploadHandler.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.Helpers.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.Mvc.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.Razor.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.WebPages.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.WebPages.Deployment.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\System.Web.WebPages.Razor.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\WebMatrix.Data.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub\bin\WebMatrix.WebData.xml

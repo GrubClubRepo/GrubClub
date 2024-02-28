@@ -1,0 +1,1081 @@
+﻿@model SupperClub.Domain.SupperClub
+@{
+    ViewBag.Title = "Chef Details";
+    ViewBag.Title = Model.Name + " – Pop Up Restaurant | Grub Club";
+    ViewBag.Description = Model.Description != null ? (Model.Description.Length > 120 ? Model.Description.Substring(0, 120) : Model.Description) : (Model.Summary == null ? "" : (Model.Summary.Length > 120 ? Model.Summary.Substring(0, 120) : Model.Summary));
+}
+@section PageSpecificScripts {
+    <!-- Meta Properties used for Sharing with OG -->
+    <meta property="og:title" content="@Model.Name" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@Request.Url.AbsoluteUri" />
+    <meta property="og:image" content="@(Request.Url.GetLeftPart(System.UriPartial.Authority) + Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + Model.ImagePath))" />
+    <meta property="og:description" content="@Model.Description" />
+    <meta property="og:site_name" content="GrubClub" />
+    <meta property="og:email" content="eat@grubclub.com" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/bootstrap.min.css")" />
+    <script src="@Url.Content("~/Scripts/home/bootstrap.min.js")" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/newstyle.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/jquery.bxslider.css")">
+    <link rel='stylesheet' type="text/css" href="@Url.Content("~/Content/css/mprogress.min.css")"> 
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.bxslider.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/mprogress.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/feather.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/ww.jquery.min.js")" type="text/javascript"></script>   
+   
+    <style>
+        .soldout-label-test{
+            top: 72px;
+            left: 146px;
+        }
+    
+        #tab10 .col-sm-3 img, #tab11 .col-sm3 img {
+            width: 320px;
+            height: 152px;
+        }
+       
+            @@media screen and (max-width: 768px) {
+                .soldout-label-test {
+                    top: 72px;
+                    left: 162px;
+                }
+                #tab10 .col-sm-3 img, #tab11 .col-sm3 img {
+                    width: 220px;
+                    height: 142px;
+                    margin-bottom: 20px;
+                }
+                #tab10 .row, #tab11 .row {
+                    border-bottom: 1px solid #eee;
+                }
+            }
+        @@media screen and (min-width: 769px) and (max-width: 905px) {
+            .soldout-label-test {
+                top: 35px;
+                left: 95px;
+            }
+
+            .soldout-label-test {
+                top: 67px;
+                left: 95px;
+            }
+
+            #tab10 .col-sm-3 img, #tab11 .col-sm3 img {
+                width: 220px;
+                height: 142px;
+            }
+        }
+                
+        .sub-title2 h2 {
+            margin: 0 !important;
+        }
+
+        .small-slider {
+            width: 100%;
+        }
+
+        #stars {
+            margin-bottom: 10px;
+        }
+
+        .tabs-nav {
+            margin-top: 5px;
+        }
+
+        .sub-line h2 {
+            border-bottom: none;
+            border-top: 1px solid #eee;
+        }
+
+        .row {
+            border: none;
+        }
+
+        .sub-title2 {
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+        }
+
+        #reviewsTab {
+            padding-bottom: 5px;
+        }
+
+        iframe {
+            display: block;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            padding-top: 30px;
+            margin-left: -20px;
+            height: 0;
+            overflow: hidden;
+        }
+
+            .video-container iframe,
+            .video-container object,
+            .video-container embed {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+         #tab10 img, #tab11 img {
+       width: 320px;
+       max-width: 100%;
+       height: auto;
+   }
+    </style>
+    <script type="text/javascript">
+    /* jQuery Validation with Tabs*/
+
+    //Make sure the validator works for hidden fields
+    $.validator.setDefaults({ ignore: '' });
+    var featherEditor = new Aviary.Feather({
+        apiKey: '@System.Web.Configuration.WebConfigurationManager.AppSettings["AviaryApiKey"]',
+        onSave: function (imageID, newURL) {
+            debugger;
+            if (imageID.substring(0, 1) === "t") {
+                debugger;
+                $.post('/event/saveUpdatedImage', { url: newURL, imageId: imageID })
+                $("#editedId").val(imageID);
+                $("#editedOldId").val(imageID);
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("saveUpdatedImageEdit", "Event")',
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify({ url: newURL, imageId: imageID }),
+                    success: function (data) {
+                        debugger;
+                        if (data.error == null) {
+                            $("#editedId").val(data.folderPathIdentifier + "_" + data.newImageId);
+                            $("#editedOldId").val(data.oldImageId);
+                            var _currentImagePaths = $("#ImagePaths").val();
+                            $("#ImagePaths").val(_currentImagePaths.replace(data.oldImageId, data.newImageId));
+                        }
+                        else {
+                            alert("error:" + data.error);
+                        }
+                    },
+                    error: function (data) {
+                        alert("error:" + data.error);
+                    }
+                });
+            }
+        },
+        onClose: function (isDirty) {
+            if (isDirty) {
+                $("#editedId").val("");
+                $("#editedOldId").val("");
+            }
+            else {
+                debugger;
+                var latestEditedImageIdNew = $("#editedId").val();
+                var latestEditedImageId = $("#editedOldId").val();
+                if (latestEditedImageIdNew && latestEditedImageIdNew.length > 0) {
+                    var res = latestEditedImageIdNew.split("_");
+                    if (res.length > 1) {
+                        var folderPathIdentifier = res[0];
+                        var fileName = res[1];
+                        if (latestEditedImageId == latestEditedImageIdNew)
+                            latestEditedImageId = fileName;
+                        var folderPath = "";
+                        switch (folderPathIdentifier) {
+                            case "t":
+                                folderPath = "@SupperClub.Code.ServerMethods.ServerUrl" + "@SupperClub.Code.ServerMethods.TempImagePathPartial";
+                                break;
+                            case "e":
+                                folderPath = "@SupperClub.Code.ServerMethods.ServerUrl" + "@SupperClub.Code.ServerMethods.EventImagePathPartial";
+                                break;
+                            case "s":
+                                folderPath = "@SupperClub.Code.ServerMethods.ServerUrl" + "@SupperClub.Code.ServerMethods.SupperClubImagePathPartial";
+                                break;
+                        }
+                        if (folderPath.length > 0) {
+                            if (folderPathIdentifier == "t") {
+                                localFileDest = folderPath + fileName;
+                                var img = document.getElementById('dis_' + latestEditedImageId);
+                                img.src = localFileDest + "?" + +new Date().getTime();
+                                img.id = "dis_" + fileName;                                
+                            }
+                            else {
+                                localFileDest = folderPath + fileName;
+                                var newImageFullUrl = localFileDest;
+                                var newRow = "<tr id='row_" + fileName.substring(0, 36) + "'>";
+                                var cols = "";
+                                var _imgId = fileName;
+                                cols += '<td style="display:none;" class="ImgId">' + _imgId + '</td>';
+                                cols += '<td style="display:none;"><img src="' + newImageFullUrl + '" id="' + latestEditedImageIdNew + '" /></td>';
+                                cols += '<td style="padding:20px;"><img src="' + newImageFullUrl + '" alt="@Model.Name" style="width:240px;" id="dis_' + _imgId + '" /></td>';
+                                cols += '<td><a class="btnEditImage" onclick="return launchEditor(\'' + latestEditedImageIdNew + '\',\'' + newImageFullUrl + '\');">Edit your picture</a></td>';
+                                cols += '<td><a class="btnDeleteImage" href="#">Delete</a></td></tr>';
+                                newRow = newRow + cols;
+                                $("#row_" + latestEditedImageId.substring(0, 36)).after(newRow);
+                                $("#row_" + latestEditedImageId.substring(0, 36)).remove();
+                            }
+                        }
+                    }
+                }
+                $("#editedId").val("");
+                $("#editedOldId").val("");
+            }
+        },
+        onError: function (errorObj) {
+            alert(errorObj.message);
+        }
+    });
+
+    function launchEditor(id, src) {
+        debugger;
+        featherEditor.launch({
+            image: id,
+            url: src,
+            cropPresets: [
+                'Custom',
+                'Original',
+                ['Square', '1:1'],
+                '3:2', '5:3', '4:3', '5:4', '6:4', '7:5', '10:8', '16:9'
+            ],
+            cropPresetsStrict: true,
+            forceCropPreset: ['', '1:1'],
+            forceCropMessage: 'Images need to be square'
+        });
+        return false;
+    }
+
+    var showErrorClicks = 0;
+    function ShowErrorClicks() {
+        if (showErrorClicks == parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["ShowValidationSummaryClicks"])) {
+            $('#validationSummary').toggle();
+        }
+        else {
+            showErrorClicks += 1;
+        }
+    }
+    //Move to a tab with any invalid fields
+    $(document).ready(function () {
+        //New logic to display editable fields on load to host and admin
+        @if(SupperClub.Code.UserMethods.IsLoggedIn && (SupperClub.Code.UserMethods.IsAdmin || SupperClub.Code.UserMethods.UserId == Model.UserId))
+            {
+                <text>
+        $(".editor").show();
+        $("#btnUpdate").show();
+        $("#btnCancel").show();
+        $("#btnUpload").show();
+        $(".display").hide();
+        $("#btnEdit").hide();
+        $(".imageEdit").show();
+        $(".imageDisplay").hide();
+        $.datepicker.setDefaults($.datepicker.regional['en-GB']);
+        $.datepicker.setDefaults({ dateFormat: 'dd/mm/yy' });
+        </text>
+            }
+        else
+        {
+            <text>
+                $(".editor").hide();
+                $("#btnUpdate").hide();
+                $("#btnCancel").hide();
+                $("#btnUpload").hide();
+                $(".imageEdit").hide();
+                $(".imageDisplay").show();
+            </text>
+        }
+
+        @if (Model.SupperClubImages.Count == 0)
+        {
+            <text>
+                $("#divImgEdit").hide();
+            </text>
+        }
+        // Delete Images
+        $('body').on('click', 'a.btnDeleteImage', function (e) {
+            debugger;
+            var tempScrollTop = $(window).scrollTop();
+            var imagePaths = $("#ImagePaths").val();
+            var imageToRemove = $(this).closest('tr').children('td.ImgId').text();
+            if (imagePaths.length > 0 && imagePaths.indexOf(imageToRemove) != -1) {
+                imagePaths = imagePaths.replace("," + imageToRemove, "");
+                imagePaths = imagePaths.replace(imageToRemove + ",", "");
+                imagePaths = imagePaths.replace(imageToRemove, "");
+            }
+            $("#ImagePaths").val(imagePaths);
+            $(this).closest("tr").remove();
+            $(window).scrollTop(tempScrollTop);
+            e.preventDefault();
+            return false;
+        });
+
+
+        var mp3 = new Mprogress({
+            template: 3,
+            parent: '#demoIn'
+        });
+        $('#btnImgUpload').click(function (e) {
+            e.preventDefault();
+            var files = $("#avatar").prop("files");
+            var totalRequestSize = 0;
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var form_data = new FormData();
+                    for (var x = 0; x < files.length; x++) {
+                        form_data.append("file" + x, files[x]);
+                        totalRequestSize += files[x].size;
+                    }
+                    if (totalRequestSize > 1024 * 1024 * 7) {
+                        alert("Total file size exceeded 7MB. Please select fewer files and continue.");
+                        return false;
+                    }
+                    else {
+                        mp3.start();
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("SaveUploadedFile", "Event")',
+                            dataType: 'json',
+                            data: form_data,
+                            processData: false,
+                            contentType: false,
+                            success: function (data, textStatus, request) {
+                                debugger;
+                                var imageUrl = data.Message;
+                                var imagePath = $("#ImagePaths").val();
+                                if (imagePath.length > 0)
+                                    imagePath = imagePath + "," + imageUrl;
+                                else if (imagePath.length == 0)
+                                    imagePath = imageUrl;
+                                $("#ImagePaths").val(imagePath);
+                                //logic to render thumbnail and edit button
+                                var res = imageUrl.split(",");
+                                for (var i = 0; i < res.length; i++) {
+                                    var imageFullUrl = "@SupperClub.Code.ServerMethods.ServerUrl" + "Content/Images/tempImages/" + res[i];
+                                    var newRow = $("<tr>");
+                                    var cols = "";
+                                    var _imgId = res[i];
+                                    cols += '<td style="display:none;" class="ImgId">' + _imgId + '</td>';
+                                    cols += '<td style="display:none;"><img src="' + imageFullUrl + '" id="t_' + _imgId + '" /></td>';
+                                    cols += '<td style="padding:20px;"><img src="' + imageFullUrl + '" alt="@Model.Name" style="width:240px;" id="dis_' + _imgId + '" /></td>';
+                                    cols += '<td><a class="btnEditImage" onclick="return launchEditor(\'t_' + _imgId + '\',\'' + imageFullUrl + '\');">Edit your picture</a></td>';
+                                    cols += '<td><a class="btnDeleteImage" href="#">Delete</a></td></tr>';
+                                    newRow.append(cols);
+                                    $("#tblImgList").append(newRow);
+                                }
+                                $('#divImgEdit').show();
+                                mp3.end(true);
+                            },
+                            error: function (request, textStatus, errorThrown) {
+                                alert("error:" + errorThrown);
+                            }
+                        });
+                        e.preventDefault();
+                    }
+                }
+                else {
+                    alert("This browser doesn't support HTML5 file uploads!");
+                }
+            }
+        });
+
+        // star rating to review tab navigation fix
+        $('#reviewsTab').bind('click', function (event) {
+            $("#tabnav3").click();
+        });
+
+        var hash = window.location.hash;
+        if (hash.toLowerCase() == "#reviews") {
+            $("#tabnav3").click();
+        }
+        $("#tabnav3").click(function () {
+            history.pushState({}, 'Reviews', window.location.pathname + '/#reviews');
+        });
+
+
+        if ($(window).width() <= 510) {
+            // d
+            $("#smVideo").hide();
+            $("#xsVideo").show();
+            $("#smVideo2").hide();
+            $("#xsVideo2").show();
+        } else {
+            $("#smVideo").show();
+            $("#xsVideo").hide();
+            $("#smVideo2").show();
+            $("#xsVideo2").hide();
+        }
+
+        $("#btnEdit").click(function () {
+            $(".editor").show();
+            $("#btnUpdate").show();
+            $("#btnCancel").show();
+            $("#btnUpload").show();
+            $(".display").hide();
+            $("#btnEdit").hide();
+            $(".imageEdit").show();
+            $(".imageDisplay").hide();
+
+            $.datepicker.setDefaults($.datepicker.regional['en-GB']);
+            $.datepicker.setDefaults({ dateFormat: 'dd/mm/yy' });
+        });
+
+        $("#btnCancel").click(function () {
+            $(".editor").hide();
+            $("#btnUpdate").hide();
+            $("#btnCancel").hide();
+            $("#btnUpload").hide();
+            $(".display").show();
+            $("#btnEdit").show();
+            $(".imageEdit").hide();
+            $(".imageDisplay").show()
+
+        });
+
+        $("#SupperClubDetailsForm").submit(function () {
+            $("#SupperClubDetailsForm").validate();
+            //Get any tab with errors
+            var tabWithError = $("#SupperClubDetailsForm .input-validation-error").closest(".tab-content");
+            if (tabWithError.length > 0) {
+                var tabName = tabWithError.get(0).id;
+                tabSelect = tabName.substring(3);
+                //Reset active class for nav and display tab block contents
+                $(".tabs-nav").children().removeClass("active");
+                $("#tabnav" + tabSelect).addClass("active");
+
+                $(".tabs-container").children().css("display", "none");
+                $("#tab" + tabSelect).css("display", "block");
+            }
+        });
+
+
+        // Image Slider
+        $(".rslides").bxSlider({
+            auto: true,
+            autoControls: true,
+            adaptiveHeight: true,
+            autoHover: true
+        });
+
+
+
+    });
+    </script>
+    <!-- Sharethis buttons -->
+    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+    <script type="text/javascript"> stLight.options({ publisher: "@System.Web.Configuration.WebConfigurationManager.AppSettings["ShareThisPublisherId"]" }); </script>
+}
+<!--  Page Title -->
+<div class="pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <div class="container" itemscope itemtype="http://schema.org/LocalBusiness">
+        <div class=" col-sm-12 sub-title2">
+            <h2><span itemprop="name">@Model.Name</span></h2>
+        </div>
+        @using (Html.BeginForm("UpdateSupperClub", "Host", FormMethod.Post, new { id = "SupperClubDetailsForm", style = "margin-bottom: 0px;", enctype = "multipart/form-data" }))
+        {
+            @Html.HiddenFor(m => m.ImagePath)
+            <div class="col-sm-5 col-lg-4">
+                <div id="reviewsTab" style="display:block; ">
+
+                    <!-- Ranking Stars -->
+                    <div style="cursor:pointer;">
+                        @Html.Partial("DisplayTemplates/Ranking", new SupperClub.Models.RankingModel(null, false, Model.AverageRank, Model.NumberGuestRanks))
+                        <p>@Model.NumberGuestRanks ratings, @Model.NumberOfReviews reviews</p>
+                    </div>
+                </div>
+                <div class="small-slider slider">
+                    @if (Model.SupperClubImages.Count > 1)
+                    {
+                        <ul class="rslides">
+                            @foreach (var _image in Model.SupperClubImages)
+                            {
+                                <li>
+                                    <a href="@Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + _image.ImagePath)" rel="imagebox" title="@Model.Name">
+                                        <img src="@Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + _image.ImagePath)" alt="@Model.Name | Grubclub" itemprop="image" />
+                                        <div class="overlayNew zoom"></div>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="item-img">
+                            <a href="@Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + Model.ImagePath)" rel="imagebox" title="@Model.Name">
+                                <img src="@Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + Model.ImagePath)" alt="@Model.Name | Grubclub" itemprop="image" />
+                                <div class="overlay zoom">
+                                </div>
+                            </a>
+                        </div>
+                        <br />
+                    }
+                </div>
+                <div class="portfolio-item-meta">
+                    <p></p>
+                    @if (SupperClub.Code.UserMethods.UserId == Model.UserId || SupperClub.Code.UserMethods.IsAdmin)
+                    {
+                        <input type="button" id="btnEdit" value="Edit Grub Club" class="button medium yellow" style="float: left" />
+                        <input type="submit" id="btnUpdate" value="Update" class="button medium yellow" style="float: left" />
+                    }
+                </div>
+            </div>
+
+
+            <div class="col-sm-7 col-lg-8">
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.UserId)
+                @Html.HiddenFor(m => m.Active)
+                <!-- Hidden Validation Summary --->
+                <div id="validationSummary" style="display:none">
+                    @Html.ValidationSummary()
+                    <br />
+                </div>
+
+                <!-- Tabs Navigation -->
+                <ul class="tabs-nav">
+                    <li id="tabnav1" class="active"><a href="#tab1">Details</a></li>
+                    <li id="tabnav2"><a href="#tab2">Social</a></li>
+                    <li id="tabnav3"><a href="#tab3">Reviews</a></li>
+                    @if (SupperClub.Code.UserMethods.UserId == Model.UserId || SupperClub.Code.UserMethods.IsAdmin)
+                    {
+                        <li id="tabnav4"><a href="#tab4">Business</a></li>
+                        <li id="tabnav5"><a href="#tab5">Banking</a></li>
+                        <li id="tabnav6"><a href="#tab6">Misc</a></li>
+                        <li id="tabnav7"><a href="#tab7">Picture</a></li>
+                    }
+                </ul>
+                <!-- Tabs Content -->
+                <div class="tabs-container">
+
+                    <div class="tab-content" id="tab1">
+                        <div class="details-column">
+                            <div class="editor field">
+                                @if (SupperClub.Code.UserMethods.IsAdmin)
+                                {
+                                    <h5>Name</h5>
+                                    @Html.ValidationMessageFor(m => m.Name)
+                                    @Html.EditorFor(m => m.Name)
+                                }
+                                else if (SupperClub.Code.UserMethods.UserId == Model.UserId)
+                                {
+                                    @Html.HiddenFor(m => m.Name)
+                                }
+                            </div>
+                        </div>
+                        <div class="details-column">
+                            <h5>In a Nutshell</h5>
+                            @Html.ValidationMessageFor(m => m.Summary)
+                            <div class="display field">
+                                @*<p>@Html.DisplayWithBreaksFor(m => m.Summary)</p>*@
+                                @if (Model.Summary != null && !String.IsNullOrEmpty(Model.Summary))
+                                {
+                                    <p>@Html.Raw("<p><span itemprop=\"Summary\">" + @Model.Summary.Replace("\r\n", "<br />").Replace("\n", "<br />") + "</span></p>")</p>
+                                }
+                            </div>
+                            <div class="editor field">
+                                @Html.EditorFor(m => m.Summary)
+                            </div>
+                        </div>
+
+                       <!-- replace the true with the correct supperclub id then uncomment-->
+                        @*@if (true)
+                        {
+                            <div class="video-container">
+                                <iframe width="560" height="315" src="http://www.youtube.com/embed/8fbgWuA8Ms0?feature=oembed&amp;wmode=opaque" frameborder="0"></iframe>
+                            </div>
+                        }*@
+                        
+                        <div class="details-column">
+                            <h5>The Whole Hog</h5>
+                            @Html.ValidationMessageFor(m => m.Description)
+                            <div class="display field">
+                                @*<p><span itemprop="description">@Html.DisplayWithBreaksFor(m => m.Description)</span></p>*@
+                                @if (Model.Description != null && !String.IsNullOrEmpty(Model.Description))
+                                {
+                                    <p>@Html.Raw("<p><span itemprop=\"Description\">" + @Model.Description.Replace("\r\n", "<br />").Replace("\n", "<br />") + "</span></p>")</p>
+                                }
+                            </div>
+
+                            <div class="editor field">
+                                @Html.EditorFor(m => m.Description)
+                            </div>
+                        </div>
+                        <!--
+                            Here's the Quinto Quarto block to be conditionally shown...-->
+                        @if (Model.Id == 119)
+                        {
+                            <div class="details-column">
+                                <h5>
+                                    <div id="smVideo2">
+                                        <object width="500" height="283"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=89557599&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=89557599&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="500" height="283"></embed></object>
+                                    </div>
+                                    <div id="xsVideo2">
+                                        <object width="300" height="170"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=89557599&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=89557599&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="300" height="170"></embed></object>
+                                    </div>
+                                    <br />
+                                    <div id="xsVideo">
+                                        <object width="300" height="170"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=88669074&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=88669074&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="300" height="170"></embed></object> <p><a href="http://vimeo.com/88669074">A Grub Club by "The King of Gnocchi"</a> from <a href="http://vimeo.com/grubclub">Grub Club</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+                                    </div>
+                                    <div id="smVideo">
+                                        <object width="500" height="283"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=88669074&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=88669074&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="500" height="283"></embed></object> <p><a href="http://vimeo.com/88669074">A Grub Club by "The King of Gnocchi"</a> from <a href="http://vimeo.com/grubclub">Grub Club</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+                                    </div>
+                                </h5>
+                            </div>
+                        }
+                        @if (Model.Id == 165)
+                        {
+                            <div class="details-column">
+                                <div id="xsVideo">
+                                    <object width="300" height="169"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=91916101&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=91916101&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="300" height="169"></embed></object> <p><a href="http://vimeo.com/91916101">A Grub Club by Chef Jason Howard</a> from <a href="http://vimeo.com/grubclub">Grub Club</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+                                </div>
+                                <div id="smVideo">
+                                    <object width="500" height="281"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=91916101&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=91916101&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=ff9933&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="500" height="281"></embed></object> <p><a href="http://vimeo.com/91916101">A Grub Club by Chef Jason Howard</a> from <a href="http://vimeo.com/grubclub">Grub Club</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+                                </div>
+                            </div>
+                        }
+                        
+                    </div>
+
+                    <div class="tab-content" id="tab2">
+                        <div class="details-column">
+                            <div class="field">
+                                <h5>Grub Club Webpage</h5>
+                                <p>@Html.Raw(String.Format("<a href=\"{1}{0}\" target=\"_blank\" itemprop=\"url\">{1}{0}</a>", Model.UrlFriendlyName, SupperClub.Code.ServerMethods.ServerUrl))</p>
+                            </div>
+                        </div>
+                        <div class="details-column">
+                            @if (!string.IsNullOrEmpty(Model.Blog))
+                            {
+                                <div class="display field">
+                                    <h5>Blog</h5>
+                                    <p>@Html.Raw(String.Format("<a href=\"http://{0}\" target=\"_blank\">{0}</a>", Model.Blog))</p>
+                                </div>
+                            }
+                            <div class="editor field">
+                                <h5>Blog</h5>
+                                @Html.ValidationMessageFor(m => m.Blog)
+                                @Html.EditorFor(m => m.Blog, "String")
+                            </div>
+                        </div>
+                        <div class="details-column">
+                            @if (!string.IsNullOrEmpty(Model.Twitter))
+                            {
+                                <div class="display field">
+                                    <h5>Twitter Name</h5>
+                                    <p>@Html.Raw(String.Format("<a href=\"http://twitter.com/{0}\" target=\"_blank\">{0}</a>", Model.Twitter))</p>
+                                </div>
+                            }
+                            <div class="editor field">
+                                <h5>Twitter Name</h5>
+                                @Html.ValidationMessageFor(m => m.Twitter)
+                                @Html.EditorFor(m => m.Twitter, "String")
+                            </div>
+                        </div>
+                        <div class="details-column">
+                            @if (!string.IsNullOrEmpty(Model.Facebook))
+                            {
+                                <div class="display field">
+                                    <h5>Facebook Page</h5>
+                                    <p>@Html.Raw(String.Format("<a href=\"http://{0}\" target=\"_blank\">{0}</a>", Model.Facebook))</p>
+                                </div>
+                            }
+                            <div class="editor field">
+                                <h5>Facebook Page</h5>
+                                @Html.ValidationMessageFor(m => m.Facebook)
+                                @Html.EditorFor(m => m.Facebook, "String")
+                            </div>
+                        </div>
+                        <div class="details-column">
+                            @if (!string.IsNullOrEmpty(Model.Pinterest))
+                            {
+                                <div class="display field">
+                                    <h5>Pinterest Page</h5>
+                                    <p>@Html.Raw(String.Format("<a href=\"http://{0}\" target=\"_blank\">{0}</a>", Model.Pinterest))</p>
+                                </div>
+                            }
+                            <div class="editor field">
+                                <h5>Pinterest Page</h5>
+                                @Html.ValidationMessageFor(m => m.Pinterest)
+                                @Html.EditorFor(m => m.Pinterest, "String")
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab3" style="height: 600px">
+                        <!--tab test-->
+                        <div class="details-column" style="height: 100%">
+                            <iframe src="@(SupperClub.Code.ServerMethods.ServerUrl + Model.UrlFriendlyName)/allreviews" frameborder="0"></iframe>
+                                                     
+                        </div>
+                    </div>
+                    @if (SupperClub.Code.UserMethods.UserId == Model.UserId || SupperClub.Code.UserMethods.IsAdmin)
+                    {
+                        <div class="tab-content" id="tab4">
+                            <div class="details-column">
+                                <h5>
+                                    Trading Name
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.TradingName)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.TradingName)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.TradingName)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    Address Line 1
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.Address)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.Address)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.Address)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    Address Line 2
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.Address2)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.Address2)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.Address2)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    City
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.City)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.City)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.City)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    Country
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.Country)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.Country)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.Country)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    Post Code
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.PostCode)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.PostCode)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.PostCode)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    Contact Phone Number
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.ContactNumber)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.ContactNumber)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.ContactNumber)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    VAT Number
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.VATNumber)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.VATNumber)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.VATNumber)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="tab5">
+                            <div class="details-column">
+                                <h5>
+                                    Cheque Name
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.ChequeName)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.ChequeName)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.ChequeName)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    Bank Name
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.BankName)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.BankName)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.BankName)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    Bank Address
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.BankAddress)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.BankAddress)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.BankAddress)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    Sort Code
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.SortCode)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.SortCode)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.SortCode)
+                                </div>
+                            </div>
+                            <div class="details-column">
+                                <h5>
+                                    Account Number
+                                </h5>
+                                @Html.ValidationMessageFor(m => m.AccountNumber)
+                                <div class="display field">
+                                    <p>@Html.DisplayFor(m => m.AccountNumber)</p>
+                                </div>
+                                <div class="editor field">
+                                    @Html.EditorFor(m => m.AccountNumber)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="tab6">
+                            <div class="display field check-box-field">
+                                @Html.DisplayFor(m => m.CouncilRegistered)
+                                @Html.LabelFor(m => m.CouncilRegistered)
+                            </div>
+                            <div class="editor field check-box-field">
+                                @Html.EditorFor(m => m.CouncilRegistered)
+                                @Html.LabelFor(m => m.CouncilRegistered)
+                                @Html.ValidationMessageFor(m => m.CouncilRegistered)
+                            </div>
+                            <br />
+                            <div class="display field check-box-field">
+                                @Html.DisplayFor(m => m.FoodHygieneCertificate)
+                                @Html.LabelFor(m => m.FoodHygieneCertificate)
+                            </div>
+                            <div class="editor field check-box-field">
+                                @Html.EditorFor(m => m.FoodHygieneCertificate)
+                                @Html.LabelFor(m => m.FoodHygieneCertificate)
+                                @Html.ValidationMessageFor(m => m.FoodHygieneCertificate)
+                            </div>
+                            <br />
+                            <div class="display field check-box-field">
+                                @Html.DisplayFor(m => m.IndemnityInsurace)
+                                @Html.LabelFor(m => m.IndemnityInsurace)
+                            </div>
+                            <div class="editor field check-box-field">
+                                @Html.EditorFor(m => m.IndemnityInsurace)
+                                @Html.LabelFor(m => m.IndemnityInsurace)
+                                @Html.ValidationMessageFor(m => m.IndemnityInsurace)
+                            </div>
+                            <br />
+                            <div class="display field check-box-field">
+                                @Html.DisplayFor(m => m.AlcoholLicense)
+                                @Html.LabelFor(m => m.AlcoholLicense)
+                            </div>
+                            <div class="editor field check-box-field">
+                                @Html.EditorFor(m => m.AlcoholLicense)
+                                @Html.LabelFor(m => m.AlcoholLicense)
+                                @Html.ValidationMessageFor(m => m.AlcoholLicense)
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="tab7">
+                            <div class="imageEdit">
+                                @Html.HiddenFor(m => m.ImagePaths)
+                                <input type="hidden" id="editedId" value="" />
+                                <input type="hidden" id="editedOldId" value="" />
+                                <p>Total size of the pictures being uploaded should not exceed 7MB at once. You can add more pictures after finishing first upload!</p>
+
+                                <h3>Step 1: Select the pictures</h3>
+                                <input id="avatar" type="file" name="avatar" multiple style="margin-bottom:10px;" />
+                                                                
+                                <h3 style="padding-top:12px;">Step 2: Upload your pictures</h3>
+                                <button id="btnImgUpload" class="button medium orange" value="Upload">Upload</button>
+                                <div id="demoIn" class="demo-bar"></div>
+
+                                <div id="divImgEdit" style="float:left;padding-top:12px;">
+                                    <h3>Step 3: Edit your pictures</h3>
+                                    <div style="color:red;font-weight:bold;text-align:left;">
+                                        To ensure pictures look great on the site,
+                                        <ul class="links-list-red"> <li> Press "Edit your picture"</li><li>Select "Crop"</li><li>Select the "Square" option to crop your image to the correct size.</li><li>Click "Apply" and then</li><li>Click on "Save"</li></ul>
+                                    </div>
+                                    <table id="tblImgList" class="tblImgList-table">
+                                        <thead style="">
+                                            <tr>
+                                                <th style="display:none;">ImageId</th>
+                                                <th style="display:none;">ImageFull</th>
+                                                <th>Image</th>
+                                                <th>Action</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.SupperClubImages.Count > 0)
+                                            {
+                                                foreach (SupperClub.Domain.SupperClubImage sci in Model.SupperClubImages)
+                                                {
+                                                    <tr class="rowImgDetails" style="border:1px solid #e2e2e2;" id="row_@(sci.ImagePath.Substring(0,36))">
+                                                        <td style="display:none;" class="ImgId">@sci.ImagePath</td>
+                                                        <td style="display:none;"><img src="@SupperClub.Code.ServerMethods.ServerUrl@SupperClub.Code.ServerMethods.SupperClubImagePathPartial@sci.ImagePath" id="s_@(sci.ImagePath)" /></td>
+                                                        <td><img src="@SupperClub.Code.ServerMethods.ServerUrl@SupperClub.Code.ServerMethods.SupperClubImagePathPartial@sci.ImagePath" alt="@Model.Name" style="width:240px;" id="dis_@(sci.ImagePath)" /></td>
+                                                        <td><a class="btnEditImage" href="#" onclick="return launchEditor('s_@(sci.ImagePath)','@SupperClub.Code.ServerMethods.ServerUrl@SupperClub.Code.ServerMethods.SupperClubImagePathPartial@sci.ImagePath');">Edit your picture</a></td>
+                                                        <td><a class="btnDeleteImage" href="#">Delete</a></td>                                                        
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>                                  
+                            </div>
+
+                            <div class="imageDisplay">
+                                @if (Model.SupperClubImages.Count > 1)
+                                {
+                                    <div id="divImg" style="float:left;">
+                                        <table id="tblImg" style="float:left;border:1px solid #e2e2e2;margin-bottom:20px;">
+                                            <thead style="border:1px solid #e2e2e2;color:#564A40;font-size:14px;font-weight:bold;padding:8px 15px;">
+                                                <tr>
+                                                    <th style="border:1px solid #e2e2e2;vertical-align:middle;">Image</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="border:1px solid #e2e2e2;">
+                                                @foreach (SupperClub.Domain.SupperClubImage sci in Model.SupperClubImages)
+                                                {
+                                                    <tr class="rowImg" style="border:1px solid #e2e2e2;">
+                                                        <td style="padding:20px;"><img src="@Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + @sci.ImagePath)" style="width:240px;vertical-align:middle;" alt="@Model.Name" /></td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <img src="@Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + Model.ImagePath)" alt="@Model.Name" />
+                                }
+                            </div>
+
+                        </div>
+                    
+                    }
+                    <div class="portfolio-item-meta">
+                        <p></p>
+                        <!-- Sharing (Implementation comments on the Event Details page)-->
+                        <h5>Tell Your Friends about this Grub Club</h5>
+                        <span class='st_googleplus_large' displaytext='Google +'>
+                        </span><span class='st_facebook_large' displaytext='Facebook'>
+                        </span><span class='st_twitter_large' displaytext='Tweet' st_via="Grub_Club" st_msg="#SupperClub">
+                        </span><span class='st_pinterest_large' displaytext='Pinterest'>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+    <div class="container sub-title2 sub-line">
+        <h2>Whats On the Table?</h2>
+
+        <div class="row">
+            <div class="col-sm-12">
+            <ul class="tabs-nav">
+                <li class="active"><a href="#tab10">Coming Up</a></li>
+                <li><a href="#tab11">Too Late</a></li>
+            </ul>
+
+                <div class="tabs-container">
+                    <div class="tab-content" id="tab10">
+                        @if (SupperClub.Code.UserMethods.UserId == Model.UserId || SupperClub.Code.UserMethods.IsAdmin)
+                        {
+                            foreach (SupperClub.Domain.Event e in Model.FutureEvents.Where(e => e.Status == (int)SupperClub.Domain.EventStatus.Active).OrderBy(e => e.Start))
+                            {
+                                Html.RenderPartial("_EventHostListing", e);
+                            }
+                        }
+                        else
+                        {
+                            foreach (SupperClub.Domain.Event e in Model.FutureEvents.Where(e => e.Status == (int)SupperClub.Domain.EventStatus.Active && e.Private == false).OrderBy(e => e.Start))
+                            {
+                                Html.RenderPartial("_EventHostListing", e);
+                            }
+                        }
+                    </div>
+                    <div class="tab-content" id="tab11">
+                        @if (SupperClub.Code.UserMethods.UserId == Model.UserId || SupperClub.Code.UserMethods.IsAdmin)
+                        {
+                            foreach (SupperClub.Domain.Event e in Model.PastEvents.Where(e => e.Status == (int)SupperClub.Domain.EventStatus.Active).OrderByDescending(e => e.Start))
+                            {
+                                Html.RenderPartial("_EventHostListing", e);
+                            }
+                        }
+                        else
+                        {
+                            foreach (SupperClub.Domain.Event e in Model.PastEvents.Where(e => e.Status == (int)SupperClub.Domain.EventStatus.Active && e.Private == false).OrderByDescending(e => e.Start))
+                            {
+                                Html.RenderPartial("_EventHostListing", e);
+                            }
+                        }
+                    </div>
+                </div>
+          </div>
+        </div>
+           
+       
+    </div>
+
+}

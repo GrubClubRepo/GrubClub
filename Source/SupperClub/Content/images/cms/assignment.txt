@@ -1,0 +1,19 @@
+
+
+
+
+1. Create few tables, and write stored procedures to do Create/Update/Delete/View opeartions.
+2. Create DAL layer .Net library project which access these stored procedures to perform operations.
+3. Create BL .Net Library to represent business Objects.
+4. Create Web Services & WCF to expose these business objects as DTOs and allow clients to access.
+5. Create a Winforms/WebForm application to perform View/Edit/Create/Delete operations.
+
+
+
+----------
+6. Use Typed DataSet.
+7. Use DataGrid/GridView/ListView controls. 
+8. Use templated field.
+9. Use Inline Editing. Use combo boxes for selecting data, display datetime control.
+10. Use validation controls.
+ 

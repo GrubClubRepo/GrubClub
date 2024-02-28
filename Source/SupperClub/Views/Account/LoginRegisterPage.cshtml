@@ -1,0 +1,174 @@
+﻿@model SupperClub.Models.LoginRegisterModel
+@{
+    ViewBag.Title = "Login or Signup";
+}
+@section PageSpecificScripts {
+<link rel="stylesheet" href="@Url.Content("~/Content/css/shortcodes.css")">
+<script type="text/javascript">
+    $(function () {
+        $("#divForgotPwd").hide();
+                
+        $('#btnForgotPwd').click(function () {
+            $("#divForgotPwd").show();
+            $('#btnForgotPwd').hide();
+            $('#txtfpEmail').val('');
+            $("#lblfpStatus").empty();
+            return false;
+        });
+        $("#btnRegisterForm").click(function (e) {
+            e.preventDefault();
+            try {
+                ga('create', 'UA-36514914-1', 'auto', { 'alwaysSendReferrer': true });
+                ga('send', 'event', { eventCategory: 'Customers', eventAction: 'Signups', eventLabel: 'Register Page', eventValue: 1 });
+            }
+            catch (err) {
+                debugger;
+            }
+            $("#RegisterFormPage").submit();
+        });
+        $('#btnResetPwd').click(function () {
+            $("#lblfpStatus").empty();
+            var emailAddress = $('#txtfpEmail').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("NewForgotPassword", "Account")',
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({ email: emailAddress }),
+                success: function(response) {                    
+                    if (!response.success) {
+                        $("#lblfpStatus").css("color","red");                        
+                    }
+                    else {
+                        $("#lblfpStatus").css("color","green");                        
+                    }
+                    $("#lblfpStatus").text(response.message);
+                },
+                error: function(response) {
+                    $("#lblfpStatus").css("color","red");
+                    $("#lblfpStatus").text(response.message);
+                }
+            });
+        });
+    });
+    </script>
+    }
+        <div class="magnific-content max-width-820 bgr-gray">
+
+    <div class="layout">
+        <noscript>
+            <div class="info-content" style="text-align:center; color:Red; font-weight:bold;">
+                <p>
+                    WARNING: It looks like your JavaScript is disabled.<br /> For full functionality of this site it is necessary to enable JavaScript before you log on.
+                    Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions</a> how to enable JavaScript in your web browser.
+                </p>
+            </div>
+        </noscript>
+        @if (ViewBag.Notification != null)
+        {
+            <br />
+            @Html.Partial("_Notification", (SupperClub.Models.NotificationModel)ViewBag.Notification)
+            TempData["Notification"] = null;
+        }
+        <div class="layout__item large-and-up-1/2">
+            <div class="ph-">
+                <h1 class="type-light h2 mb-">Login</h1>
+                <p class="mb type-small semibold color-dark">Please log in to account to continue</p>
+                @using (Html.BeginForm("NewLogIn", "Account", new { returnUrl = Model.RedirectURL, isPage=true }, FormMethod.Post, new { id = "loginFormPage" }))
+                {
+                    <div class="pt-">
+                        <div>
+                            <label>Your Email Address</label>
+                            @Html.ValidationMessageFor(m => m.LogOnModel.UserName)
+                            @Html.EditorFor(m => m.LogOnModel.UserName, new { @class = "input input--large input--primary mb--" })
+                        </div>
+
+
+                        <div>
+                            @Html.LabelFor(m => m.LogOnModel.Password)
+                            @Html.ValidationMessageFor(m => m.LogOnModel.Password)
+                            @Html.PasswordFor(m => m.LogOnModel.Password, new { @class = "input input--large input--primary mb-" })
+                        </div>
+                        <input type="submit" class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+" id="btnLogin" value="Login" />
+                    </div>
+                }
+                <br/>
+                <br/>
+                <br/>
+                <div>
+                <a href="" id="btnForgotPwd" class="type-large mb++ color-orange type-semibold text-underline">Forgot password</a>
+                    <div id="divForgotPwd" class="ph-">
+                        <div class="pt-"> 
+                            <p class="mb type-small semibold color-dark"> Please enter your email address and we'll send you a new password.</p>
+                                <label>Your Email Address</label>                                
+                                <input type="text" id="txtfpEmail" class="input input--large input--primary mb--" />                                 
+                                <input type="button" class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+" id="btnResetPwd" value="Reset password" />
+                                <br />
+                                <br />
+                                <br/>
+                                <br/>
+                                <label id="lblfpStatus"></label>                           
+                        </div>
+                    </div>
+                </div>
+               
+        <h1 class="type-light h2 mb-">OR</h1>
+        <a id="loginLink" href="@Url.Action("facebooklogin", "account", new { returnUrl = Model.RedirectURL })">
+            <img src="/Content/images/fb-join-medium.png" alt="" style="height: 54px;line-height: 50px; width:100%;max-width:100%;">
+        </a>
+
+                </div>
+        </div>
+        <div class="layout__item large-and-up-1/2">
+            <div class="ph-">
+                <h1 class="type-light h2 mb-">Register</h1>
+                <p class="mb type-small semibold color-dark">Not a Grub Club member yet? Register your details below.</p>
+                @using (Html.BeginForm("NewRegister", "Account", new { redirectURL = Model.RedirectURL, isPage = true }, FormMethod.Post, new { id = "RegisterFormPage" }))
+                {
+                    <div class="pt-">
+                        <div>
+                            <label>First Name</label>
+                            @Html.ValidationMessageFor(m => m.RegisterModel.FirstName)
+                            @Html.EditorFor(m => m.RegisterModel.FirstName, new { @class = "input input--large input--primary mb" })
+                        </div>
+                        <div>
+                            <label>Last Name</label>
+                            @Html.ValidationMessageFor(m => m.RegisterModel.LastName)
+                            @Html.EditorFor(m => m.RegisterModel.LastName, new { @class = "input input--large input--primary mb" })
+                        </div>
+                        <hr class="hr hr--dots mb">
+                        <div>
+                            <label>Your Email Address</label>
+                            @Html.ValidationMessageFor(m => m.RegisterModel.Email)
+                            @Html.EditorFor(m => m.RegisterModel.Email, new { @class = "input input--large input--primary mb" })
+                        </div>
+                        <div>
+                            <label>Confirm Your Email Address</label>
+                            @Html.ValidationMessageFor(m => m.RegisterModel.ConfirmEmail)
+                            @Html.EditorFor(m => m.RegisterModel.ConfirmEmail, new { @class = "input input--large input--primary mb" })
+                        </div>
+                        <hr class="hr hr--dots mb">
+                        <div>
+                            <label>Password</label>
+                            @Html.ValidationMessageFor(m => m.RegisterModel.Password)
+                            @Html.PasswordFor(m => m.RegisterModel.Password, new { @class = "input input--large input--primary mb" })
+                        </div>
+                        <div>
+                            <label>Confirm Your Password</label>
+                            @Html.ValidationMessageFor(m => m.RegisterModel.ConfirmPassword)
+                            @Html.PasswordFor(m => m.RegisterModel.ConfirmPassword, new { @class = "input input--large input--primary mb" })
+                        </div>
+                        <div>
+                            <label>By clicking “Register” you confirm that you accept the <a href="@Url.Content("~/Home/TermsAndConditions")" target="_blank" style="color:#dd6000;">Terms and Conditions</a></label>
+                        </div>
+                        <br/>
+                        <input type="submit" class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+" id="btnRegisterForm" value="Register" />
+                        
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+            
+            </div>
+

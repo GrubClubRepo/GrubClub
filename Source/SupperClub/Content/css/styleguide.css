@@ -1,0 +1,118 @@
+/*------------------------------------*\
+    #STYLEGUIDE STYLES
+\*------------------------------------*/
+/**
+ * These styles are used only for styleguide page, not for production.
+ */
+/**
+ * Styleguide container.
+ */
+.styleguide-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1024px;
+}
+
+/**
+ * Styleguide block.
+ */
+.styleguide-block {
+  border-bottom: 1px solid rgba(221, 220, 220, 0.5);
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+}
+.styleguide-block a[name] {
+  color: #89969f;
+}
+.styleguide-block a[name], .styleguide-block a[name]:hover {
+  text-decoration: none;
+}
+
+/**
+ * As seen on http://paularmstrong.github.io/swig/docs/tags, remixed with
+ * http://prismjs.com/ okaidia theme.
+ */
+pre, code, samp, var, kbd {
+  background: #272822;
+  color: #f8f8f8;
+  font-family: Consolas, Monaco, 'Andale Mono', monospace;
+  font-size: 13px;
+}
+
+pre {
+  border-collapse: separate;
+  margin-bottom: 3rem;
+  overflow: auto;
+  padding: 1.5em 0;
+}
+
+code {
+  direction: ltr;
+  padding: 1.5em;
+  text-align: left;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+  white-space: pre;
+  word-break: normal;
+  word-spacing: normal;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+code .token--comment,
+code .token--prolog,
+code .token--doctype,
+code .token--cdata {
+  color: slategray;
+}
+code .token--punctuation {
+  color: #f8f8f2;
+}
+code .token--namespace {
+  opacity: .7;
+}
+code .token--property,
+code .token--tag,
+code .token--constant,
+code .token--symbol {
+  color: #f92672;
+}
+code .token--boolean,
+code .token--number {
+  color: #ae81ff;
+}
+code .token--macro,
+code .token--selector,
+code .token--attr-name,
+code .token--string,
+code .token--builtin {
+  color: #9b703f;
+}
+code .token--operator,
+code .token--entity,
+code .token--url,
+code .language-css .token--string,
+code .style .token--string,
+code .token--variable {
+  color: #f8f8f2;
+}
+code .token--atrule,
+code .token--attr-value {
+  color: #e6db74;
+}
+code .token--keyword {
+  color: #66d9ef;
+}
+code .token--regex,
+code .token--important {
+  color: #fd971f;
+}
+code .token--important {
+  font-weight: bold;
+}
+code .token--entity {
+  cursor: help;
+}

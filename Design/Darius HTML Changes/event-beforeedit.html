@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="csstransforms no-csstransforms3d csstransitions js" lang="en"><!--<![endif]--><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <!-- Basic Page Needs
+     ================================================== -->
+    <meta charset="utf-8">
+    <title>Event before edit</title>
+
+    <!-- Mobile Specific
+     ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+     ================================================== -->
+    <link rel="stylesheet" type="text/css" href="files/style.css">
+    <link rel="stylesheet" type="text/css" href="files/supperclubcustom.css">
+    <link rel="stylesheet" type="text/css" href="files/css.css">
+
+    <!-- Java Script
+     ================================================== -->
+    <script src="files/ga.js" async="" type="text/javascript"></script><script src="files/jquery-1.js" type="text/javascript"></script>
+    <script src="files/jquery-ui-1.js" type="text/javascript"></script>
+
+    <!-- Template HTML Scripts
+     ================================================== -->
+    <script src="files/flexslider.js" type="text/javascript"></script>
+    <script src="files/jquery_002.js" type="text/javascript"></script>
+    <script src="files/custom.js" type="text/javascript"></script>
+    <script src="files/ender.js" type="text/javascript"></script>
+    <script src="files/selectnav.js" type="text/javascript"></script>
+    <script src="files/imagebox_002.js" type="text/javascript"></script>
+    <script src="files/carousel.js" type="text/javascript"></script>
+    <script src="files/twitter.js" type="text/javascript"></script>
+    <script src="files/tooltip.js" type="text/javascript"></script>
+    <script src="files/popover.js" type="text/javascript"></script>
+    <script src="files/effects.js" type="text/javascript"></script>
+    <!-- Page Specific Java Script -->
+    
+    <!-- Meta Properties used for Sharing with OG -->
+    <meta property="og:title" content="Novella diner">   
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://www.grubclub.com/Event/Details?eventId=33">
+    <meta property="og:image" content="http://www.grubclub.com/Content/Images/Events/defaultEventImage.png">     
+    <meta property="og:description" content="Specifically trying to test out the booking process and payment and confirmation process">
+    <meta property="og:site_name" content="GrubClub">     
+    <meta property="og:email" content="contact@grubclub.com">
+
+    <script src="files/jquery_004.js" type="text/javascript"></script>
+    <script src="files/jquery_003.js" type="text/javascript"></script>
+    <script src="files/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript" src="files/js.js"></script><script src="files/main.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        function initialize()
+        {
+         var mapCenter = new google.maps.LatLng(51.51, -0.23);
+
+          var mapOptions = {
+                    zoom: 15,
+                    maxZoom: 15,
+                    scrollwheel: false,
+                    zoomControl: false,
+                    streetViewControl: false,
+                    disableDefaultUI: false,
+                    panControl:false,
+                    center: mapCenter,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            var marker = new google.maps.Marker({
+              map: map,
+              clickable: false,
+              position : new google.maps.LatLng(51.51, -0.23),
+              title: ''
+            });
+            var circle = new google.maps.Circle({
+            map: map,
+            radius: 300,    // metres
+            strokeWeight:1,
+            strokeColor:'#AA0000',
+            clickable: false,
+            editable: false,
+            fillColor: '#AA0000',
+            fillOpacity: 0.2,
+            strokeOpacity:0.1
+            });
+            circle.bindTo('center', marker, 'position');
+            marker.setVisible(false); 
+        };
+        /* jQuery Validation with Tabs*/
+
+        //Make sure the validator works for hidden fields
+        $.validator.setDefaults({ ignore: '' });
+
+        //Move to a tab with any invalid fields
+        $(document).ready(function () {
+            $(".editor").hide();
+            $("#btnUpdate").hide();
+            $("#btnCancel").hide();
+            $("#btnUpload").hide();
+            $(".imageEdit").hide();
+            $(".imageDisplay").show();
+
+            $("#btnEdit").click(function () {
+                $(".editor").show();
+                $("#btnUpdate").show();
+                $("#btnCancel").show();
+                $("#btnUpload").show();
+                $(".display").hide();
+                $("#btnEdit").hide();
+                $(".imageEdit").show();
+                $(".imageDisplay").hide();
+            });
+
+            $("#btnCancel").click(function () {
+                $(".editor").hide();
+                $("#btnUpdate").hide();
+                $("#btnCancel").hide();
+                $("#btnUpload").hide();
+                $(".display").show();
+                $("#btnEdit").show();
+                $(".imageEdit").hide();
+                $(".imageDisplay").show();
+
+            });
+
+            $("#tabnav7").click(function(){
+                if ($("#tabnav7").is(':visible'))
+                {
+                    initialize();
+                }
+            });
+
+            $("#CostTextDisplay").maskMoney({ symbol: '£', showSymbol: true, symbolStay: true, allowZero: true });
+            $("#CostTextDisplay").mask();
+
+            $("#CuisinesDL").change(function () {
+                var cuisineText = $("#Cuisines").val();
+                if (!endsWith(cuisineText, ", ") & cuisineText.length > 0) {
+                    cuisineText = cuisineText + ", ";
+                }
+                cuisineText = cuisineText + $("#CuisinesDL option:selected").text() + ", ";
+                $("#Cuisines").val(cuisineText);
+            });
+
+            $("#EventDetailsForm").submit(function () {
+                $("#EventDetailsForm").validate();
+                //Get any tab with errors
+                var tabWithError = $("#EventDetailsForm .input-validation-error").closest(".tab-content");
+                if (tabWithError.length > 0) {
+                    tabName = tabWithError.get(0).id;
+                    tabSelect = tabName.substring(3);
+                    //Reset active class for nav and display tab block contents
+                    $(".tabs-nav").children().removeClass("active");
+                    $("#tabnav" + tabSelect).addClass("active");
+
+                    $(".tabs-container").children().css("display", "none");
+                    $("#tab" + tabSelect).css("display", "block");
+                }
+
+                // Handle Diet CheckBoxes - convert back to comma delimited string
+                var diets = "";
+                $(".dietCB:checked").each(function () {
+                    diets = diets + this.name + ",";
+                });
+                $("#Diets").val(diets); // Update the hidden field
+            });
+
+
+        });
+
+        function RankAttendee(eventId, userId, rank) {
+            $.getJSON('/Event/RankAttendee', { eventId: eventId, eventAttendeeId: userId, ranking: rank }, function (success) {
+                if (success == false) {
+                    alert("There was a problem ranking this user, please try again or contact and Administrator");
+                }
+                else {
+                    if (rank > 0) {
+                        $("#" + userId + " .positive").removeClass("white").addClass("green");
+                        $("#" + userId + " .positive").children().addClass("icon-white");
+                        $("#" + userId + " .negative").removeClass("red").addClass("white");
+                        $("#" + userId + " .negative").children().removeClass("icon-white");
+                    }
+                    else if (rank < 0) {
+                        $("#" + userId + " .positive").removeClass("green").addClass("white");
+                        $("#" + userId + " .positive").children().removeClass("icon-white");
+                        $("#" + userId + " .negative").removeClass("white").addClass("red");
+                        $("#" + userId + " .negative").children().addClass("icon-white");
+                    }
+                }
+            });
+        }
+
+        function RankEvent(eventId, userId, rank) {
+            $.getJSON('/Event/RankEvent', { eventId: eventId, eventAttendeeId: userId, ranking: rank }, function (success) {
+                if (success == false) {
+                    alert("There was a problem ranking this event, please try again or contact and Administrator");
+                }
+                else {
+                    $("#stars").children().each(function (i) {
+                        if (i < rank) {
+                            $(this).attr("src", "/Content/images/yellow_star.png");
+                        }
+                        else {
+                            $(this).attr("src", "/Content/images/grey_star.png");
+                        }
+                    });
+                }
+            });
+        }
+
+        function RejectAttendee(eventId, userId) {
+            $.getJSON('/Event/RejectAttendee', { eventId: eventId, eventAttendeeId: userId }, function (success) {
+                if (success == false) {
+                    alert("There was a problem rejecting this user, please try again or contact and Administrator");
+                }
+                else {
+                    $("#" + userId).remove();
+                }
+            });
+        }
+
+        function CancelEvent() {
+            var conf = confirm('Are you sure?');
+            if(conf) {
+                window.location = '/Event/CancelEvent?eventId=33';
+            }
+        }
+
+        function GotoTab(tabId) {
+            //Reset active class for nav and display tab block contents
+            $(".tabs-nav").children().removeClass("active");
+            $("#tabnav" + tabId).addClass("active");
+
+            $(".tabs-container").children().css("display", "none");
+            $("#tab" + tabId).css("display", "block");
+        }
+
+        function endsWith(str, suffix) {
+            return str.indexOf(suffix, str.length - suffix.length) !== -1;
+        }
+
+    </script>
+    <!-- Sharethis buttons -->
+    <script type="text/javascript" src="files/buttons.js"></script>
+    <script type="text/javascript"> stLight.options({ publisher: "eb5ec82b-023a-4757-9f2e-65e93859f8eb" }); </script>
+
+        <!-- LiveFyre Comments -->
+        <!-- https://github.com/Livefyre/livefyre-docs/wiki/Comments-3-Integration-Guide -->
+        <!-- Include the Comments 3 JavaScript library -->
+        <script type="text/javascript" src="files/livefyre.js"></script>
+        <!-- Initialise Comments 3 -->
+        <script type="text/javascript">
+            var currentUrl = $(location).attr('href');
+            var currentTitle = "Novella diner"
+            var articleId = 'event_' + 33;
+            var collectionMeta = {
+                articleId: articleId,
+                title: currentTitle,
+                url: currentUrl,
+                tags: "Events",
+            };
+
+            var streamConfig = {
+                collectionMeta: collectionMeta,
+                signed: false,
+                articleId: collectionMeta.articleId,
+                siteId: '316798',
+                el: 'livefyre'
+            };
+
+            var callback = function () {
+                document.getElementById('livefyre-status').innerHTML = 'Comments 3 has loaded!';
+                $("#livefyre-status").hide();
+            }
+
+            fyre.conv.load(
+                {}, /* This implementation uses the default network and doesn't customize the auth system */
+                [streamConfig],
+                callback
+            );
+        </script><link media="all" href="files/livefyre_embed.css" type="text/css" rel="stylesheet"><script src="files/livefyre_main.js" type="text/javascript"></script>
+    
+
+<script src="files/checkOAuth.js" type="text/javascript"></script><link href="files/buttons.css" type="text/css" rel="stylesheet"><script src="files/commonutilstats.js" charset="UTF-8" type="text/javascript"></script><script src="files/AuthenticationService.js" charset="UTF-8" type="text/javascript"></script></head>
+
+<body onclick="if(stWidget.buttonClicked==false){stWidget.stopClosing=false;stWidget.openDuration=0;stWidget.stClose(100);}">
+<!-- Header -->
+<div id="header">
+
+	<!-- 960 Container Start -->
+	<div class="container ie-dropdown-fix">
+	
+		<!-- Logo -->
+		<div class="four columns">
+			<a href="http://www.grubclub.com/"><img src="files/logo.png" alt=""></a>
+		</div>
+		
+		<!-- Main Navigation Start -->
+		<div class="twelve columns">
+			<div id="navigation">
+				<ul id="nav">
+					<li class="toplevel"><a class="current" href="http://www.grubclub.com/Search">Find a Grub Club</a>
+                        <ul>
+                            <li><a href="http://www.grubclub.com/Search">Find a Grub Club</a></li>
+                            <li><a href="http://www.grubclub.com/Home/HowItWorksGuests">How It Works For Guests</a></li>
+                            <li><a href="http://www.grubclub.com/Home/FAQsGuest">FAQs for Guests</a></li>    
+                        </ul>
+                    </li>
+                         <li class=""><a href="http://www.grubclub.com/Event/CreateEvent?supperClubId=3">Host New Event</a>
+                              <ul style="display: none;">
+                                  <li><a href="http://www.grubclub.com/Event/CreateEvent?supperClubId=3">Host New Event</a></li>
+                                    <li><a href="http://www.grubclub.com/Home/HowItWorksHosts">How It Works For Hosts</a></li>
+                                    <li><a href="http://www.grubclub.com/Home/FAQsHost">FAQs for Hosts</a></li>
+                                    <li><a href="http://www.grubclub.com/Home/HowToHost">How To Host a Grub Club</a></li>
+                                </ul>
+                           </li>
+                         <li class="toplevel"><a href="http://www.grubclub.com/Event/MyHostedEvents">My Events</a>
+                        <ul>
+                            <li><a href="http://www.grubclub.com/Event/MyEvents">My Events - Attending</a></li>
+                            <li><a href="http://www.grubclub.com/Event/MyHostedEvents">My Events - Hosting</a></li>
+                        </ul>
+                    </li>
+                    
+                    
+                    <li class="toplevel"><a href="http://www.grubclub.com/Account/UserDetails">My Account</a>
+						<ul>
+                            <li><a href="http://www.grubclub.com/Account/UserDetails">My Account Details</a></li>
+                            <li><a href="http://www.grubclub.com/Host/Details?supperClubId=3">My Grub Club Details</a></li>
+                            <li><a href="http://www.grubclub.com/Account/ChangePassword">Change Password</a></li>
+							<li><a href="http://www.grubclub.com/Account/LogOff">Log Off</a></li>
+						</ul>
+					</li>
+
+				</ul><select class="selectnav" id="selectnav1"><option selected="selected" value="">Menu</option><option value="http://www.grubclub.com/Search">Find a Grub Club</option><option value="http://www.grubclub.com/Search">- Find a Grub Club</option><option value="http://www.grubclub.com/Home/HowItWorksGuests">- How It Works For Guests</option><option value="http://www.grubclub.com/Home/FAQsGuest">- FAQs for Guests</option><option value="http://www.grubclub.com/Event/CreateEvent?supperClubId=3">Host New Event</option><option value="http://www.grubclub.com/Event/CreateEvent?supperClubId=3">- Host New Event</option><option value="http://www.grubclub.com/Home/HowItWorksHosts">- How It Works For Hosts</option><option value="http://www.grubclub.com/Home/FAQsHost">- FAQs for Hosts</option><option value="http://www.grubclub.com/Home/HowToHost">- How To Host a Grub Club</option><option value="http://www.grubclub.com/Event/MyHostedEvents">My Events</option><option value="http://www.grubclub.com/Event/MyEvents">- My Events - Attending</option><option value="http://www.grubclub.com/Event/MyHostedEvents">- My Events - Hosting</option><option value="http://www.grubclub.com/Account/UserDetails">My Account</option><option value="http://www.grubclub.com/Account/UserDetails">- My Account Details</option><option value="http://www.grubclub.com/Host/Details?supperClubId=3">- My Grub Club Details</option><option value="http://www.grubclub.com/Account/ChangePassword">- Change Password</option><option value="http://www.grubclub.com/Account/LogOff">- Log Off</option></select>
+			</div>
+		</div>
+		<!-- Main Navigation End -->
+		
+	</div>
+	<!-- 960 Container End -->
+
+</div>
+<!-- End Header -->
+
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <!-- darius: hide breadcrumbs -->
+    <!--
+    <div class="container">
+        <p>Search / Search Results</p>
+    </div>	
+    -->
+</div>
+
+
+
+<form action="http://grubclub.com/Search/SearchResultJson" id="SearchCriteriaForm" method="post" name="SearchCriteriaForm" novalidate="novalidate">    <div class="container search-bar">
+        <ul class="container search-fields-container">
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="files/i-calender.png" width="34" height="34" alt="calender-icon" onclick="$(&#39;#SearchCriteria_StartDate&#39;).focus(); return false;">
+                </span>
+                <input class="date search-input hasDatepicker" id="SearchCriteria_StartDate" name="SearchCriteria.StartDate" placeholder="When?" type="search" value="10/12/12">
+            </li>
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="files/i-map.png" width="34" height="34" alt="map-icon" onclick="$(&#39;#SearchCriteria_Location&#39;).focus(); return false;">
+                </span>
+                <input class="search-input" id="SearchCriteria_Location" name="SearchCriteria.Location" placeholder="Where?" type="search" value="London">
+            </li>
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="files/i-ppl.png" width="34" height="34" alt="people-icon" onclick="$(&#39;#SearchCriteria_Guests&#39;).focus(); return false;">
+                </span>
+                <input class="search-input" data-val="true" data-val-number="The field Guests must be a number." data-val-range="Please provide a valid number of guests" data-val-range-min="1" data-val-required="The Guests field is required." id="SearchCriteria_Guests" name="SearchCriteria.Guests" placeholder="How many?" type="search" value="2">
+            </li>
+              
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="files/i-keyword.png" width="34" height="34" alt="keyword-icon" onclick="$(&#39;#SearchCriteria_Keyword&#39;).focus(); return false;">
+                </span>
+                <input class="search-input" id="SearchCriteria_Keyword" name="SearchCriteria.Keyword" placeholder="Key Word" type="search" value="">
+            </li>
+            <li class="three columns search-button-container">
+                <span class="search-button button" onclick="$(&#39;#SearchCriteriaForm&#39;).submit()">
+                    <!-- darius: changed copy in a button / moved 'i' beside 'Find it' --><i class="icon-search icon-white"></i>Find it
+                </span>
+            </li>
+            
+            <li><input type="submit" id="btnsubmitForm" style="visibility:hidden; padding:0px"></li>
+        </ul>
+    </div>
+    
+    
+
+<!-- Page Title End -->
+<div class="container sub-title2">
+    <h2>Novella diner</h2>
+</div>
+    <!-- 960 Container Start -->
+    <div class="container">
+<form novalidate="novalidate" action="/Event/UpdateDetails" id="EventDetailsForm" method="post" style="margin-bottom: 0px;">            
+
+	<div class="six columns">
+                <div class="small-slider slider">
+                    <div class="item-img">
+                        <a href="http://www.grubclub.com/Content/Images/Events/defaultEventImage.png" rel="imagebox">
+                            <img src="images/test-medium-photo.jpg" alt="">
+                            <div class="overlay zoom">
+                            </div>
+                      </a>
+                  </div>
+                    <p>
+                        
+                  </p><div class="details-timings-container timings-info">
+                        <h6 style="display: inline;">DATE: </h6> 11/12/2012
+                        <br>
+                        <h6 style="display: inline;">TIME: </h6>19:25 - 23:25
+                        <br>
+                        <h6 style="display: inline;">SEATS: </h6>10
+                        </div>
+                    <p></p>
+                </div>
+                <div class="portfolio-item-meta"> 
+                    <p></p>
+                     <!-- Event and Booking Section -->
+                     
+                     	
+                        
+                        <!-- darius: added 'float right'--><a href="#" onclick="CancelEvent();" class="button medium red" style="float:right;">Cancel Event</a>
+                        <!-- darius: changed 'float right' to 'float left'-->
+                        <input id="btnEdit" value="Edit Event" class="button medium yellow" style="float:left" type="button">
+                        
+                        <input id="btnUpdate" value="Update" class="button medium orange" style="float: left; " type="submit">
+                        <input id="btnCancel" value="Back" class="button medium red" style="float: right; " type="button">
+                    
+                    <!-- Hosted By Section -->
+                    <h5>Hosted By:</h5>
+                    
+                    <!-- darius: added image and div -->
+                    <div class="meta-image">
+                        <a href="" >
+                            <img src="images/test-small.jpg" alt="">
+                        </a>
+                    </div>
+                    
+                    <!-- darius: changed p to div -->
+                   	<div class="meta-copy">
+                        <a href="http://grubclub.com/Host/Details?supperClubId=3" style="color: #3F8FAF">North London Supper Club</a>
+                        <!-- darius: changed 'br' to 'div' -->
+                        <div>
+                        Come along to our regular Windsor venue, meeting for drinks in the Two Brewers.
+                        </div>
+                    </div>
+
+                        <!-- Sharing Section -->
+                        <h5>
+                            Share this event</h5>
+                        <span st_processed="yes" class="st_googleplus_large" displaytext="Google +">
+                        <span class="stButton" style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;"><span style="background-image: url(&quot;http://w.sharethis.com/images/googleplus_32.png&quot;);" class="stLarge"></span><img style="position: absolute; top: -7px; right: -7px; width: 19px; height: 19px; max-width: 19px; max-height: 19px; display: none;" src="files/check-big.png"></span></span>
+                        <span st_processed="yes" class="st_facebook_large" displaytext="Facebook">
+                        <span class="stButton" style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;"><span style="background-image: url(&quot;http://w.sharethis.com/images/facebook_32.png&quot;);" class="stLarge"></span><img style="position: absolute; top: -7px; right: -7px; width: 19px; height: 19px; max-width: 19px; max-height: 19px; display: none;" src="files/check-big.png"></span></span>
+                        <span st_processed="yes" class="st_twitter_large" displaytext="Tweet" st_via="Grub_Club" st_msg="#SupperClub #Event">
+                        <span class="stButton" style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;"><span style="background-image: url(&quot;http://w.sharethis.com/images/twitter_32.png&quot;);" class="stLarge"></span><img style="position: absolute; top: -7px; right: -7px; width: 19px; height: 19px; max-width: 19px; max-height: 19px; display: none;" src="files/check-big.png"></span></span>
+                        <span st_processed="yes" class="st_pinterest_large" displaytext="Pinterest">
+                        <span class="stButton" style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;"><span style="background-image: url(&quot;http://w.sharethis.com/images/pinterest_32.png&quot;);" class="stLarge"></span><img style="position: absolute; top: -7px; right: -7px; width: 19px; height: 19px; max-width: 19px; max-height: 19px; display: none;" src="files/check-big.png"></span></span>
+                </div>
+            </div>
+            
+            
+              <!-- darius: added class 'event-info' -->
+            <div class="nine columns event-info">
+                <input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Id" name="Id" value="33" type="hidden">
+                <input data-val="true" data-val-required="The Active field is required." id="Active" name="Active" value="True" type="hidden">
+                <input id="ImagePath" name="ImagePath" value="defaultEventImage.png" type="hidden">
+                <input data-val="true" data-val-required="The DateCreated field is required." id="DateCreated" name="DateCreated" value="10/12/2012 15:05:42" type="hidden">
+                <input data-val="true" data-val-number="The field SupperClubId must be a number." data-val-required="The SupperClubId field is required." id="SupperClubId" name="SupperClubId" value="3" type="hidden">
+                
+                <input data-val="true" data-val-required="*" id="Start" name="Start" value="11/12/2012 19:25:00" type="hidden">
+                <input data-val="true" data-val-required="The End field is required." id="End" name="End" value="11/12/2012 23:25:00" type="hidden">
+                <input data-val="true" data-val-number="The field How many hours long is it? * must be a number." data-val-range="Please provide a valid duration" data-val-range-min="1" data-val-required="*" id="Duration" name="Duration" value="4" type="hidden">
+                
+                <!-- Hidden Validation Summary --->
+                <div style="display:none">
+                    <div class="validation-summary-valid" data-valmsg-summary="true"><ul><li style="display:none"></li>
+</ul></div>
+                </div>
+
+                <!-- Tabs Navigation -->
+                <ul class="tabs-nav">
+                    <li class="active" id="tabnav1"><a href="#tab1">Details</a></li>
+                    <li id="tabnav2"><a href="#tab2">Menu</a></li>
+                    <li id="tabnav3"><a href="#tab3">Other</a></li>
+                        <li id="tabnav4"><a href="#tab4">Picture</a></li>
+                        <li id="tabnav5"><a href="#tab5">Guests</a></li>
+                    <li id="tabnav7"><a href="#tab7">Location</a></li>
+                </ul>
+                <!-- Tabs Content -->
+                <div class="tabs-container">
+                    <div style="display: block;" class="tab-content" id="tab1">
+                        <div class="details-column">
+                            <h5>Event Date and Time</h5>
+                                <p>11/12/2012 19:25 - 23:25</p>
+                            <div style="display: none;" class="editor field">
+                                <p>(You can't change the time and duration because we've started selling tickets)</p>
+                            </div>
+                        </div>
+                        
+                        <input data-val="true" data-val-required="*" id="Name" name="Name" value="Novella diner" type="hidden">
+                        
+                        
+                        <div class="details-column">
+                            <h5>Description</h5>
+                            <span class="field-validation-valid" data-valmsg-for="Description" data-valmsg-replace="true"></span>
+                            <div class="display field">
+                                <p>Specifically trying to test out the booking process and payment and confirmation process</p>
+                            </div>
+                            <div style="display: none;" class="editor field">
+                                <textarea class="text-box multi-line" data-val="true" data-val-required="*" id="Description" name="Description">Specifically trying to test out the booking process and payment and confirmation process</textarea>
+                            </div>
+                        </div>
+
+                        <div class="details-column">
+                            <h5>Cost</h5>
+                            <span class="field-validation-valid" data-valmsg-for="CostTextDisplay" data-valmsg-replace="true"></span>
+                            <!-- darius: added 'important-copy' for thew price -->
+                            <div class="display field important-copy">
+                                <p>£0.00</p>
+                            </div>
+                            <div style="display: none;" class="editor field">
+                                <span>Grub Club will add a 3% commission 
+                                to the price per ticket for guests</span>
+                                
+
+<input availableseats="9" cuisines="System.Web.Mvc.SelectList" diets="System.Collections.Generic.List`1[SupperClub.Domain.Diet]" title="Event Details" id="CostTextDisplay" name="CostTextDisplay" placeholder="£X.00" value="£0.00" type="text">
+                                <input data-val="true" data-val-number="The field How much does it cost per person? * must be a number." data-val-required="*" id="Cost" name="Cost" value="0.0000" type="hidden">
+                            </div>
+                        </div>
+
+                        <div class="details-column">
+                            <h5>Seats Available</h5>
+                            <span class="field-validation-valid" data-valmsg-for="Guests" data-valmsg-replace="true"></span>
+                            <div class="display field">
+                                <p>9 / 10 available</p>
+                            </div>
+                            <div style="display: none;" class="editor field">
+                                
+
+<input availableseats="9" cuisines="System.Web.Mvc.SelectList" diets="System.Collections.Generic.List`1[SupperClub.Domain.Diet]" title="Event Details" data-val="true" data-val-number="The field Seats Available * must be a number." data-val-range="Please provide a valid number of seats" data-val-range-min="1" data-val-regex="The field Seats Available * should be a positive or negative non-decimal number." data-val-regex-pattern="^-?\d+$" data-val-required="*" id="Guests" name="Guests" placeholder="" value="10" type="text">
+                            </div>
+                        </div>
+
+                        <div class="details-column">
+                            <div style="display: none;" class="editor field">
+                                <h5>Reserved Seats</h5>    
+                                <span class="field-validation-valid" data-valmsg-for="ReservedSeats" data-valmsg-replace="true"></span>    
+                                
+
+<input availableseats="9" cuisines="System.Web.Mvc.SelectList" diets="System.Collections.Generic.List`1[SupperClub.Domain.Diet]" title="Event Details" data-val="true" data-val-number="The field Reserved Seats must be a number." data-val-range="Please provide a valid number of reserved seats" data-val-range-min="0" data-val-regex="Must be a number" data-val-regex-pattern="^-?\d+$" data-val-required="The Reserved Seats field is required." id="ReservedSeats" name="ReservedSeats" placeholder="" value="0" type="text">
+                            </div>
+                        </div>
+
+                        <div class="details-column">
+                            <h5>House Rules</h5>
+                            <span class="field-validation-valid" data-valmsg-for="HouseRule" data-valmsg-replace="true"></span>
+                            <div class="display field">
+                                <p>No shoes. Everyone must wear togas. </p>
+                            </div>
+                            <div style="display: none;" class="editor field">
+                                <textarea class="text-box multi-line" id="HouseRule" name="HouseRule">No shoes. Everyone must wear togas. </textarea>
+                            </div>
+                        </div>
+
+                        <div class="display field">
+                            <!-- LiveFyre Comments 3 -->
+                            <div style="display: none;" id="livefyre-status">Comments 3 has loaded!</div>
+                            <div class="fyre-width-medium fyre" id="livefyre"><div class="fyre-widget"><iframe src="files/httpwww.html" style="position: absolute; height: 1px; width: 1px; z-index: 99999; background-color: transparent;" frameborder="0"></iframe><div class="fyre-permalink-stream"></div><div class="fyre-stream-stats"><div class="fyre-comment-count"><span>0 comments</span></div><div class="fyre-divider"></div><div class="fyre-help"><div class="fyre-box-wrapper"><a href="http://livefyre.com/" target="_blank"><img class="fyre-logo-drop" src="files/down_arrow.png"><img class="fyre-logo-help" src="files/lf-logo.png" alt="Livefyre"></a><ul class="fyre-box-list"><li><a href="http://livefyre.com/" target="_blank" title="Get Livefyre">Get Livefyre</a></li><li><a href="http://support.livefyre.com/" target="_blank" title="FAQ">FAQ</a></li></ul></div></div></div><div class="fyre-auth"><div class="fyre-login-bar"><a rel="nofollow" href="#" class="fyre-user-loggedout">Sign in</a></div><div class="fyre-live-container"><div class="fyre-livecount"><em class="fyre-stream-livecount">1 person listening</em></div><div class="fyre-listener-avatars"></div></div></div><div style="" class="fyre-editor"><div class="fyre-editor-container"><div class="fyre-editor-editable"><iframe id="fyre-editor-22" class="fyre-roundedpanel-content editable" style="padding: 0px; background-color: white;" frameborder="0"></iframe></div><div class="fyre-editor-toolbar"><div role="toolbar" style="-moz-user-select: none;" class="goog-toolbar goog-toolbar-horizontal"><div id=":1" style="-moz-user-select: none;" role="button" title="" class="goog-inline-block fyre-button-left fyre-format-button"><div class="goog-inline-block fyre-button-left-outer-box"><div class="goog-inline-block fyre-button-left-inner-box"></div></div></div><div id=":2" style="-moz-user-select: none;" role="button" title="" class="goog-inline-block fyre-button-left fyre-mention-button"><div class="goog-inline-block fyre-button-left-outer-box"><div class="goog-inline-block fyre-button-left-inner-box"></div></div></div><div id=":3" style="-moz-user-select: none;" role="button" title="" class="goog-inline-block fyre-button-left fyre-follow-button"><div class="goog-inline-block fyre-button-left-outer-box"><div class="goog-inline-block fyre-button-left-inner-box">+ Follow</div></div></div><div id=":4" style="-moz-user-select: none;" role="button" title="" class="goog-inline-block fyre-button-right fyre-post-button fyre-post-button-enabled fyre-post-button-new"><div class="goog-inline-block fyre-button-right-outer-box"><div class="goog-inline-block fyre-button-right-inner-box">Post comment as...</div></div></div><div id=":5" style="-moz-user-select: none;" role="button" title="" class="goog-inline-block fyre-button-right fyre-post-to fyre-post-to-facebook"><div class="goog-inline-block fyre-button-right-outer-box"><div class="goog-inline-block fyre-button-right-inner-box"></div></div></div><div id=":6" style="-moz-user-select: none;" role="button" title="" class="goog-inline-block fyre-button-right fyre-post-to fyre-post-to-twitter"><div class="goog-inline-block fyre-button-right-outer-box"><div class="goog-inline-block fyre-button-right-inner-box"></div></div></div><div id=":7" style="-moz-user-select: none;" role="button" title="" class="goog-inline-block fyre-button-right fyre-post-to fyre-post-to-linkedin"><div class="goog-inline-block fyre-button-right-outer-box"><div class="goog-inline-block fyre-button-right-inner-box"></div></div></div><div id=":8" role="separator" style="-moz-user-select: none;" class="goog-toolbar-separator goog-inline-block">&nbsp;</div></div><div style="display: none;" class="fyre-format-toolbar"><div tabindex="-1" role="toolbar" style="-moz-user-select: none;" class="goog-toolbar goog-toolbar-horizontal"><div id="+bold" style="-moz-user-select: none;" role="button" aria-pressed="true" title="Bold" class="goog-inline-block goog-toolbar-button"><div class="goog-inline-block goog-toolbar-button-outer-box"><div class="goog-inline-block goog-toolbar-button-inner-box"><div class="tr-icon tr-bold"></div></div></div></div><div id="+italic" style="-moz-user-select: none;" role="button" aria-pressed="true" title="Italic" class="goog-inline-block goog-toolbar-button"><div class="goog-inline-block goog-toolbar-button-outer-box"><div class="goog-inline-block goog-toolbar-button-inner-box"><div class="tr-icon tr-italic"></div></div></div></div><div id="+underline" style="-moz-user-select: none;" role="button" aria-pressed="true" title="Underline" class="goog-inline-block goog-toolbar-button"><div class="goog-inline-block goog-toolbar-button-outer-box"><div class="goog-inline-block goog-toolbar-button-inner-box"><div class="tr-icon tr-underline"></div></div></div></div><div id="+link" style="-moz-user-select: none;" role="button" aria-pressed="true" title="Add or remove link" class="goog-inline-block goog-toolbar-button"><div class="goog-inline-block goog-toolbar-button-outer-box"><div class="goog-inline-block goog-toolbar-button-inner-box"><div class="tr-link">Link</div></div></div></div><div id="+insertOrderedList" style="-moz-user-select: none;" role="button" aria-pressed="true" title="Numbered list" class="goog-inline-block goog-toolbar-button"><div class="goog-inline-block goog-toolbar-button-outer-box"><div class="goog-inline-block goog-toolbar-button-inner-box"><div class="tr-icon tr-insertOrderedList"></div></div></div></div><div id="+insertUnorderedList" style="-moz-user-select: none;" role="button" aria-pressed="true" title="Bullet list" class="goog-inline-block goog-toolbar-button"><div class="goog-inline-block goog-toolbar-button-outer-box"><div class="goog-inline-block goog-toolbar-button-inner-box"><div class="tr-icon tr-insertUnorderedList"></div></div></div></div></div></div></div><div class="fyre-editor-preview"></div></div></div><div class="fyre-input-box-collapsed"></div><div class="fyre-comment-stream"><div style="display: none;" class="fyre-content-loading">Loading</div><div class="fyre-stream-sort"><span class="fyre-stream-sort-text">Sort: </span><a href="#" class="fyre-stream-sort-newest fyre-stream-sort-selected">Newest</a><span class="fyre-stream-sort-bar"> | </span><a href="#" class="fyre-stream-sort-oldest">Oldest</a></div><div class="fyre-stream-content"></div><div style="display: none;" class="fyre-stream-more"><div class="fyre-stream-more-container"><div class="fyre-text">Show More Comments</div><div class="fyre-spinner"><div class="fyre-ball"><!--[if IE]><img src="http://zor.fyre.co/wjs/v3.0.10029/images/fyre-spinner-ball.gif" alt="" /><![endif]--><!--[if !IE]><!--><img src="files/fyre-spinner-ball.png" alt=""><!--<![endif]--></div></div></div></div></div><div style="display: none;" class="fyre-notifier-container"><div class="fyre-notifier"><ul class="fyre-notifier-list"></ul><ul class="fyre-notifier-archive"></ul></div><div class="fyre-notifier-base-shadow"><div class="fyre-notifier-base"><div class="fyre-notifier-counter blue">0</div><div class="fyre-notifier-caption">New Comments</div><div class="fyre-notifier-base-close"></div></div></div></div></div></div>
+                        </div>
+                    </div>
+
+                    <div style="display: none;" class="tab-content" id="tab2">
+                        <div class="details-column">
+                            <h5>Cuisine</h5>
+                            <span class="field-validation-valid" data-valmsg-for="Cuisines" data-valmsg-replace="true"></span>
+                            <div class="display field">
+                                <p>English, Hungarian, Continental, Pescatarian</p>
+                            </div>
+                            <div style="display: none;" class="editor field">
+                                <select class="custom_select" id="CuisinesDL" name="CuisinesDL"><option selected="selected" value="">- Select Cuisine -</option>
+<option value="1">English</option>
+<option value="3">Japanese</option>
+<option value="4">Italian</option>
+<option value="5">Thai</option>
+<option value="10">Chinese</option>
+<option value="14">Malaysian</option>
+<option value="27">Indonesian</option>
+<option value="33">Hungarian</option>
+<option value="34">Traditional English</option>
+<option value="35">Continental</option>
+<option value="36">Latin</option>
+<option value="37">Spanish</option>
+<option value="38">Fruit</option>
+<option value="39">trial</option>
+<option value="40">British</option>
+<option value="41">Piratesque</option>
+<option value="42">Jamaican</option>
+<option value="43">Pescatarian</option>
+</select>
+                                
+
+<input availableseats="9" cuisines="System.Web.Mvc.SelectList" diets="System.Collections.Generic.List`1[SupperClub.Domain.Diet]" title="Event Details" id="Cuisines" name="Cuisines" placeholder="" value="English, Hungarian, Continental, Pescatarian" type="text">
+                            </div>
+                        </div>
+                        
+                        <div class="details-column">
+                            <h5>Specific Diets</h5>
+                            <span class="field-validation-valid" data-valmsg-for="Diets" data-valmsg-replace="true"></span>
+                            <div class="display field">
+                                <p>Vegan</p>
+                            </div>
+                            <div style="display: none;" class="editor field">
+                                
+<input class="dietCB" id="Vegetarian" name="Vegetarian" style="width:50px;" value="true" type="checkbox"><input name="Vegetarian" value="false" type="hidden">Vegetarian<input checked="checked" class="dietCB" id="Vegan" name="Vegan" style="width:50px;" value="true" type="checkbox"><input name="Vegan" value="false" type="hidden">Vegan                                <input id="Diets" name="Diets" value="Vegan" type="hidden">
+                                <br><br>
+                            </div>
+                        </div>
+
+                        <div class="details-column">
+                            <h5>Menu</h5>
+                            <span class="field-validation-valid" data-valmsg-for="Menu" data-valmsg-replace="true"></span>
+                            <div class="display field">
+                                <!-- Split on new line -->
+                                <ul class="arrow_list">
+                                    <li>Antipasti</li>    
+                                    <li>Rabbit ravioli</li>    
+                                    <li>Carpaccio</li>    
+                                    <li>Vodka sorbet</li>    
+                                    <li>Vitello tonnato</li>    
+                                    <li>Grilled swordfish</li>    
+                                    <li>Tiramisu</li>    
+                                </ul>
+                            </div>
+                            <div style="display: none;" class="editor field">
+                                <p>(Remember put a * between courses to create a list!)</p>
+                                <textarea class="text-box multi-line" id="Menu" name="Menu">Antipasti * Rabbit ravioli * Carpaccio * Vodka sorbet * Vitello tonnato * Grilled swordfish * Tiramisu
+
+
+
+
+
+
+
+
+</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: none;" class="tab-content" id="tab3">
+                        <div class="display field check-box-field">
+                            <input checked="checked" class="check-box" disabled="disabled" type="checkbox">
+                            <label for="Alcohol">Are guests permitted to bring their own alcohol?</label>
+                        </div>
+                        <div style="display: none;" class="editor field check-box-field">
+                            <input checked="checked" class="check-box" data-val="true" data-val-required="The Are guests permitted to bring their own alcohol? field is required." id="Alcohol" name="Alcohol" value="true" type="checkbox"><input name="Alcohol" value="false" type="hidden">
+                            <label for="Alcohol">Are guests permitted to bring their own alcohol?</label>
+                            <span class="field-validation-valid" data-valmsg-for="Alcohol" data-valmsg-replace="true"></span>
+                        </div>
+                        <br>
+                        <div class="display field check-box-field">
+                            <input class="check-box" disabled="disabled" type="checkbox">
+                            <label for="Charity">Is this a charity event?</label>
+                        </div>
+                        <div style="display: none;" class="editor field check-box-field">
+                            <input class="check-box" data-val="true" data-val-required="The Is this a charity event? field is required." id="Charity" name="Charity" value="true" type="checkbox"><input name="Charity" value="false" type="hidden">
+                            <label for="Charity">Is this a charity event?</label>
+                            <span class="field-validation-valid" data-valmsg-for="Charity" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>
+                        <div style="display: none;" class="tab-content" id="tab4">
+                            <span style="display: none;" class="imageEdit">
+                                    <iframe id="imageFrame" src="files/UploadImage.html" style="border:none; margin:0; padding:0; min-height:100%; width:100%;" scrolling="no">
+                                    </iframe>
+                            </span>
+                            <div class="imageDisplay item-img">
+                                <img src="files/defaultEventImage.png" alt="">
+                            </div>
+                        </div>
+                        <div class="tab-content" id="tab5" style="padding-left: 0px; padding-right: 0px; display: none;">
+                            <table class="standard-table" style="margin-bottom:0px;">
+                                <tbody><tr>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Ratings
+                                    </th>
+                                        <th>
+                                            Reject
+                                        </th>
+                                </tr>
+                                    <tr id="1cb14c0f-3546-4e79-80d5-db848f8cc125">
+                                        <td>
+                                            Guest Nam (+0)
+                                        </td>
+                                        <td>
+                                            <i class="icon-thumbs-up"></i><span class="positive">0</span>
+                                             | 
+                                            <i class="icon-thumbs-down"></i><span class="negative">0</span>
+                                        </td>
+                                            <td>
+                                                <a href="#" onclick="RejectAttendee(33, '1cb14c0f-3546-4e79-80d5-db848f8cc125');" class="button small red">
+                                                    <i class="icon-remove icon-white"></i>Reject</a>
+                                            </td>
+                                    </tr>
+                            </tbody></table>
+                            <br>
+                            <a href="http://www.grubclub.com/Event/GuestList?eventId=33" class="button medium yellow" style="">Full Guest List</a>
+                        </div>
+                    
+                    <div style="display: none;" class="tab-content" id="tab7">
+                        <div class="display field">
+                            <div id="map" style="width: 100%; height: 480px;"></div>
+                        </div>
+                        <div style="display: none;" class="editor field">
+                            <div class="field">
+                                <label for="Address">Address 1 *</label>
+                                <span class="field-validation-valid" data-valmsg-for="Address" data-valmsg-replace="true"></span>
+                            </div>
+                            <div class="field">
+                                
+
+<input availableseats="9" cuisines="System.Web.Mvc.SelectList" diets="System.Collections.Generic.List`1[SupperClub.Domain.Diet]" title="Event Details" data-val="true" data-val-required="*" id="Address" name="Address" placeholder="" value="17 Abdale Road" type="text">
+                            </div>
+                            <div class="label">
+                                <label for="Address2">Address 2</label>
+                                <span class="field-validation-valid" data-valmsg-for="Address2" data-valmsg-replace="true"></span>
+                            </div>
+                            <div class="field">
+                                
+
+<input availableseats="9" cuisines="System.Web.Mvc.SelectList" diets="System.Collections.Generic.List`1[SupperClub.Domain.Diet]" title="Event Details" id="Address2" name="Address2" placeholder="" type="text">
+                            </div>
+                            <div class="label">
+                                <label for="City">Town/City *</label>
+                                <span class="field-validation-valid" data-valmsg-for="City" data-valmsg-replace="true"></span>
+                            </div>
+                            <div class="field">
+                                
+
+<input availableseats="9" cuisines="System.Web.Mvc.SelectList" diets="System.Collections.Generic.List`1[SupperClub.Domain.Diet]" title="Event Details" data-val="true" data-val-required="*" id="City" name="City" placeholder="" value="London" type="text">
+                            </div>
+                            <div class="label">
+                                <label for="PostCode">Post Code *</label>
+                                <span class="field-validation-valid" data-valmsg-for="PostCode" data-valmsg-replace="true"></span>
+                            </div>
+                            <div class="field">
+                                
+
+<input availableseats="9" cuisines="System.Web.Mvc.SelectList" diets="System.Collections.Generic.List`1[SupperClub.Domain.Diet]" title="Event Details" data-val="true" data-val-required="*" id="PostCode" name="PostCode" placeholder="" value="w12 7er" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+</form>    </div>
+
+
+<!-- Footer Start -->
+<div id="footer">
+
+	<!-- 960 Container -->
+	<div class="container">
+		
+		<!-- About -->
+		<div class="one-third column">
+			<h5>About Us</h5>
+			<p>This is a story of two food obsessed people who realised they 
+simply wanted to share what they loved doing every day: get people 
+together to share laughter around a dinner table... <a href="http://www.grubclub.com/Home/AboutUs">read more</a></p>
+            <p>We are just starting out so any <a href="http://www.grubclub.com/Home/ContactUs?messageText=I%27ve%20got%20some%20feedback%20and%20it%27s%20about%20">feedback</a> is welcome!</p>
+		</div>
+		
+		<!-- Useful Links -->
+		<div class="one-third column">
+			<h5>Useful Links</h5>
+			<ul class="links-list">
+                <li><a href="http://www.grubclub.com/Home/NotesFromASupperClub">Notes From A Supper Club</a></li>
+			</ul>
+		</div>
+		
+		<!-- Latest From Blog
+		<div class="four columns">
+			<h5>Latest From The Blog</h5>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_01.png" alt="" /></a>
+				<p><a href="#">Maecenas metus lore nulla, facili, pretium lipsum sit.</a></p>
+				<span>28 June 2012</span>
+			</div>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_02.png" alt="" /></a>
+				<p><a href="#">Aean metus lore nulla, facili, pretium lipsum dolor.</a></p>
+				<span>26 June 2012</span>
+			</div>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_03.png" alt="" /></a>
+				<p><a href="#">Metus lore lipsum nullam, facili, pretiumea lipsum.</a></p>
+				<span>22 June 2012</span>
+			</div>
+		</div> -->
+		
+		<!-- Twitter -->
+		<div class="one-third column">
+			<h5>Latest Tweets</h5>
+			<ul id="twitter"><li><span>Some amazing recipe books from @<a href="http://twitter.com/guardian">guardian</a> <a href="http://t.co/OlcvzzTq">http://t.co/OlcvzzTq</a>. Looking for foodie presents: what other great recipe books to people enjoy?</span> <br><b><a href="http://twitter.com/grub_club/statuses/278187446661967873">about 14 hours ago</a></b></li><li><span>@<a href="http://twitter.com/mysterydiner1">mysterydiner1</a> Thanks! Really love reading and saring the story behind people's favourite foods</span> <br><b><a href="http://twitter.com/grub_club/statuses/278159308196306944">about 16 hours ago</a></b></li></ul>
+				<script type="text/javascript">
+				    jQuery(document).ready(function ($) {
+				        $.getJSON('http://api.twitter.com/1/statuses/user_timeline/Grub_Club.json?count=2&callback=?', function (tweets) {
+				            $("#twitter").html(tz_format_twitter(tweets));
+				        });
+				    });
+				</script>
+			<div class="clearfix"></div>
+		</div>
+
+	</div>
+	<!-- 960 Container End -->
+	
+</div>
+<!-- Footer End -->
+
+<!--  Footer Copyright-->
+<div id="footer-bottom">
+
+	<!-- 960 Container -->
+	<div class="container">
+				
+		<div class="eight columns">
+			<div id="copyright">© Copyright 2012 by <a href="http://www.grubclub.com/Home/ContactUs">GrubClub</a>. All Rights Reserved. <a href="http://www.grubclub.com/Home/TermsAndConditions">Terms and Conditions</a></div>
+		</div>
+		
+        
+
+		<div class="eight columns">
+			<ul class="social-links">
+				
+                <li>
+                    <a href="#" onclick="window.open('http://www.twitter.com/Grub_Club');" rel="tooltip" title="Twitter">
+                        <img src="files/twitter.png" alt="Facebook"></a>
+                </li>
+                <li>
+                    <a href="#" onclick="window.open('http://www.facebook.com/GrubClub1');" rel="tooltip" title="Facebook">
+                        <img src="files/facebook.png" alt="Facebook"></a>
+                </li>
+                <li>
+                    <a href="http://www.grubclub.com/Home/ContactUs" rel="tooltip" title="Contact">
+                        <img src="files/mail.png" alt="Contact"></a>
+                </li>
+				<!--<li class="digg"><a href="#">Digg</a></li>
+				<li class="vimeo"><a href="#">Vimeo</a></li>
+				<li class="youtube"><a href="#">YouTube</a></li>
+				<li class="skype"><a href="#">Skype</a></li>-->
+			</ul>
+		</div>
+
+	</div>
+	<!-- End 960 Container -->
+	
+</div>
+<!--  Footer Copyright End -->
+
+    <!-- Google Analytics -->    
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36514914-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+<!-- Back To Top Button -->
+<div id="backtotop"><a href="#"></a></div>
+
+<!-- Imagebox Build -->
+<script src="files/imagebox.js" type="text/javascript"></script><div id="ib-overlay"></div>
+
+<!-- Menu Highlighter -->
+<script type="text/javascript">
+    var loc = window.location.pathname;
+    var selectedMenuLink = $('li>a[href$="' + loc + '"]');
+    var link = selectedMenuLink[0];
+    if (link != null) {
+        $(".toplevel>a").removeClass("current");
+        if ($(link).parent().hasClass('toplevel')) {
+            $(link).addClass('current');
+        }
+        else {
+            // Assign the nearest top level menu item
+            var topLink = $(link).closest('.toplevel').children(':first-child a');
+            $(topLink).addClass("current");
+        }
+    }
+</script>
+
+
+<iframe style="display:none;" src="files/getSegment.html" name="stSegmentFrame" id="stSegmentFrame" frameborder="0" height="0px" scrolling="no" width="0px"></iframe><div style="visibility: hidden; top: -999px; left: -999px;" class="stwrapper" id="stwrapper"><div class="stclose"></div><iframe src="files/index.html" style="top: 0px; left: 0px;" name="stLframe" class="stLframe" id="stLframe" allowtransparency="true" frameborder="0" height="350px" scrolling="no" width="353px"></iframe></div><div class="fyre-tooltip"></div></body></html>

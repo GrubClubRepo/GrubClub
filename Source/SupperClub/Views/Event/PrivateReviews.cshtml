@@ -1,0 +1,90 @@
+﻿
+@model SupperClub.Models.PrivateReviewModel
+
+@section PageSpecificScripts {
+
+<meta name="robots" content="noindex,follow" />
+    }
+
+<div class="container container--small" id="DivReviews">
+
+    <div style="margin-bottom: 30px;">
+        <h2 style=" color: #FF3300; display: inline; padding-right: 15px; margin-left:50px !important;">Private Reviews</h2>
+    </div>
+
+    @foreach(SupperClub.Domain.Review r in Model.Reviews)
+    { 
+    <div class="flag flag--top flag--flush flag--responsive mb">
+        <div class="flag__img ph">
+            <img src="@Url.Content("~/Content/images/")placeholder-img2.jpg" alt="">
+        </div>
+        <div class="flag__body">
+
+            <h3 class="h6 type-semibold">@r.GuestName  &nbsp; &nbsp; &nbsp; <time>@r.DateCreated.ToString("ddd, d MMM yyyy")</time></h3>
+
+
+            @if (r.Rating == 5)
+            { 
+            <ul class="rating ">
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            }
+            else if (r.Rating == 4)
+            { 
+            <ul class="rating ">
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            }
+            else if (r.Rating == 3)
+            { 
+            <ul class="rating ">
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+           }
+            else if (r.Rating == 2)
+            { 
+            <ul class="rating ">
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            }
+            else if (r.Rating == 1)
+            {             <ul class="rating ">
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            }
+           else if (r.Rating== 0)
+            {
+            <ul class="rating ">
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            }
+
+            <p class="type-light">@r.PrivateReview</p>
+        </div>
+    </div>
+    }
+</div>

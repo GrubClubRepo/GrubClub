@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Our Pop Up Story | Grub Club";
+    ViewBag.Description = "A story of two people obsessed with food and connecting people";
+}
+
+@section PageSpecificScripts {
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<!--  960 Container Start -->
+<div class="container">
+
+    <!-- Space column for centering -->
+    <div class="three columns"><p></p></div>
+
+	<!-- Accordions
+	================================================== -->
+	<div class="ten columns sub-title4">
+        <h2>This is a story...</h2>
+        <p>...of two food obsessed friends who realised they simply wanted to share what they loved doing every day: get people together to discover a new food adventure, providing eating experiences in new venues so chefs can use their talents in fresh and exciting ways:</p>
+        <blockquote>
+            <p>"On what seemed an exotic trip to Zanzibar in 2006, I was surrounded by idyllic white sandy beaches, turquoise waters with exotic dhows floating across them.</p>
+            <p>Being a foodie, I couldn’t wait to see what riches the Spice Island would offer. Beautiful as the island was, imagine my disappointment to see a whole range of underwhelming European restaurants.</p>
+            <p>I spent the rest of the trip looking for Zanzibari cuisine and finally came across Two Tables – a local family home converted into a restaurant with… that’s right: two tables! What a wonderful experience eating local, natural home cooked food, discovering Stone Town’s culinary secrets from a friendly Zanzibari.</p>
+            <p>Fast forward to 2010 where I met Liv, We were both working and living in South India for a year. Our paths soon crossed and a lasting friendship was quickly established, bringing Liv to the dinner table of many of my friends’ mums who were delighted to share their culinary secrets with the curious foreigner.</p>
+            <p>Back in London, Liv was eager to channel her passion for building sustainable communities through grassroots food enterprises while I couldn’t get the idea of my Zanzibari experience out of my head. Our shared love of food, travel and meeting people sealed our destinies and Grub Club was born."</p>
+        </blockquote>
+        <p>Liv and Sid would like to build on this idea with you by bringing together a community of food lovers who share the same passions and interests, be it in London, Zanzibar, South India or anywhere in the world.</p>
+	</div>
+</div>
+<div class="container">
+<div class="three columns"><p></p></div>
+<div class="ten columns sub-title4">
+	<h2>See How It Works</h2>
+	<div align="center">	
+		<div class="recently-added-events-vdo-box-large">
+		<iframe src="http://player.vimeo.com/video/65300127?title=0&amp;byline=0&amp;portrait=0&amp;color=ff6700" width="500" height="281" frameborder="1" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><p>Filmed and edited by our friends at <a href="http://www.manuelfernandez.co.uk">www.manuelfernandez.co.uk</a></p>
+		</div>
+	</div>
+  </div>
+</div>
+<!-- End 960 Container -->

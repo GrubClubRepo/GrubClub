@@ -1,0 +1,317 @@
+﻿@model SupperClub.Domain.Event
+
+@{
+    ViewBag.Title = "Guest List";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Set selected seatingTime
+        $("input[name='seatingTime']").change(function () {
+            var selectedVal = $("input[type='radio'][name='seatingTime']:checked").val();
+            if (selectedVal != 10000) {
+                var rows = $('table.standard-table tr');
+                var SelSeat = rows.filter('.Class' + selectedVal).show();
+                var SelSeatTotal = rows.filter('.TotalClass' + selectedVal).show();
+                rows.not(SelSeat).not(SelSeatTotal).not('thead tr').hide();
+            }
+            else {
+
+                $('table.standard-table tr').show();
+                $('tr[class^="TotalClass"]').hide();
+                $("#grandTotal").show();
+            }
+        });
+        var isMulti = "@Model.MultiSeating";
+        if (isMulti.toUpperCase() == "TRUE") {
+            $("#grandTotal").hide();
+            var selectedVal = $("input[type='radio'][name='seatingTime']:checked").val();
+            var rows = $('table.standard-table tr');
+            var SelSeat = rows.filter('.Class' + selectedVal).show();
+            var SelSeatTotal = rows.filter('.TotalClass' + selectedVal).show();
+            rows.not(SelSeat).not(SelSeatTotal).not('thead tr').hide();
+        }
+        var isMultiMenu = "@Model.MultiMenuOption";
+        if (isMultiMenu.toUpperCase() == "FALSE") {
+            {
+                $(".showMultiMenu").hide();
+            }
+        }
+    });
+</script>
+
+
+    <!-- 960 Container Start -->
+    <div class="container--big">
+        <div class="sixteen columns">
+            
+            <div class="sub-title2">
+                <h2>@ViewBag.Title</h2>
+            </div>
+             
+            @if (Model.MultiSeating)
+            {
+                <h6 style="display:inline;font-size:medium;float:left;">Choose the seating:   </h6>             
+                foreach (SupperClub.Domain.EventSeating evs in Model.EventSeatings.OrderBy(x => x.Start))
+                {
+                    if (@evs.Id == Model.DefaultSeatingId)
+                    {
+                        <input type="radio" name="seatingTime" id="@evs.Id" value="@evs.Id" style="display:inline;float:left;" checked="checked"><label for="@evs.Id" style="display:inline;float:left;font-size:15px;">@evs.Start.ToShortTimeString()    </label>                                
+                    }
+                    else
+                    {
+                        <input type="radio" name="seatingTime" id="@evs.Id" value="@evs.Id" style="display:inline;float:left;"><label for="@evs.Id" style="display:inline;float:left;font-size:15px;">@evs.Start.ToShortTimeString()    </label>                               
+                    }
+                }
+                <input type="radio" name="seatingTime" id="all" value="10000" style="display:inline;float:left;"><label for="all" style="display:inline;float:left;font-size:15px;">All</label>                               
+            }
+             <br />
+            <div class="layout">
+                <table style="margin-bottom:0px;margin-top:20px;text-align:left">
+
+                    <thead>
+                        <tr>
+                            <th class="layout__item large-and-up-2/20">
+                                Booking Ref#
+                            </th>
+                            <th class="layout__item large-and-up-3/20">
+                                Full Name
+                            </th>
+                            <th class="layout__item large-and-up-4/20">Email</th>
+                            <th class="layout__item large-and-up-3/20">Contact Number</th>
+                            <th class="layout__item large-and-up-3/20 showMultiMenu">
+                                @if (Model.MultiMenuOption)
+                                {
+                                    @: Menu Option
+                                }
+                            </th>
+                            <th class="layout__item large-and-up-1/20">
+                                Total Seats
+                            </th>
+                            <th class="layout__item large-and-up-4/20">
+                                Special Requirements
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (Model.MultiSeating)
+             {
+                 var grandTotalGuest = 0;
+                 var blank = "";
+
+                 foreach (SupperClub.Domain.EventSeating est in Model.EventSeatings)
+                 {
+                     var classname = "Class" + est.Id;
+                     var totalclassname = "TotalClass" + est.Id;
+                     var totalGuestCnt = 0;
+
+                     var consolidatedGuests =
+                        from ea in est.EventAttendees
+                        group ea by new
+                        {
+                            ea.UserId, ea.SeatingId, ea.MenuOptionId, ea.EventId, ea.User, ea.EventMenuOption
+                        } into gcs
+                        select new
+                        {
+                            UserId = gcs.Key.UserId,
+                            SeatingId = gcs.Key.SeatingId,
+                            MenuOptionId = gcs.Key.MenuOptionId,
+                            EventId = gcs.Key.EventId,
+                            User = gcs.Key.User,
+                            EventMenuOption = gcs.Key.EventMenuOption,
+                            NumberOfGuests = gcs.Sum(ea => ea.NumberOfGuests)
+                        };
+
+                     foreach (var eb in consolidatedGuests)
+                     {
+                         totalGuestCnt += eb.NumberOfGuests;
+                         var bref_list = (from t in eb.User.Tickets
+                                     join tb in eb.User.TicketBaskets
+                                     on t.BasketId equals tb.Id
+                                     where t.EventId == eb.EventId && t.UserId == eb.UserId && t.SeatingId == eb.SeatingId && t.MenuOptionId == eb.MenuOptionId
+                                          select new { bookingReference = tb.BookingReference, bookingRequirements = tb.BookingRequirements }).Distinct().ToList();
+                        var bref = "";
+                        var breq = "";
+                        if (bref_list != null)
+                        {
+                            foreach(var b in bref_list)
+                            {
+                                if (b != null && b.bookingRequirements != null)
+                                {
+                                    if(breq.Length > 0)
+                                    {
+                                        breq = breq + "  * " + b.bookingRequirements;
+                                    }
+                                    else
+                                    {
+                                        breq = b.bookingRequirements;
+                                    }
+                                }
+                                if (b != null)
+                                {
+                                    bref = b.bookingReference.ToString("00000000");
+                                }
+                            }
+                        }
+                        <tr id="@eb.UserId" class="@classname">
+                            <td class="layout__item large-and-up-2/20">
+                                @bref
+                            </td>
+                            <td class="layout__item large-and-up-3/20">
+                                @eb.User.FirstName @eb.User.LastName
+                            </td>
+                            <td class ="layout__item large-and-up-4/20">
+                                @eb.User.Email
+                            </td>
+                            <td class="layout__item large-and-up-3/20">
+                                @if (string.IsNullOrEmpty(@eb.User.ContactNumber))
+                                                    {@blank}
+                                                    else
+                                                    {@eb.User.ContactNumber}
+                            </td>
+                                
+                            <td class="layout__item large-and-up-3/20 showMultiMenu">
+                                @if (Model.MultiMenuOption)
+                                {
+                                    @eb.EventMenuOption.Title
+                                }
+                            </td>
+                            <td style="text-align:center !important;" class="layout__item large-and-up-1/20">
+                                @eb.NumberOfGuests
+                            </td>
+                            <td class="layout__item large-and-up-4/20">
+                                @breq
+                            </td>
+</tr>
+                     }
+                        <tr style="height:72px;">
+                            <td class="layout__item large-and-up-2/20" style="font-weight:bold;">Total Guests</td>
+                            <td class="layout__item large-and-up-3/20"></td>
+                            <td class="layout__item large-and-up-4/20"></td>
+                            <td class="layout__item large-and-up-3/20"></td>
+                            <td class="layout__item large-and-up-3/20 showMultiMenu"></td>
+
+                            <td class="layout__item large-and-up-1/20" style="font-weight:bold;text-align:center !important;">@totalGuestCnt</td>
+                            <td class="layout__item large-and-up-4/20"> </td>
+                        </tr>
+                        
+                        grandTotalGuest += totalGuestCnt;
+                     }
+                        <tr style="height:72px;">
+                            <td class="layout__item large-and-up-2/20" style="font-weight:bold;">Total Guests</td>
+                            <td class="layout__item large-and-up-3/20"></td>
+                            <td class="layout__item large-and-up-4/20"></td>
+                            <td class="layout__item large-and-up-3/20"></td>
+                            <td class="layout__item large-and-up-3/20 showMultiMenu"></td>
+
+                            <td class="layout__item large-and-up-1/20" style="font-weight:bold;text-align:center !important;">@grandTotalGuest</td>
+                            <td class="layout__item large-and-up-4/20"> </td>
+                        </tr>
+                   
+                  }
+                        else
+                        {
+                        var totalGuestCnt = 0;
+                        var blank = "";
+                        var consolidatedGuests =
+                        from ea in Model.EventAttendees
+                        group ea by new
+                        {
+                        ea.UserId,
+                        ea.MenuOptionId,
+                        ea.EventId,
+                        ea.User,
+                        ea.EventMenuOption
+                        } into gcs
+                        select new
+                        {
+                        UserId = gcs.Key.UserId,
+                        MenuOptionId = gcs.Key.MenuOptionId,
+                        EventId = gcs.Key.EventId,
+                        User = gcs.Key.User,
+                        EventMenuOption = gcs.Key.EventMenuOption,
+                        NumberOfGuests = gcs.Sum(ea => ea.NumberOfGuests)
+                        };
+                        foreach (var ea in consolidatedGuests)
+                        {
+                        var bref_list = (from t in @ea.User.Tickets
+                        join tb in @ea.User.TicketBaskets
+                        on t.BasketId equals tb.Id
+                        where t.EventId == ea.EventId && t.UserId == ea.UserId && t.MenuOptionId == ea.MenuOptionId
+                        select new { bookingReference = tb.BookingReference, bookingRequirements = tb.BookingRequirements }).Distinct().ToList();
+                        var bref = "";
+                        var breq = "";
+                        if (bref_list != null)
+                        {
+                        foreach (var b in bref_list)
+                        {
+                        if (b != null && b.bookingRequirements != null)
+                        {
+                        if (breq.Length > 0)
+                        {
+                        breq = breq + "  * " + b.bookingRequirements;
+                        }
+                        else
+                        {
+                        breq = b.bookingRequirements;
+                        }
+                        }
+                        if (b != null && b.bookingReference != null)
+                        {
+                        bref = b.bookingReference.ToString("00000000");
+                        }
+                        }
+                        }
+                        totalGuestCnt += @ea.NumberOfGuests;
+                        <tr id="@ea.UserId">
+                            <td class="layout__item large-and-up-2/20">
+                                @bref
+                            </td>
+                            <td class="layout__item large-and-up-3/20">
+                                @ea.User.FirstName @ea.User.LastName
+                            </td>
+                            <td class="layout__item large-and-up-4/20">
+                                @ea.User.Email
+                            </td>
+                            <td class="layout__item large-and-up-3/20">
+                                @if (string.IsNullOrEmpty(@ea.User.ContactNumber))
+                           {@blank}
+                           else
+                           {@ea.User.ContactNumber}
+                            </td>
+                            <td class="layout__item large-and-up-3/20 showMultiMenu">
+                                @if (Model.MultiMenuOption)
+                                {
+                                    @ea.EventMenuOption.Title
+                                }
+                            </td>
+                            <td style="text-align:center !important;" class="layout__item large-and-up-1/20">
+                                @ea.NumberOfGuests
+                            </td>
+                            <td class="layout__item large-and-up-4/20">
+                                @breq
+                            </td>
+                        </tr>
+                        }
+                        <tr style="height:72px;">
+                            <td class="layout__item large-and-up-2/20" style="font-weight:bold;">Total Guests</td>
+                            <td class="layout__item large-and-up-3/20"></td>
+                            <td class="layout__item large-and-up-4/20"></td>
+                            <td class="layout__item large-and-up-3/20"></td>
+                            <td class="layout__item large-and-up-3/20 showMultiMenu"></td>
+                                                      
+                            <td class="layout__item large-and-up-1/20" style="font-weight:bold;text-align:center !important;">@totalGuestCnt</td>
+                            <td class="layout__item large-and-up-4/20"> </td>  
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+                <br />
+                <a href="@Url.Action("DownloadGuestList", new { eventId = Model.Id })" class="btn btn--primary btn--medium">Download Guest List</a>
+                <br /><br />
+                <a href="@Url.Action("DetailsByIdWithName", new { eventId = Model.Id, eventSeoFriendlyName = Model.UrlFriendlyName })" style="float:left;text-underline-position:below;">< Back to Event</a>
+            </div>
+    </div>
+    <!-- 960 Container End -->

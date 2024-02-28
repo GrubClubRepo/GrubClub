@@ -1,0 +1,6 @@
+﻿@* Add the placeholder data to the existing ViewData so other ViewData info is not lost.*@
+@{
+    ViewData["placeholder"] = ViewData.ModelMetadata.Watermark;
+}
+
+@Html.TextBox("", ViewData.TemplateInfo.FormattedModelValue, ViewData)

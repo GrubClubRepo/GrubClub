@@ -1,0 +1,70 @@
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\SupperClub.Domain.dll.config
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\SupperClub.Domain.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\SupperClub.Domain.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\CodeFirstStoredProcs.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\DataAnnotationsExtensions.ClientValidation.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\DataAnnotationsExtensions.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\EntityFramework.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\Facebook.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\SupperClub.Logger.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\WebActivator.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\log4net.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\SupperClub.Logger.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\EntityFramework.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\Facebook.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\bin\Debug\log4net.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\obj\Debug\SupperClub.Domain.csprojResolveAssemblyReference.cache
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\obj\Debug\SupperClub.Domain.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Domain\obj\Debug\SupperClub.Domain.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\SupperClub.Domain.dll.config
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\SupperClub.Domain.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\SupperClub.Domain.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\CodeFirstStoredProcs.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\DataAnnotationsExtensions.ClientValidation.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\DataAnnotationsExtensions.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\EntityFramework.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\SupperClub.Logger.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\System.Web.Mvc.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\WebActivator.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\log4net.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\System.Web.Razor.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\System.Web.WebPages.Razor.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\Microsoft.Web.Infrastructure.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\SupperClub.Logger.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\EntityFramework.xml
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\System.Web.Mvc.xml
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\log4net.xml
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\System.Web.Razor.xml
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\System.Web.WebPages.Razor.xml
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\obj\Debug\SupperClub.Domain.csprojResolveAssemblyReference.cache
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\obj\Debug\SupperClub.Domain.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\obj\Debug\SupperClub.Domain.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\EntityFramework.SqlServer.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\WebActivatorEx.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Domain\bin\Debug\EntityFramework.SqlServer.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\SupperClub.Domain.dll.config
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\SupperClub.Domain.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\SupperClub.Domain.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\CodeFirstStoredProcs.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\DataAnnotationsExtensions.ClientValidation.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\DataAnnotationsExtensions.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\EntityFramework.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\EntityFramework.SqlServer.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\Microsoft.Web.Infrastructure.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\SupperClub.Logger.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\System.Web.Mvc.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\WebActivator.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\WebActivatorEx.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\log4net.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\System.Web.Razor.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\System.Web.WebPages.Razor.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\SupperClub.Logger.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\EntityFramework.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\EntityFramework.SqlServer.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\System.Web.Mvc.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\log4net.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\System.Web.Razor.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\bin\Debug\System.Web.WebPages.Razor.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\obj\Debug\SupperClub.Domain.csprojResolveAssemblyReference.cache
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\obj\Debug\SupperClub.Domain.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Domain\obj\Debug\SupperClub.Domain.pdb

@@ -1,0 +1,425 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+@if (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && (HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "index" ||HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "hometest"))
+{
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    @: <html lang="en" class="homepage">
+    <!--<![endif]-->
+}
+else
+{
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    @: <html lang="en">
+    <!--<![endif]-->
+}
+<head>
+     
+        @Html.Partial("_HeaderNew")
+    
+    <!-- Page Specific Java Script -->
+    @RenderSection("PageSpecificScripts", false)
+    @RenderSection("AdditionalMeta", false)
+    @RenderSection("Styles", required: false)
+    <style>
+        #navigation {
+            float: left;
+            margin: 10px -1px 0 0;
+        }
+
+            #navigation ul li {
+                float: left;
+                position: relative;
+            }
+
+
+                #navigation ul li a {
+                    color: #a9a9a8;
+                    font-weight: 700;
+                    font-size: 17px;
+                    font-size: 1.0625rem;
+                    line-height: 1.41176;
+                    -moz-transition: all 0.2s ease;
+                    -o-transition: all 0.2s ease;
+                    -webkit-transition: all 0.2s ease;
+                    transition: all 0.2s ease;
+                }
+
+                    #navigation ul li a:hover,
+                    #navigation .toplevel {
+                        height: 25px;
+                    }
+
+            #navigation ul ul {
+                opacity: 0;
+                padding: 6px 8px 8px 8px;
+                margin: 0px 0 0 21px;
+                filter: alpha(opacity=0);
+                position: absolute;
+                top: -99999px;
+                left: 0;
+                background: #F5F6F0;
+                z-index: 999;
+                border-radius: 5px;
+            }
+
+                #navigation ul ul li a {
+                    padding: 3px 6px 1px 6px;
+                    margin: 1px 0;
+                    display: block;
+                    font-family: Arial, sans-serif;
+                    font-weight: normal;
+                    line-height: 16px;
+                    width: 119px;
+                    text-align: left;
+                    background: none;
+                }
+
+                #navigation ul ul ul {
+                    position: absolute;
+                    top: -99999px;
+                    left: 100%;
+                    opacity: 0;
+                    margin: -10px 0 0 0px;
+                    z-index: 999;
+                    border-radius: 3px;
+                }
+
+                    #navigation ul ul ul li a {
+                    }
+
+            #navigation ul li:hover > ul {
+                opacity: 1;
+                position: absolute;
+                top: 100%;
+                left: -5px;
+            }
+
+            #navigation ul ul li:hover > ul {
+                position: absolute;
+                top: 0;
+                left: 100%;
+                opacity: 1;
+                z-index: 497;
+                background: #fff border: 0;
+            }
+
+            #navigation ul ul li:hover > a {
+                border-radius: 2px;
+                background: white !important;
+                font-weight: normal !important;
+            }
+    </style>
+    <script type="text/javascript">
+    function Subscribe(newsletterbox) {
+        var SubscribeEmailAddress = newsletterbox ? $('#newsletterboxemail').val() : $('#SubscribeEmailAddress').val();
+        if (SubscribeEmailAddress != '' && SubscribeEmailAddress != null) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("subscribe","home")',
+                data: { emailAddress: SubscribeEmailAddress },
+                cache: false,
+                dataType: 'json text',
+                traditional: true,
+                success: function (result) {
+                    if (result == "true") {
+                        
+                        @if (bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseAppNexusPixel"]))
+                        {
+                            <text>
+                        var _script = document.createElement("script");
+                        _script.type = "text/javascript";
+                        _script.src = "https://secure.adnxs.com/px?id=517414&t=1";
+                        $("body").append(_script);
+                        </text>
+                        }
+                        $('#newsletter-confirmed').css('display', 'block');
+                        $('#newsletter-boxContent').css('display', 'none');
+                        //$('#SubscribeEmailAddress').hide();
+                        //$('#btnSubscribe').hide();
+                        //$('#txtSubscribeError').hide();
+
+                        //$('#hdrSubscribe').text('Welcome to the Club!');
+                        //$('#txtSubscribe').text("Thanks for subscribing. We'll let you know about any new events and any other news!");
+                    }
+                    else {
+                        //$('#txtSubscribeError').text("Looks like there is a problem with your email address, please try again!");
+                        //$('#txtSubscribeError').show();
+                    }
+                },
+                error: function () {
+                    alert("Could not save email address.");
+                }
+            });
+        } else { alert('There was an error with the submission - please try again.'); };
+    }
+        $(function () {
+        $('#popupDialog').click(function () {
+            $("#divForgotPwd").hide();
+            $('#btnForgotPwd').show();
+            $('#txtfpEmail').val('');
+            $("#lblfpStatus").empty();
+            $('#login-dialog').load("@Url.Action("loginRegister", "account", new { returnUrl = HttpContext.Current.Request.Url.AbsoluteUri })");
+        });
+            $('#popupDialog1').click(function () {
+                $("#divForgotPwd").hide();
+                $('#btnForgotPwd').show();
+                $('#txtfpEmail').val('');
+                $("#lblfpStatus").empty();
+                $('#login-dialog').load("@Url.Action("loginRegister", "account", new { returnUrl = HttpContext.Current.Request.Url.AbsoluteUri })");
+            });
+
+           
+        $('#newsletter-btn').click(function () {
+            var SubscribeEmailAddress = $('#newsletterboxemail').val();
+            if (SubscribeEmailAddress != null && SubscribeEmailAddress.length > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("subscribe","home")',
+                    data: { emailAddress: SubscribeEmailAddress, location: "Sidebar" },
+                    cache: false,
+                    dataType: 'json text',
+                    traditional: true,
+                    success: function (result) {
+                        if (result == "true") {
+                            
+                            @if (bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseAppNexusPixel"]))
+                            {
+                                <text>
+                                var _script = document.createElement("script");
+                                _script.type = "text/javascript";
+                                _script.src = "https://secure.adnxs.com/px?id=517414&t=1";
+                                $("body").append(_script);
+                                </text>
+                            }
+                            $('#newsletter-confirmed').css('display', 'block');
+                            $('#newsletter-boxContent').css('display', 'none');
+                            ga('create', 'UA-36514914-1', 'auto', { 'alwaysSendReferrer': true});
+                            ga('send', 'event', { eventCategory: 'Newsletter', eventAction: 'Signups', eventLabel: 'Sidebar', eventValue: 1 });
+                            _gaq.push(['_setAllowLinker', true]);
+                            _gaq.push(['_setDomainName', 'grubclub.com']);
+
+                            //$('#SubscribeEmailAddress').hide();
+                            //$('#btnSubscribe').hide();
+                            //$('#txtSubscribeError').hide();
+
+                            //$('#hdrSubscribe').text('Welcome to the Club!');
+                            //$('#txtSubscribe').text("Thanks for subscribing. We'll let you know about any new events and any other news!");
+                        }
+                        else {
+                            //$('#txtSubscribeError').text("Looks like there is a problem with your email address, please try again!");
+                            //$('#txtSubscribeError').show();
+                        }
+                    },
+                    error: function () {
+                        alert("Could not save email address.");
+                    }
+                });
+            } else { alert('There was an error with the submission - please try again.'); }
+        });
+    });
+    </script>
+</head>
+
+@if (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "index")
+{
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    @: <body style="margin-top:-25px;">
+    <!--<![endif]-->
+}
+else
+{
+    <!--[if (gte IE 9)|!(IE)]><!-->
+    @: <body>
+    <!--<![endif]-->
+}
+@if(!(HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "prepostpayment"))
+    {
+<!-- Header -->
+<header class="header-main">
+  
+    <div class="top-bar-container">
+        <div class="top-bar-event-container" style="width:20% !important;">
+            <span class="top-bar-private selected">
+                <a href="/pop-up-restaurants" class="top-bar-private selected">What's On?</a>
+            </span>
+            <span class="top-bar-private selected">
+                <a href="/chefs" class="top-bar-private selected">Our Chefs</a>
+            </span>
+        </div>
+        <div class="top-bar-event-container" style="width:10% !important;">
+          
+        </div>
+        <a class="top-bar-logo" href="https://grubclub.com">
+        </a>
+        
+        <div class="top-bar-event-container">
+            <span class="top-bar-private selected">
+                <a href="http://private-events.grubclub.com/" class="top-bar-private selected">Private Events</a>
+            </span>
+            <span class="top-bar-private selected">
+                <a href="/host/welcome" class="top-bar-private selected">Host a Grub Club</a>
+            </span>
+            @if (SupperClub.Code.UserMethods.IsLoggedIn)
+            {
+
+                <span class="top-bar-private">
+                    <a href="@Url.Action("logoff", "account", new { returnUrl = HttpContext.Current.Request.Url.AbsoluteUri })" class="top-bar-private selected">
+                        Logout
+                    </a>
+                </span>
+
+                <span class="top-bar-private selected">
+                    <a href="@Url.Action("myprofile", "account")" class="top-bar-private selected">
+                        My Profile
+                    </a>
+                </span>
+            }
+            else
+            {
+                <span class="top-bar-private selected">
+                    <a href="#login-dialog" id="popupDialog1" class="top-bar-private selected open-popup">
+                        Login
+
+                    </a>
+                </span>
+            }
+        </div>
+       
+        <div id="navigation">
+            @if (SupperClub.Code.UserMethods.IsLoggedIn && SupperClub.Code.UserMethods.IsAdmin)
+            {
+
+                <ul>
+                    <li>
+                        <a href="#">Admin</a>
+                        <ul>
+                            <li>
+                                <a href="@Url.Action("AllUsers", "Admin")">Users</a>
+                                <ul>
+                                    <li><a href="@Url.Action("UnlockUser", "Admin")">Unlock Specific User</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="@Url.Action("AllSupperClubs", "Admin")">Grub Clubs</a></li>
+                            <li><a href="@Url.Action("NewEvents", "Admin")">New Events</a></li>
+                            <li><a href="@Url.Action("Reports", "Admin")">Reporting</a></li>
+                            <li><a href="@Url.Action("SendGuestEmail", "Admin")">Booking Confirmation Email</a></li>
+                            <li>
+                                <a href="@Url.Action("CheckReviews", "Admin")">Reviews</a>
+                                <ul>
+                                    <li><a href="@Url.Action("CheckReviews", "Admin")">Check Reviews</a></li>
+                                    <li><a href="@Url.Action("GenerateReviewKeys", "Admin")">Generate Review Links</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Vouchers</a>
+                                <ul>
+                                    <li><a href="@Url.Action("AllActiveVouchers", "Admin")">Vouchers</a></li>
+                                    <li><a href="@Url.Action("CreateVoucher", "Admin")">Create Voucher</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Tags</a>
+                                <ul>
+                                    <li><a href="@Url.Action("CreateTag", "Admin")">Create Tag</a></li>
+                                    <li><a href="@Url.Action("EditTag", "Admin")">Edit Tag</a></li>
+                                    <li><a href="@Url.Action("SupperClubTag", "Admin")">SupperClub Tag</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Category</a>
+                                <ul>
+                                    <li><a href="@Url.Action("CreateCategory", "Admin")">Create Category</a></li>
+                                    <li><a href="@Url.Action("EditCategory", "Admin")">Edit Category</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Debug Tools</a>
+                                <ul>
+                                    <li><a href="@Url.Action("TestEmail", "Admin")">Test Email</a></li>
+                                    <li><a href="@Url.Action("DeviceInfo", "Admin")">Device Info</a></li>
+                                    <li><a href="@Url.Content("~/version.txt")">Version</a></li> <!-- Uses content to view this file -->
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">System Tools</a>
+                                <ul>
+                                    <li><a href="@Url.Action("Flushcache", "Admin")">Flush Cache</a></li>
+                                    <li><a href="@Url.Action("FlushExpiredTicketBaskets", "Admin")">Flush Expired Baskets</a></li>
+                                    <li><a href="@Url.Action("Log4Net", "Admin", new { days = 1 })">System Logs</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("CMS", "Admin")">CMS</a>
+
+
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            }
+          
+
+        </div>
+    </div>
+</header>
+<!-- End Header -->
+   <div class="mb"></div>
+
+
+}
+@RenderBody()
+@if (!(HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "prepostpayment"))
+{
+<div id="login-dialog" class="magnific-content max-width-820 bgr-gray mfp-hide"></div>
+<div class="newsletter">
+    <a href="javascript:;" class="newsletter__button">
+        <div class="tableize tableize--full tableize--middle">
+            <div class="tableize__cell">
+                <div>
+                    <span>Newsletter</span>
+                    <svg role="img" class="icon icon-18x10">
+                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                    </svg>
+
+                </div>
+            </div>
+        </div>
+    </a>
+    <span class="newsletter__content">
+        <form action="" class="full-height">
+            <div class="close-btn type-small color-white">Close <span class="type-bold">X</span></div>
+            <div class="tableize tableize--full tableize--middle">
+                <div class="tableize__cell">
+                    <div id="newsletter-boxContent">
+                        <p class="type-small type-bold color-white mb--">Enter Email Here for Total Happiness</p>
+                        <input type="email" required class="input input--primary" name="newsletterboxemail" id="newsletterboxemail" placeholder="e.g. halloumi@grubclub.com">
+                        @*<input type="email" class="input input--primary" placeholder="Email address">*@
+                        @*<button type="submit" id="newsletter-btn" class="">OK</button>*@
+                        <button id="newsletter-btn" type="button" class="btn type-uppercase type-small type-bold">ok</button>
+                    </div>
+                    <div id="newsletter-confirmed" style="display: none">Life just got Sweeter!</div>
+                </div>
+            </div>
+        </form>
+    </span>
+</div>
+
+@Html.Partial("_FooterNew")
+}
+@if (Request.Cookies["SetTag"] != null)
+{
+    if(Request.Cookies["SetTag"].Value == "1" && bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseAppNexusPixel"]))
+    {
+        <!-- Conversion Pixel - Grub Club Registrations - DO NOT MODIFY -->
+        <img src="https://secure.adnxs.com/px?id=515616&t=2" width="1" height="1" />
+        <!-- End of Conversion Pixel -->
+        var c = new HttpCookie("SetTag");
+        c.Expires = DateTime.Now.AddDays(-1);
+        Response.Cookies.Add(c);
+    }
+}
+    </body>
+</html>

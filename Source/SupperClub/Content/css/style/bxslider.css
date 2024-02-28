@@ -1,0 +1,139 @@
+	body{
+		padding:0;
+		margin:0;
+	}
+	
+/* RESET AND LAYOUT */
+	.bx-wrapper {
+		position: relative;
+		padding:0;
+		*zoom: 1;
+		width: 100%;
+		height:100%;
+		overflow:hidden;
+	}
+	.bx-wrapper img {
+		width: 100%;
+		display: block;
+	}
+		.double-tile .bx-wrapper img {
+			width: 405px;
+            
+		}
+	.slider{
+		margin:0; /* important */;
+	}
+	
+/* LOADER */
+	.bx-wrapper .bx-loading {
+		min-height: 50px;
+		background:#3F3F3F url(images/bx_loader.gif) center center no-repeat #fff;
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 2000;
+	}
+	
+/* PAGER */
+	.bx-wrapper .bx-pager {
+		text-align: center;
+	}
+	.bx-wrapper .bx-pager,
+	.bx-wrapper .bx-controls-auto {
+		position: absolute;
+		bottom: 20px;
+		width: 100%;
+		z-index:1;
+	}
+	.bx-wrapper .bx-pager .bx-pager-item,
+	.bx-wrapper .bx-controls-auto .bx-controls-auto-item {
+		display: inline-block;
+		*zoom: 1;
+		*display: inline;
+	}
+	
+	.bx-wrapper .bx-pager.bx-default-pager a {
+		text-indent: -9999px;
+		display: block;
+		width: 8px;
+		height: 8px;
+		margin: 0 4px;
+		border:1px solid white;
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		border-radius: 3px; /* future proofing */
+		-khtml-border-radius: 3px; /* for old Konqueror browsers */
+	}
+	.bx-wrapper .bx-pager.bx-default-pager a.active {
+		cursor:default;
+		background:white;
+	}
+	
+/* DIRECTION CONTROLS (NEXT / PREV) */
+	.bx-wrapper .bx-controls-direction a {
+		position: absolute;
+		top: 50%;
+		margin-top: -16.5px;
+		width: 18px;
+		height: 33px;
+		text-indent: -9999px;
+		z-index: 1;
+	}
+		.testimonials .bx-wrapper .bx-controls-direction a {
+			margin-top: -25.5px;
+			width: 26px;
+			height: 51px;
+		}
+	
+	.bx-wrapper .bx-controls-direction a.disabled {
+		display: none;
+	}
+	
+/* AUTO CONTROLS (START / STOP) */	
+	.bx-wrapper .bx-controls-auto {
+		text-align: center;
+		margin-right:30px;
+	}
+	
+	.bx-wrapper .bx-controls-auto .bx-start {
+		display: block;
+		text-indent: -9999px;
+		width: 10px;
+		height: 11px;
+		outline: 0;
+		background:gray url(images/controls.png) -86px -11px no-repeat;
+		margin: 0 3px;
+	}
+	
+	.bx-wrapper .bx-controls-auto .bx-start:hover,
+	.bx-wrapper .bx-controls-auto .bx-start.active {
+		background-position: -86px 0;
+	}
+	
+	.bx-wrapper .bx-controls-auto .bx-stop {
+		display: block;
+		text-indent: -9999px;
+		width: 9px;
+		height: 11px;
+		outline: 0;
+		background:orange url(images/controls.png) -86px -44px no-repeat;
+		margin: 0 3px;
+	}
+	
+	.bx-wrapper .bx-controls-auto .bx-stop:hover,
+	.bx-wrapper .bx-controls-auto .bx-stop.active {
+		background-position: -86px -33px;
+	}
+	
+/* PAGER WITH AUTO-CONTROLS HYBRID LAYOUT */	
+	.bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-pager {
+		text-align: left;
+		width: 80%;
+	}
+	
+	.bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-controls-auto {
+		right: 0;
+		width: 35px;
+	}

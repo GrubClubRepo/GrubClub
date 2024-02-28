@@ -1,0 +1,60 @@
+﻿@model SupperClub.Models.ReviewAuthorisationModel
+
+@{
+    ViewBag.Title = "Decode Review Keys";
+}
+
+@section PageSpecificScripts {
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+    });
+
+</script>
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+        <h4 class="headline">Review Authentication Token Decode</h4>
+
+        <div id="LinkDetails" class="field">
+            <h4>Valid Token:</h4>
+            <p>@ViewBag.DecryptSuccess</p>
+            @if ((bool)ViewBag.DecryptSuccess)
+            {
+                if (Model.AllUsers)
+                {
+                    <h4>User Id:</h4>
+                    <p>All Users</p>
+                    <h4>Allow Guest Reviews:</h4>
+                    <p>@Model.AllowGuests</p>
+                }
+                else
+                {
+                    <h4>User Id:</h4>
+                    <p>@Model.UserId</p>
+                }
+                <h4>Event</h4>
+                <p><a href="@Url.Action("DetailsByIdWithName","Event", new { eventId = Model.EventId })">Event Id = @Model.EventId</a></p>
+            }
+        </div>
+
+	</div>
+</div>

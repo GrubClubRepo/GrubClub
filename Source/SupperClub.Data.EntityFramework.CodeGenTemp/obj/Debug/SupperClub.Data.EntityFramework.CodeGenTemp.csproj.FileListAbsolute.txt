@@ -1,0 +1,23 @@
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.dll.config
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\Facebook.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\Facebook.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.dll.config
+G:\Grubclub\try upgrade\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\Facebook.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\Facebook.xml
+G:\Grubclub\try upgrade\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.csprojResolveAssemblyReference.cache
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.dll.config
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\Facebook.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Debug\Facebook.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Debug\SupperClub.Data.EntityFramework.CodeGenTemp.csprojResolveAssemblyReference.cache

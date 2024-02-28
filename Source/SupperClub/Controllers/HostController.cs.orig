@@ -1,0 +1,312 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using SupperClub.Domain.Repository;
+using System.Web.Security;
+using SupperClub.Domain;
+using SupperClub.Models;
+using SupperClub.Code;
+using System.Web.Configuration;
+using SupperClub.Web.Helpers;
+using System.Text.RegularExpressions;
+using System.Drawing;
+using System.IO;
+using SupperClub.Logger;
+
+namespace SupperClub.Controllers
+{
+    public class HostController : BaseController
+    {
+        public HostController(ISupperClubRepository supperClubRepository)
+        {
+            _supperClubRepository = supperClubRepository;
+        }        
+        public ActionResult Details(int supperClubId)
+        {
+            var model = _supperClubRepository.GetSupperClub(supperClubId);
+            if (!string.IsNullOrEmpty(model.Twitter))
+                model.Twitter = "@" + model.Twitter;
+            return View("Details", model);
+        }
+
+        public ActionResult DetailsByName(string hostname)
+        {
+            var model = _supperClubRepository.GetSupperClub(hostname);
+            if (!string.IsNullOrEmpty(model.Twitter))
+                model.Twitter = "@" + model.Twitter;
+            return View("Details", model);
+        }
+
+        public ActionResult OurChefs()
+        {
+            List<SupperClub.Domain.SupperClub> model = _supperClubRepository.GetAllActiveSupperClubs().ToList();
+            return View(model);
+        }
+
+        [Authorize]
+        public ActionResult RegisterSupperClub()
+        {
+            if (UserMethods.CurrentUser.SupperClubs.Count > 0)
+                return RedirectToAction("CreateEvent", "Event", new { supperClubId = UserMethods.CurrentUser.SupperClubs.First().Id });
+
+            SupperClub.Domain.SupperClub model = new Domain.SupperClub();
+            LogMessage("Started GC Registration");
+            return View(model);
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult RegisterSupperClub(SupperClub.Domain.SupperClub model)
+        {
+            LogMessage("Begin GC Registration");
+
+            //string newImagePath = null;
+            //if (model.File != null)
+            //{
+            //    newImagePath = ImageScaler.ConvertImage(model.File);
+            //    if (newImagePath != null)
+            //        model.ImagePath = newImagePath; // only update the image if conversion was successful
+            //    else
+            //        ModelState.AddModelError("File", "There was a problem with your image file!");
+            //}
+            string[] images = model.ImagePaths.Trim().TrimEnd(',').Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            if (images.Length > 0)
+                model.ImagePath = images[images.Length - 1];
+            model.ImagePath = string.IsNullOrEmpty(model.ImagePath) ? "defaultSupperClubImage.png" : model.ImagePath;
+            
+            GeoLocation geolocation = Utils.GetAddressCoordinates(model.Address + " " + model.Address2 + " " + model.PostCode + " " + model.City);
+            if (geolocation == null)
+                ModelState.AddModelError("Address", "We couldn't find your address on a map!");
+
+            if (ModelState.IsValid)
+            {
+                model.UserId = (Guid)UserMethods.UserId;
+                model.Active = false; //SC must be activated by an Admin
+
+                model.ImagePath = string.IsNullOrEmpty(model.ImagePath) ? "defaultSupperClubImage.png" : model.ImagePath;
+
+                model.Longitude = geolocation.Longitude;
+                model.Latitude = geolocation.Latitude;
+
+                if (model.Twitter != null)
+                    model.Twitter = model.Twitter.Replace("@", "");
+
+                Regex rgx = new Regex("[^a-zA-Z0-9 -]");
+                model.UrlFriendlyName = rgx.Replace(model.Name, "").Trim().Replace(" ", "-");
+
+                var s = _supperClubRepository.RegisterSupperClub(model);
+
+                LogMessage("Change User Role to GC Owner");
+                AddToRole(Membership.GetUser(), "Host");
+                UserMethods.ClearSettingInSession("RoleType"); //So their new role will be activated
+
+                //MoveImage(model.ImagePath);
+                MoveImage(images);
+
+                //Send email to Admin about new SC
+                EmailService.EmailService es = new EmailService.EmailService(_supperClubRepository);
+                bool success = es.SendAdminNewSupperClubRegisteredEmail(UserMethods.CurrentUser.FirstName, UserMethods.CurrentUser.aspnet_Users.LoweredUserName, s.Name);
+
+                LogMessage("Registered GC: " + s.Name);
+                SetNotification(NotificationType.Info, "Your Grub Club is registered! Now it's time to create your first event, please note this won't be searchable until someone has approved your Grub Club.", true);
+                return RedirectToAction("CreateEvent", "Event", new { supperClubId = s.Id });
+            }
+            else
+            {
+                LogMessage("Problems with GC Registration");
+                string errorMsg = "There were problems registering your Grub Club, please fix them and try again.";
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        errorMsg = errorMsg + " " + error.ErrorMessage;
+                    }
+                }
+                SetNotification(NotificationType.Error, errorMsg);
+                return View(model);
+            }
+            
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult UpdateSupperClub(SupperClub.Domain.SupperClub model)
+       {
+            //string newImagePath = null;
+            //if (model.File != null)
+            //{
+            //    newImagePath = ImageScaler.ConvertImage(model.File);
+            //    if (newImagePath != null)
+            //        model.ImagePath = newImagePath; // only update the image if conversion was successful
+            //}
+            string[] images = null;
+            if (!string.IsNullOrEmpty(model.ImagePaths))
+            {
+                images = model.ImagePaths.Trim().TrimEnd(',').Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                model.ImagePath = images[images.Length - 1];
+            }
+ 
+            GeoLocation geolocation = Utils.GetAddressCoordinates(model.Address + " " + model.Address2 + " " + model.PostCode + " " + model.City);
+            if (geolocation != null)
+            {
+                model.Longitude = geolocation.Longitude;
+                model.Latitude = geolocation.Latitude;
+            }
+
+            if (model.Twitter != null)
+                model.Twitter = model.Twitter.Replace("@", "");
+
+            Regex rgx = new Regex("[^a-zA-Z0-9 -]");
+            model.UrlFriendlyName = rgx.Replace(model.Name, "").Trim().Replace(" ", "-");
+
+            bool success = _supperClubRepository.UpdateSupperClub(model);
+            if (images != null && images.Length > 0)
+                MoveImage(images);
+
+            if (success)
+            {
+                LogMessage("Updated GC Details" + model.Id.ToString());
+                string notificationMessage = "Your Grub Club details have been updated.";
+
+
+                //if (!string.IsNullOrEmpty(model.ImagePath))
+                //    MoveImage(model.ImagePath);
+
+                //if (model.File != null && newImagePath == null) // there was a file, but it didn't convert successfully
+                //    SetNotification(NotificationType.Warning, "We updated your details, but there was a problem with your image file, please try again.", true);
+                //else 
+                if (geolocation == null)
+                    SetNotification(NotificationType.Warning, "We updated your details, but we couldn't find your address on a map, please check it again.", true);
+                else
+                    SetNotification(Models.NotificationType.Success, notificationMessage, true);
+            }
+            else
+            {
+                LogMessage("Problem Updating Grub Club details: " + model.Id.ToString(), LogLevel.ERROR);
+                SetNotification(Models.NotificationType.Error, "There was a problem updating your Grubclub. Please try again.", true);
+            }
+
+            return RedirectToAction("DetailsByName", "Host", new { hostname = model.UrlFriendlyName });
+       }
+
+       [Authorize(Roles = "Host")]
+       public ActionResult UploadImages(IEnumerable<HttpPostedFileBase> files)
+       {
+            var result = new List<string>();
+
+            foreach (HttpPostedFileBase file in files)
+            {
+                try
+                {
+                    //.. standard file upload code
+                    String img = ImageScaler.ConvertImage(file);
+                    if (img != null)
+                        result.Add(img);
+                    else
+                        LogMessage("Problem Uploading Images for GrubClub.", LogLevel.ERROR);
+                }
+                catch (Exception ex)
+                {
+                    LogMessage("Problem Uploading Images for GrubClub. Error Details: " + ex.StackTrace, LogLevel.ERROR);
+                }
+            }
+            return Json(result);
+        }
+
+        private void AddToRole(MembershipUser user, string role)
+        {
+            if (!Roles.IsUserInRole(user.UserName, role))
+            {
+                OnBeforeAddUserToRole(role);
+                if (!Roles.IsUserInRole(user.UserName, role))
+                    System.Web.Security.Roles.AddUserToRole(user.UserName, role);
+            }
+        }
+
+        private void OnBeforeAddUserToRole(string role)
+        {
+            if (!Roles.RoleExists(role))
+                Roles.CreateRole(role);
+        }
+
+
+        private void MoveImage(string imageName)
+        {
+            string oldPathAndName = Server.MapPath(WebConfigurationManager.AppSettings["TempImagePath"]) + imageName;
+            string newPathAndName = Server.MapPath(WebConfigurationManager.AppSettings["SupperClubImagePath"]) + imageName;
+            if (System.IO.File.Exists(oldPathAndName))
+            {
+                System.IO.File.Copy(oldPathAndName, newPathAndName);
+                System.IO.File.Delete(oldPathAndName);
+            }
+        }
+
+        private void MoveImage(string[] imageNames)
+        {
+            foreach (string imageName in imageNames)
+            {
+                string oldPathAndName = Server.MapPath(WebConfigurationManager.AppSettings["TempImagePath"]) + imageName;
+                string newPathAndName = Server.MapPath(WebConfigurationManager.AppSettings["SupperClubImagePath"]) + imageName;
+
+                if (System.IO.File.Exists(oldPathAndName))
+                {
+                    System.IO.File.Copy(oldPathAndName, newPathAndName);
+                    System.IO.File.Delete(oldPathAndName);
+                }
+            }
+        }
+        public JsonResult HostNameAvailable(string Name)
+        {
+            Domain.SupperClub _currentSupperClub = null;
+            if (UserMethods.IsAdmin)
+            {
+                // Allows Admin to update other GC's. Assume's Admin will never duplicate name.
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            if (UserMethods.SupperClubId.HasValue)
+            {
+                _currentSupperClub = _supperClubRepository.GetSupperClub(UserMethods.SupperClubId.Value);
+                // If GC owner hasn't changed the name then it's ok
+                if (_currentSupperClub.Name == Name)
+                    return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            Regex rgx = new Regex("[^a-zA-Z0-9 -]");
+            string UrlFriendlyName = rgx.Replace(Name, "").Replace(" ", "-");
+            var _supperClub = _supperClubRepository.GetSupperClub(UrlFriendlyName);
+            if (_supperClub != null) // name already in use
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+
+        }
+
+        #region Static Public Pages
+        [OutputCache(Duration = 60 * 60 * 24 * 365, Location = System.Web.UI.OutputCacheLocation.Any)]
+        public ActionResult Welcome()
+        {
+            return View();
+        }
+
+        public ActionResult Tips()
+        {
+            return View("HostAdminTips");
+        }
+
+        public ActionResult email1()
+        {
+            return View("emailacknowledgement");
+        }
+        public ActionResult email2()
+        {
+            return View("approvalconfirmed");
+        }
+        public ActionResult email3()
+        {
+            return View("rejection");
+        }
+        #endregion
+    }
+}

@@ -1,0 +1,198 @@
+﻿@model SupperClub.Models.AllVouchersModel
+
+@{
+    ViewBag.Title = "All Active Vouchers";
+}
+
+@section PageSpecificScripts {
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#updateStatus").hide();
+        $(".standard-table tbody tr.inactive").hide();
+        $(".standard-table tbody tr.active").show();
+
+        $("input[type='radio'][name='VoucherType']").change(function () {
+            var selected = $("input[type='radio'][name='VoucherType']:checked");
+            if (selected.length > 0) {
+                vType = selected.val();
+                if (vType == 0) {
+                    $('table[class="standard-table"] tr[class="active"]').hide();
+                    $('table[class="standard-table"] tr[class="inactive"]').show();
+                    $("h4.headline").text("In-active Vocuher List");
+                }
+                if (vType == 1) {
+                    $('table[class="standard-table"] tr[class="active"]').show();
+                    $('table[class="standard-table"] tr[class="inactive"]').hide();
+                    $("h4.headline").text("Active Vocuher List");
+                }
+                if (vType == 2) {
+                    $('table[class="standard-table"] tr[class="active"]').show();
+                    $('table[class="standard-table"] tr[class="inactive"]').show();
+                    $("h4.headline").text("Vocuher List");
+                }
+            }
+        });
+        $('#DeactivateVoucherForm').submit(function () {
+            var vCode = $("#txtVoucherCode").val();
+            $("#VoucherCode").val(vCode);                                  
+        });
+    });
+    function ChangeVoucherStatus(voucherId, newStatus) {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ChangeVoucherStatus", "Admin")',
+            data: { voucherId: voucherId, newStatus: newStatus },
+                cache: false,                    
+                success: function (success) {
+                    if (!success) {
+                        if(newStatus)
+                            alert("There was a problem activating this voucher! Please try again");
+                        else
+                            alert("There was a problem deactivating this voucher! Please try again");
+                    }
+                    else {
+                        if (newStatus) {
+                            alert("Voucher activated successfully");
+                            $("#ref" + voucherId).text("Deactivate");
+                            $("#ref" + voucherId).attr("onclick", "ChangeVoucherStatus(" + voucherId + "," + false + ")");
+                            $("#v_" + voucherId).removeClass('inactive');
+                            $("#v_" + voucherId).addClass('active');
+                            if ($("input[type='radio'][name='VoucherType']:checked").val() < 2)
+                                $("#v_" + voucherId).hide();
+                        }
+                        else {
+                            alert("Voucher deactivated successfully");
+                            $("#ref" + voucherId).text("Activate");
+                            $("#ref" + voucherId).attr("onclick", "ChangeVoucherStatus(" + voucherId + "," + true + ")");
+                            $("#v_" + voucherId).removeClass('active');
+                            $("#v_" + voucherId).addClass('inactive');
+                            if ($("input[type='radio'][name='VoucherType']:checked").val() < 2)
+                                $("#v_" + voucherId).hide();
+                        }
+                    }
+                },
+                error: function () {
+                    if (newStatus)
+                        alert("Some error occured while activating this voucher! Please try again.");
+                    else
+                        alert("Some error occured while deactivating this voucher! Please try again.");
+                }
+        });
+    }    
+</script>
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <div class="container">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "DeactivateVoucherForm", enctype = "multipart/form-data" }))
+        {
+            @Html.HiddenFor(m => m.VoucherCode);
+            <table>
+                <tr>
+                    <td style="vertical-align:middle;padding-right:20px;">
+                        <h5>Enter the voucher code to be deactivated: </h5>
+                    </td>
+                    <td style="vertical-align:middle;padding-right:20px;">
+                        <input type="text" id="txtVoucherCode" value="" />
+                    </td>
+                    <td style="vertical-align:middle;padding-right:20px;"><button type="submit" id="btnDeactivateVoucher" class="button small green">Deactivate Voucher</button>
+                        </td>                    
+                </tr>
+            </table>
+        }
+        <div class="sixteen columns">
+            <table >
+			    <tr>
+                    <td><input type="radio" name="VoucherType"  value="1" checked="checked"  /><label style="display:inline;">Active</label></td>
+                    <td><input type="radio" name="VoucherType"  value="0"  /><label style="display:inline;">In-active</label></td>
+                    <td><input type="radio" name="VoucherType"  value="2"  /><label style="display:inline;">All</label></td>
+                </tr>
+            </table>
+            <h4 class="headline">Active Voucher List</h4>
+                <table class="standard-table">
+				    <tr>
+					    <!--<th>Unique Id</th>-->
+					    <th>Voucher Code</th>
+                        <th>Voucher Owner</th>
+                        <th>Voucher Description</th>
+					    <th>Voucher Type</th>                       
+                        <th>Min Booking Amount</th>
+                        <th>Max Limit</th>
+                        <th>Number of Times Used</th>
+                        <th>Redeemable with</th>
+                         <th>Start Date</th>
+					    <th>Expiry Date</th>
+                        <th>Status</th>
+				    </tr>
+
+                    @for (int i = 0; i <= Model.AllActiveVouchers.Count - 1; i++)
+                    {
+                        SupperClub.Domain.Voucher v = Model.AllActiveVouchers[i];
+                        var owner = v.OwnerId == 2 ? "Admin" : "Chef";
+                        var vtype = v.TypeId == 1 ? "% off" : (v.TypeId == 2 ? "£ off" : "");
+                        var vStartDate = v.StartDate != null ? v.StartDate.ToString("dd-MMM-yyyy") : "-";
+                        var vExpiryDate = v.ExpiryDate != null ? v.ExpiryDate.ToString("dd-MMM-yyyy") : "-";
+                        var vMinBookingAmount = v.MinBookingAmount != 0 ? "£" + v.MinBookingAmount.ToString("0.00") : "No Limit";
+                        var vUsageCap = v.UsageCap != 0 ? v.UsageCap.ToString() : "Unlimited";
+                        var vIsGlobal = v.IsGlobal ? "All Grub Clubs" : "Specific Grub Clubs";
+  				        <tr id="@("v_" + v.Id.ToString())" class="active">
+					        <!--<td>@v.Id</td>-->
+					        <td>@v.Code</td>
+                              <td>@owner</td>
+                            <td>@v.Description</td>
+					        <td>@vtype</td>                           
+                            <td>@vMinBookingAmount</td>
+                            <td>@vUsageCap</td>
+                            <td>@v.NumberOfTimesUsed</td>
+                            <td>@vIsGlobal</td>
+                            <td>@vStartDate</td>
+                            <td>@vExpiryDate</td>                            
+					        <td><a href="#" id="@("ref" + v.Id.ToString())" onclick="ChangeVoucherStatus(@v.Id, false);">Deactivate</a></td>
+				        </tr>
+                    }
+                    @if(Model.AllActiveVouchers != null && Model.AllActiveVouchers.Count > 0)
+                    {
+                        for (int i = 0; i <= Model.AllInactiveVouchers.Count - 1; i++)
+                        {
+                            SupperClub.Domain.Voucher v = Model.AllInactiveVouchers[i];
+                            var vtype = v.TypeId == 1 ? "% off" : (v.TypeId == 2 ? "£ off" : "");
+                            var vStartDate = v.StartDate != null ? v.StartDate.ToString("dd-MMM-yyyy") : "-";
+                            var vExpiryDate = v.ExpiryDate != null ? v.ExpiryDate.ToString("dd-MMM-yyyy") : "-";
+                            var vMinBookingAmount = v.MinBookingAmount != 0 ? "£" + v.MinBookingAmount.ToString("0.00") : "No Limit";
+                            var vUsageCap = v.UsageCap != 0 ? v.UsageCap.ToString() : "Unlimited";
+                            var vIsGlobal = v.IsGlobal ? "All Grub Clubs" : "Specific Grub Clubs";
+  				            <tr id="@("v_" + v.Id.ToString())" class="inactive">
+					            <!--<td>@v.Id</td>-->
+					            <td>@v.Code</td>
+                                <td>@v.Description</td>
+					            <td>@vtype</td>                           
+                                <td>@vMinBookingAmount</td>
+                                <td>@vUsageCap</td>
+                                <td>@v.NumberOfTimesUsed</td>
+                                <td>@vIsGlobal</td>
+                                <td>@vStartDate</td>
+                                <td>@vExpiryDate</td>                            
+					            <td><a href="#" id="@("ref" + v.Id.ToString())" onclick="ChangeVoucherStatus(@v.Id, true);">Activate</a></td>
+				            </tr>
+                        }
+                    }
+                </table>
+        </div>
+    </div>
+}

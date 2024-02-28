@@ -1,0 +1,125 @@
+﻿@model SupperClub.Models.ContactUsModel
+@{
+    ViewBag.Title = "Want to Learn More about Pop Up Restaurants?|Contact Grub Club";
+    ViewBag.Description = "Get in touch with Grub Club, we would love to hear from you.";
+}
+@section PageSpecificScripts {
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+}
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString()
+            / @ViewBag.Title</p>
+    </div>
+</div>
+@if(ViewBag.Notification != null)
+{
+    @Html.Partial("_Notification", (SupperClub.Models.NotificationModel)ViewBag.Notification);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <div class="container sub-title2">
+        <h2>
+            We'd love to hear from you! </h2>
+            <br /><h5 style="font-family: 'Lobster', cursive;font-size:25px;Font-weight:normal;padding:40 0 15px 0;margin:-6px 0 -5px 0;">Please complete the form below if you have a question or if you'd like to host a Grub Club</h5>
+    </div>
+    
+    <div class="container">
+        <!-- Contact Form -->
+        <div class="eleven columns">
+            @using (Html.BeginForm())
+            {
+                <div>
+                    <fieldset>
+                        <div class="field">
+                            <label>
+                                Name:</label>
+                            @Html.ValidationMessageFor(m => m.Name)
+                            @Html.TextBoxFor(m => m.Name)
+                        </div>
+                        <div class="field">
+                            <label>
+                                Email:<span>*</span></label>
+                            @Html.ValidationMessageFor(m => m.Email)
+                            @Html.TextBoxFor(m => m.Email)
+                        </div>
+                        <div class="field">
+                            <label>
+                                Message:<span>*</span></label>
+                            @Html.ValidationMessageFor(m => m.Message)
+                            @Html.TextAreaFor(m => m.Message)
+                        </div>
+                    </fieldset>
+                </div>
+                <input type="submit" value="Send Message" class="button medium yellow" />
+            }
+        </div>
+        
+        <!-- Contact Details -->
+        <div class="five columns">
+            <div class="widget">
+                <h5>
+                    Contact Details</h5>
+                <ul class="contact-details" style="padding-top: 8px;">
+                    <li><i class="icon-map-marker"></i>
+                        <p>
+                            17, Abdale Road <br />
+                            London W12 7ER</p>
+                    </li>
+                    @*<li><i class="icon-user"></i>
+                        <p>
+                            Phone: Call Liv on (44) 781 311 7125</p>
+                    </li>*@
+                    <li><i class="icon-envelope"></i>
+                        <p>
+                            Email: <a href="#">eat@grubclub.com</a></p>
+                    </li>
+                    <li><i class="icon-globe"></i>
+                        <p>
+                            Web: <a href="#">www.grubclub.com</a></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Social Media -->
+        <div class="five columns">
+            <div class="widget">
+                <h5>
+                    Social Media</h5>
+                <p>
+                    <div id="social" class="tooltips">
+                        <a href="#" onclick="window.open('http://www.twitter.com/Grub_Club');" rel="tooltip"
+                            title="Twitter">
+                            <img src="@Url.Content("~/Content/images/social_icons/twitter.png")" alt="Facebook" /></a>
+                        <a href="#" onclick="window.open('http://www.facebook.com/GrubClub1');" rel="tooltip"
+                            title="Facebook">
+                            <img src="@Url.Content("~/Content/images/social_icons/facebook.png")" alt="Facebook" /></a>
+                        @*<a href="#" onclick="window.open('http://plus.google.com/GrubClub');" rel="tooltip"
+                            title="Google Plus">
+                            <img src="@Url.Content("~/Content/images/social_icons/googleplus.png")" alt="Google Plus" /></a>*@
+                    </div>
+                </p>
+            </div>
+        </div>
+    </div>
+<!-- End 960 Container -->
+    
+@*<div class="container sub-title2">
+    <h2>
+        See Our Location On Map</h2>
+</div>
+<!--  960 Container Start -->
+<div class="container">
+    <!-- Google Map -->
+    <div class="sixteen columns">
+        <div id="google-map" class="embed">
+            <iframe width="640" height="300" frameborder="0" scrolling="no" marginheight="0"
+                marginwidth="0" src="http://maps.google.co.uk/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Bethnal+Green&amp;aq=0&amp;oq=Bethnal&amp;sll=51.508074,0.063869&amp;sspn=0.105347,0.251484&amp;t=m&amp;ie=UTF8&amp;hq=&amp;hnear=Bethnal+Green,+Greater+London,+United+Kingdom&amp;ll=51.527408,-0.066018&amp;spn=0.026323,0.062871&amp;z=14&amp;output=embed">
+            </iframe>
+        </div>
+    </div>
+    <!-- Google Map End -->
+</div>*@
+}

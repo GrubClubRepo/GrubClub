@@ -1,0 +1,112 @@
+﻿@model SupperClub.Models.Log4NetModel
+
+@{
+    ViewBag.Title = "Log4Net";
+}
+
+@section PageSpecificScripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#SelectedLogLevel').change(function () {
+            window.location = '@Url.Action("Log4Net","Admin")?LogLevel=' + $(this).val() + '&filter=' + $('#FilterText').val();
+        });
+
+        $('#SearchButton').click(function () {
+            window.location = '@Url.Action("Log4Net","Admin")?LogLevel=' + $('#SelectedLogLevel').val() + '&filter=' + $('#FilterText').val();
+        });
+
+    });
+
+</script>
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+<!--  960 Container Start -->
+<div class="container">
+    <div class="eight columns">
+        <div class="field">
+            <h4>Level</h4>
+            @Html.DropDownList("SelectedLogLevel", (SelectList)ViewBag.LogLevels, "Select", new { @class = "custom_select" })
+        </div>
+    </div>
+
+    <div class="eight columns">
+        <div class="field">
+            <h4>Search</h4>
+            @Html.TextBoxFor(m => m.FilterText, new { style = "display: inline;" })
+            <span id="SearchButton" class="orange button">Go</span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+	<div class="sixteen columns">
+
+
+
+        <br />
+        @if (Model.LogEvents != null)
+        {
+        <table class="standard-table">
+            <tr>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Level
+                </th>
+                <th>
+                    Source
+                </th>
+                <th>
+                    Message
+                </th>
+                <th>
+                    Exception
+                </th>
+            </tr>
+            @foreach (SupperClub.Domain.Log log in Model.LogEvents)
+            {
+                <tr>
+                    <td>
+                        @log.Date.ToString("dd/MM/yy HH:mm:ss.ms")
+                    </td>
+                    <td>
+                        @log.Level
+                    </td>
+                    <td>
+                        @log.Logger
+                    </td>
+                    <td>
+                        @log.Message
+                    </td>
+                    <td>
+                        <a href="@Url.Action("LogEvent", new { logId = log.ID })">Details</a>
+                    </td>
+                </tr>
+            }
+        </table>
+        }
+        else
+        {
+            @:No Log events to display
+            <br /><br />
+        }
+        <a href="@Url.Action("PurgeLog", new { olderThanDays = 7 })" class="button small red"><i class="icon-remove icon-white"></i>Purge Log</a>
+	</div>
+</div>

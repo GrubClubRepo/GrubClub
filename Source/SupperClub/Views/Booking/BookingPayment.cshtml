@@ -1,0 +1,819 @@
+﻿@model SupperClub.Models.BookingConfirmModel
+
+
+@section PageSpecificScripts {
+    <script type="text/javascript">
+        var numOfTickets=0;//@Model.ChooseTicketModel.BookingModel.numberOfTickets
+
+      function test()
+{
+    //debugger;
+
+   // $("#btnBuyTickets").prop("disabled",true);
+
+    //$("[name='InProgress']").html("Please Wait, your tickets are in progress")
+    var menucount=@Html.Raw(Json.Encode(Model.ChooseTicketModel.BookingModel.bookingMenuModel == null ? 1 : Model.ChooseTicketModel.BookingModel.bookingMenuModel.Count));
+    var seatId = @Model.ChooseTicketModel.BookingModel.seatingId;
+    var total = 0;
+    var myStr = "";
+    numOfTickets = 0;
+    for(var j=0; j<menucount;j++)
+    {
+        var price = parseFloat($("#menuOptionPrice_" + j).text());
+        var tickets = parseFloat($("#menuOptionTickets_" + j).val());
+        if(isNaN(tickets))
+            tickets=0;
+        if(isNaN(price))
+            price=0;
+        total+=price*tickets;
+        if(myStr.length > 0)
+            myStr += ",";
+
+        var oMenuId = "#chkmenuOption_" + j;
+        //temp2 = "menuOptionPrice_" + j;
+        var menuId=$(oMenuId).val();
+        numOfTickets += tickets;
+        myStr += menuId + "|"+ tickets;
+    }
+
+    $("[name='totalPrice']").html(total.toFixed(2));
+    if(numOfTickets>0 && tickets >= @Model.ChooseTicketModel.BookingModel.numberOfTickets)
+    {
+        $.getJSON('@Url.Action("UpdateTickets", "Booking")', { numberTicketsRequested: numOfTickets, seatingId : seatId, strBmm : myStr }, function (updateTickets)
+    {
+         $("[name='InProgress']").html("");
+            if (updateTickets.Success == false)
+            {//debugger;
+         numOfTickets=0;
+        // $("#btnBuyTickets").prop("disabled",true);
+                                checkAndEnableBuyTickets();
+        //$("[name='InProgress']").html("Please Wait, your tickets are in progress")
+                                $( "#reviewTickets" ).prop( "disabled", true );
+                if(updateTickets.NumberTicketsAvailable == 0)
+                {
+                    // Sold out
+                    if(seatId > 0)
+                        alert("Sorry but we were not able to allocate the number of tickets you wanted for this seating. You can try to book a different seating!");
+                    else
+                        alert("Sorry but we were not able to allocate the number of tickets you wanted. They've been snapped up!");
+
+                    return;
+                }
+                else if(updateTickets.NumberTicketsAvailable < numOfTickets)
+                {
+
+                    if(seatId > 0)
+                    {
+                        alert("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets available for this seating. You can try to book a different seating or reduce total seats!");
+                        $("[name='totalPrice']").html("0.00");
+                        // $("input[name='menutickets']").html("0");
+                        for(var j=0; j<menucount;j++)
+                        {
+                            $("#menuOptionTickets_" + j).val("0");
+
+                        }
+                    }
+                    else
+                    {
+                        alert("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets left for this event!");
+
+                        $("[name='totalPrice']").html("0.00");
+                        // $("input[name='menutickets']:").html("0");
+                        for(var j=0; j<menucount;j++)
+                        {
+                            $("#menuOptionTickets_" + j).val("0");
+
+                        }
+                    }
+
+                    return;
+                }
+
+                // Session Timed out or no basket found (no cookie)
+                if(updateTickets.NumberTicketsAllocated == 0) {
+                    window.location = '@Url.Action("SessionExpired", "Booking")';
+                    return;
+                }
+
+                $("input[class='bmmNumSelect']").each(function() {
+                    // Update the dropdownlist length if required
+                    var options = $(this).children('option').length;
+                    if(options > updateTickets.NumberTicketsAvailable)
+                    {
+                        var optionsToRemove = (updateTickets.NumberTicketsAvailable - 1); // -1 for index
+                        $(this).find('option:gt(' + optionsToRemove + ')').remove(); // :gt uses index, remove options with index greater than x
+                    }
+                });
+            }
+            else{
+
+                checkAndEnableBuyTickets();
+                if($("#chkTerms").checked == true && $("#btnBuyTickets")[0].disabled== true)
+                {
+
+
+                }
+                else
+                {
+                    if($("#chkTerms").checked == false && $("#btnBuyTickets")[0].disabled== false)
+                    {
+                        alert("Please check Terms and Conditions to buy tickets");
+                    }
+
+                }
+            }
+        });
+    }
+    else
+    {
+        alert("Sorry but total number of tickets can not be zero!");
+    }
+
+
+
+}
+
+        function updateMenuTickets() {
+            var seatId = @Model.ChooseTicketModel.BookingModel.seatingId;
+        if($("input[name='seatingTime']").length > 0)
+        {
+            var selectedVal = $("input[type='radio'][name='seatingTime']:checked").val();
+            if(selectedVal >= 0)
+                seatId = selectedVal;
+        }
+        var totalAmt = 0;
+        var numOfTickets = 0;
+        var num_tr = $('#menuSel tr').length-1;
+        var t = document.getElementById('menuSel');
+        var rate = 0;
+        rate = 0*1.0;
+        var qty = 0;
+        var amount = 0;
+        var myStr = "";
+
+        for(var i = 1; i < num_tr;i++) {
+            var rate1 = $(t.rows[i].cells[4]).closest('tr').find('.bmmTicketCost').text();
+
+            var menuId = parseInt($.trim($(t.rows[i].cells[4]).closest('tr').find('.bmmId').text()));
+
+            rate1= rate1.toString().replace("£","");
+            rate=parseFloat(rate1);
+            qty = parseInt($(t.rows[i].cells[0]).closest('tr').find('select').val());
+
+            amount = qty * rate;
+
+            //alert(menuId + "," + qty + "," + rate + "," +amount);
+
+            $(t.rows[i].cells[3]).html("£" + amount.toFixed(2)); // output the values
+            totalAmt += amount;
+            numOfTickets += qty;
+            if(myStr.length > 0)
+                myStr += ",";
+            myStr += menuId + "|"+ qty;
+        }
+        $('#bmmTotalDue').html("£" + totalAmt.toFixed(2));
+        //var obj = JSON.stringify(myObj);
+        if(numOfTickets > 0)
+        {
+            $.getJSON('@Url.Action("UpdateTickets", "Booking")', { numberTicketsRequested: numOfTickets, seatingId : seatId, strBmm : myStr }, function (updateTickets) {
+                if (updateTickets.Success == false)
+                {
+                    $( "#reviewTickets" ).prop( "disabled", true );
+                    if(updateTickets.NumberTicketsAvailable == 0)
+                    {
+                        // Sold out
+                        if(seatId > 0)
+                            alert("Sorry but we were not able to allocate the number of tickets you wanted for this seating. You can try to book a different seating!");
+                        else
+                            alert("Sorry but we were not able to allocate the number of tickets you wanted. They've been snapped up!");
+
+                        return;
+                    }
+                    else if(updateTickets.NumberTicketsAvailable < numOfTickets)
+                    {
+                        if(seatId > 0)
+                            alert("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets available for this seating. You can try to book a different seating or reduce total seats!");
+                        else
+                            alert("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets left for this event!");
+
+                        return;
+                    }
+
+                    // Session Timed out or no basket found (no cookie)
+                    if(updateTickets.NumberTicketsAllocated == 0) {
+                        window.location = '@Url.Action("SessionExpired", "Booking")';
+                        return;
+                    }
+
+                    $("input[class='bmmNumSelect']").each(function() {
+                        // Update the dropdownlist length if required
+                        var options = $(this).children('option').length;
+                        if(options > updateTickets.NumberTicketsAvailable)
+                        {
+                            var optionsToRemove = (updateTickets.NumberTicketsAvailable - 1); // -1 for index
+                            $(this).find('option:gt(' + optionsToRemove + ')').remove(); // :gt uses index, remove options with index greater than x
+                        }
+                    });
+                }
+                else{
+
+                    $( "#reviewTickets" ).prop( "disabled", false );
+                }
+            });
+        }
+        else
+        {
+            alert("Sorry but total number of tickets can not be zero!");
+        }
+    }
+    function checkAndEnableBuyTickets()
+    {
+        if( $("#chkTerms")[0].checked == true && $("#InProgress").html()=="" && numOfTickets>0)
+        {
+            $("#btnBuyTickets").prop("disabled",false);
+        }
+        else
+        {
+            $("#btnBuyTickets").prop("disabled",true);
+        }
+    }
+
+    function initialize()
+    {
+        @Html.Raw(string.Format("var mapCenter = new google.maps.LatLng({0}, {1});", ViewBag.Lattitude.ToString("F3"), ViewBag.Longitude.ToString("F3")))
+
+        var mapOptions = {
+            zoom: 13,
+            maxZoom: 15,
+            scrollwheel: true,
+            zoomControl: true,
+            streetViewControl: false,
+            disableDefaultUI: false,
+            panControl:true,
+            center: mapCenter,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById('map-single-pin'), mapOptions);
+        google.maps.event.addDomListener(window, 'load', initialize);
+        var marker = new google.maps.Marker({
+            map: map,
+            @Html.Raw(string.Format("position : new google.maps.LatLng({0}, {1}),", ViewBag.Lattitude.ToString("F3"), ViewBag.Longitude.ToString("F3")))
+            title: ''
+        });
+        var circle = new google.maps.Circle({
+            map: map,
+            @Html.Raw(string.Format("radius: {0},", SupperClub.Code.ServerMethods.GoogleMapsCircleRadius))    // metres
+            strokeWeight:1,
+            strokeColor:'#AA0000',
+            clickable: false,
+            editable: false,
+            fillColor: '#AA0000',
+            fillOpacity: 0.2,
+            strokeOpacity:0.1
+        });
+        circle.bindTo('center', marker, 'position');
+        marker.setVisible(true);
+    };
+
+    $(document).ready(function () {
+
+
+
+        $('input[name=seatingTime]:radio').change(function ()
+        {
+            //debugger;
+
+            var a =document.getElementById("seatingtime_ "+$(this).val());
+            $(litSeatingTime)[0].innerHTML=a.innerHTML
+
+            if(numOfTickets > 0)
+            {
+
+                test();
+            }
+        });
+
+        $("#chkTerms").change(function(){
+            //debugger;
+            checkAndEnableBuyTickets();
+
+
+        });
+
+        $("#showMapLink").click(function () {
+            initialize();
+        });
+        // $("#btnBuyTickets").prop("disabled",numOfTickets>0);
+        checkAndEnableBuyTickets();
+
+        $("#creditCardDetailsForm").submit(function () {
+            var cardType = $('#CreditCardDetailsViewModel_creditCardDetails_CardType option:selected').val();
+            if (cardType != null && cardType.length > 0)
+                return true;
+            else
+                return false;
+        });
+
+
+        $("#applyVoucherCode").click(function () {
+            //debugger;
+            if ($("#txtVoucherCode").length > 0)
+            {
+                var voucherCode = $("#txtVoucherCode").val();
+                var rate1=$("[name='totalPrice']")[0].innerHTML;
+                rate1= rate1.toString().replace("£","");
+                var totalAmountDue=parseFloat(rate1);
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("CheckVoucherCode", "Booking")',
+                    data: { voucherCode: voucherCode, eventId : @Model.ChooseTicketModel.BookingModel.eventId, totalBookings : numOfTickets, basketValue : totalAmountDue },
+                    success:function(validateResult){
+                        //debugger;
+                        if (validateResult > 0)
+                        {
+                            $.getJSON('@Url.Action("ApplyVoucherCode", "Booking")', { voucherId: validateResult }, function (result)
+                            {
+                                if (result.Status == 0) {
+                                    alert("Error applying voucher code. Please try again.");
+                                    return false;
+                                }
+                                if (result.Status == -1) {
+                                    location.href = '@Url.Action("SessionExpired", "Booking")';
+                                    return;
+                                }
+                                else
+                                {//debugger;
+                                    var totalAfterDiscount = totalAmountDue - result.Discount.toFixed(2);
+
+                                    $("[name='VoucherApply']").html(result.Discount.toFixed(2)+"  voucher applied")
+                                    if(totalAfterDiscount <= 0)
+                                    {
+                                        totalAfterDiscount = 0;
+                                        $("#payWithCard").val("Book Free!");
+                                    }
+                                    $("[name='totalPrice']").html(totalAfterDiscount.toFixed(2));
+                                    $("#discount").val(result.Discount);
+                                    $("#voucherDescription").text(result.VoucherDescription);
+                                    $("#tdDiscount").html("£" + result.Discount.toFixed(2));
+                                    $("#tdTotalAfterDiscount").html("£" + totalAfterDiscount.toFixed(2));
+                                    $(".discountRow").show();
+                                    $(".select__item pl").focus();
+
+
+                                    return true;
+                                }
+                            });
+                        }
+                        else
+                        {
+                            if(validateResult < 0)
+                            {
+                                var message = "Invalid Voucher Code.";
+                                switch (validateResult)
+                                {
+                                    case -1:
+                                        message = "This Voucher Code has expired.";
+                                        break;
+                                    case -2:
+                                        message = "This Voucher Code is not valid for current booking.";
+                                        break;
+                                    case -3:
+                                        message = "You have already used this voucher for previous bookings.";
+                                        break;
+                                    case -4:
+                                        message = "This Voucher Code has expired.";
+                                        break;
+                                    case -5:
+                                        message = "This voucher code can not be applied to your basket. Minimum basket value is more than current basket value.";
+                                        break;
+                                    default:
+                                        message = "Error applying voucher code. Please try again.";
+                                        break;
+                                }
+                                $.ajax({
+                                    type: 'GET',
+                                    url: '@Url.Action("GetVoucherDetails", "Booking")',
+                                    data: { voucherCode: voucherCode },
+                                    success:function(result){
+                                        if(result != null && result.Id > 0)
+                                            $("#voucherDescription").text(result.Description);
+                                        alert(message);
+                                    },
+                                    error:function(){
+                                        alert(message);
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                alert("Invalid Voucher Code. Please enter a valid voucher code.");
+                            }
+                            return false;
+                        }
+                    },
+                    error:function(){
+                        alert("Error applying voucher code. Please try again.");
+                    }
+                });
+            }
+            else {
+                alert("Please enter a voucher code!");
+                return false;
+            }
+        });
+
+        $('#creditCardDetailsForm').hide();
+        $('#proceedToPayment').click(function(){
+            if(numOfTickets>0)
+            {
+                $('#creditCardDetailsForm').show();
+                $('#creditCardDetailsForm').focus();
+
+            }
+            else
+            {
+                $('#creditCardDetailsForm').hide();
+                alert("Number of tickets can not be 0");
+
+            }
+        });
+    });
+    </script>
+}
+
+@*<div class="container mb+">
+    <ul class="breadcrumbs list-inline list-inline--delimited pt-- mb">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Chefs </a></li>
+        <li><a href="#">User Profile </a></li>
+        <li class="current"><a href="#">Adam Walden</a></li>
+    </ul>
+</div>*@
+<div class="container payment-forms">
+    <div class="layout layout--rev">
+        <div class="layout__item large-and-up-1/3 payment-forms__sidebar">
+            <div class="bgr-white">
+                <img src="@Url.Content("~/Content/images/Events/")@ViewBag.EventImage" alt="" class="full-width" style="height:195px; width:297px;">
+                <div class="p-">
+                    <h2 class="h4 line-height-1-35">@Model.ChooseTicketModel.BookingModel.EventName Supper Club</h2>
+                    
+                        <span class='pr--'>Hosted By @ViewBag.EventHostName </span>
+
+                        <ul class="rating inline-block">
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        if (i < @ViewBag.Ratings)
+                                        {
+                            <li class="is-checked">
+
+                                <svg role="img" class="icon ">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use>
+                                </svg>
+                            </li>
+
+                                    }
+                                    else
+                                    {
+
+                            <li class="">
+
+                                <svg role="img" class="icon ">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use>
+                                </svg>
+                            </li>
+                                    }
+                                    }
+                        </ul>
+                    
+                    <p  class="mb--">@ViewBag.PostCode.Split(new string[] { " " }, StringSplitOptions.None)[0] - <a id="showMapLink"  style="display:block;" href="#map-single-pin-wrap" class="color-gray open-popup">View on maps</a></p>
+                    <hr class="hr hr--dots mb-">
+                    <form action="">
+                        <div class="flag flag--small mb--">
+                            <div class="flag__img">
+
+                                <svg role="img" class="icon color-blue icon--19x19 mr--">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-medium_calendar"></use>
+                                </svg>
+                            </div>
+                            <div class="flag__body">
+                                <label class="relative datepicker-wrap display-block">
+                                    @*<input type="text" class="js__datepicker input--full input--primary input--h42" placeholder="Pick a date">*@
+                                    @ViewBag.StartDate
+                                    @*<div class="select__icon">
+                                        <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+
+                                    </div>*@
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flag flag--small mb-">
+                            <div class="flag__img">
+
+                                <svg role="img" class="icon color-blue icon--19x19 mr--">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-mediuml_clock"></use>
+                                </svg>
+                            </div>
+                            <div class="flag__body">
+                                <span id="litSeatingTime">
+                                    @ViewBag.StartTime
+                                    </span>
+                                    @*<div class="select select--medium select--full inline-block">
+                <select class="select__item pl">
+                    <option value="">Select time</option>
+                    <option value="">18.00</option>
+                    <option value="">16.00</option>
+                    <option value="">14.00</option>
+                    <option value="">12.00</option>
+                    <option value="">10.00</option>
+                </select>
+                <div class="select__icon">
+                    <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+
+                </div>
+            </div>*@
+</div>
+                        </div>
+                </div>
+                @*<button class="btn btn--primary btn--gray-light btn--full btn--h44 color-dark mb-">Apply / Update</button>*@
+                <div id="voucherRow">
+                    <hr class="hr hr--dots">
+                    <div class="justifize__box">
+                        <span class='type-bold type-x-huge color-dark line-height-1-15'>£</span>
+                        <span class='type-bold type-x-huge color-dark line-height-1-15' name="totalPrice">0.00</span>
+                    </div>
+                </div>
+                <hr class="hr hr--dots">
+                <div class="justifize">
+                    <div class="justifize__box">
+                        <span class='type-bold type-x-huge color-dark line-height-1-15'>£</span>
+                        <span class='type-bold type-x-huge color-dark line-height-1-15' name="totalPrice">0.00</span>
+                        <span name="VoucherApply"></span>
+                    </div>
+                    @if(ViewBag.Byob == true)
+                    {
+                    <div class="justifize__box">
+                        <span class='type-bold h4 color-dark tooltip-wrap line-height-1-15'>
+                            <svg role="img" class="icon icon--7x19">
+                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-small_botle"></use>
+                            </svg>
+                            BYOB <div class="tooltip">Bring your own beers</div>
+                        </span>
+                    </div>
+                    }
+                </div>
+                <hr class="hr hr--dots mb--">
+            </div>
+   
+        </div>
+        
+
+        <div class="layout__item large-and-up-2/3">
+            <form action="" class="mb+">
+                @if (Model.ChooseTicketModel.BookingModel.bookingSeatingModel != null)
+            {
+                    <h1 class="type-light line-height-1-15 mb">Choose your seating</h1>
+                    <div class="choose-menu-table-wrapper">
+
+                        @foreach (var seating in Model.ChooseTicketModel.BookingModel.bookingSeatingModel)
+                    {
+                            <input type="radio" name="seatingTime" id="@seating.seatingId" value="@seating.seatingId" style="display:inline;"><label id="seatingtime_ @seating.seatingId" for="@seating.seatingId" style="display:inline;font-size:16px;">@seating.start.ToShortTimeString()    </label></input>
+
+                    }
+                    </div>
+            }
+                <h1 class="type-light line-height-1-15 mb">Choose your menu</h1>
+                <div class="choose-menu-table-wrapper">
+                    <table class="choose-menu-table">
+                        <thead>
+                            <tr>
+                                <th>Menu Type</th>
+                                <th>Number of Guests</th>
+                                <th>Price Per Person</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ChooseTicketModel.BookingModel != null)
+                        {
+
+                            int counter = Model.ChooseTicketModel.BookingModel.bookingMenuModel != null ? Model.ChooseTicketModel.BookingModel.bookingMenuModel.Count : 1;
+
+                            var temp = ""; var temp2 = ""; var temp3 = "";
+
+                            for (int i = 0; i < counter; i++)
+                            {
+                                temp = "chkmenuOption_" + i;
+                                temp2 = "menuOptionPrice_" + i;
+                                temp3 = "menuOptionTickets_" + i;
+                                var val1 = Model.ChooseTicketModel.BookingModel.bookingMenuModel != null ? Model.ChooseTicketModel.BookingModel.bookingMenuModel[i].menuOptionId : Model.ChooseTicketModel.BookingModel.eventId;
+                                var title = Model.ChooseTicketModel.BookingModel.bookingMenuModel != null ? Model.ChooseTicketModel.BookingModel.bookingMenuModel[i].menuTitle : Model.ChooseTicketModel.BookingModel.EventName;
+                                var cost = Model.ChooseTicketModel.BookingModel.bookingMenuModel != null ? Model.ChooseTicketModel.BookingModel.bookingMenuModel[i].baseTicketCost : Model.ChooseTicketModel.BookingModel.baseTicketCost;
+                                <tr>
+                                    <td>
+                                        <label class="chooser ">
+                                            <div class="flag flag--flush flag--fix">
+                                                <div class="flag__img">
+                                                    <input class="chooser__input" type="checkbox" id="@temp" name="menuOption" value="@val1" style="display:none !important;">
+
+
+
+                                                    @*<span class="chooser__icon">
+
+                                                        <svg role="img" class="icon ">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                        </svg>
+                                                    </span>*@
+                                                </div>
+                                                <div class="flag__body">
+                                                    <span class="chooser__label opacity-7 type-semibold ml-"> @title </span>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <div class="number-spinner">
+                                            <input name="menutickets"  type="text" class="input--primary input--extrasmall text-center" placeholder='0' id="@temp3" onchange="javascript:test();">
+                                            <a href="javascript:test();" class="number-spinner__up"></a>
+                                            <a href="javascript:test();" class="number-spinner__down"></a>
+                                        </div>
+                                    </td>
+                                    <td>
+
+                                        <span class='type-extrahuge type-semibold color-dark' id="@temp2">
+                                            @SupperClub.Domain.CostCalculator.CostToGuest(cost)
+                                        </span>
+
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <hr class="hr hr--dots">
+                <div class="justifize">
+                    <div class="justifize__box">
+                        <span class='type-bold type-x-huge color-dark line-height-1-15'>Total £</span>
+                        <span class='type-bold type-x-huge color-dark line-height-1-15' name="totalPrice">0.00</span><span name="VoucherApply"></span>
+                    </div>
+                </div>
+                <hr class="hr hr--dots mb+">
+                <h2 class="h1 type-light line-height-1-15 mb">A Message for the Chef</h2>
+                <div class="large-and-up-ph++ medium-ph+ ph-">
+                    @*<textarea class="input--primary input--textarea input--full mb+" placeholder="Let the chef know about your eating requirments and allergies"></textarea>*@
+                    @Html.TextAreaFor(m => m.ChooseTicketModel.BookingModel.bookingRequirements, new { @class = "input--primary input--textarea input--full mb+",  placeholder = "Let the chef know about your eating requirments and allergies" })
+                </div>
+                <h2 class="h1 type-light line-height-1-15 mb">Voucher Code</h2>
+                <span class="large-and-up-ph++ medium-ph+ ph-">
+
+                    <input type="text" class="input--primary input--medium input--h42 mb" placeholder="Voucher code here" id="txtVoucherCode">
+                    <button type="button" class="btn btn--primary btn--medium" id="applyVoucherCode" style="display: inline !important; min-height: 10px; margin-top: -25px !important; margin-left: 5px !important; width: 25%;">Apply Voucher</button>
+                    <button type="button" class="btn btn--primary btn--full btn--54 mb++" id="proceedToPayment" style="display: display:inline !important; width: 80% !important; margin-left: 90px !important;">Proceed to Payment</button>
+
+                </span>
+            </form>
+        </div>
+
+        @using (Html.BeginForm("CreditCardDetails", "Booking", FormMethod.Post, new { id = "creditCardDetailsForm", @class = "mb+" }))
+        {
+            <h1 class="type-light line-height-1-15 mb">Payment @*<span class='type-default type-normal'>Register or <a href="#login-register" class="open-popup">Login</a></span>*@</h1>
+            <div class="large-and-up-ph++ medium-ph+ ph- mb+">
+                <p class="type-semibold color-darken mb--">Card Type</p>
+                <div class="large-and-up-pr++ mb-">
+                    <div class="select select--medium select--full inline-block">
+
+                        @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.CardType)
+                        @Html.DropDownListFor(m => m.CreditCardDetailsViewModel.creditCardDetails.CardType, Model.CreditCardDetailsViewModel.CreditCardTypes, "Select", new { @class = "select__item pl" })
+                        <div class="select__icon">
+                            <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+
+                        </div>
+                    </div>
+                </div>
+                <p class="type-semibold color-darken mb--">Name on Card</p>
+
+                @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.CardHolder)
+                @Html.EditorFor(m => m.CreditCardDetailsViewModel.creditCardDetails.CardHolder, new { @class = "input--primary input--full input--h42 mb-" })
+
+                @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.CreditCardNumber)
+                @Html.EditorFor(m => m.CreditCardDetailsViewModel.creditCardDetails.CreditCardNumber, new { @class = "input--primary input--full input--h42 mb-" })
+
+                <div class=" justifize">
+                    <div class="justifize__box">
+                        <p class="type-semibold color-darken mb--">Expiry Date</p>
+                        <div class="expiry-date-wrap">
+
+                            @Html.TextBoxFor(m => m.CreditCardDetailsViewModel.creditCardDetails.ExpiryMonth, new { @class = "input--primary input--number", style = "max-width: 20px; display: inline", placeholder = "MM" })
+                            <span>/</span>
+
+                            @Html.TextBoxFor(m => m.CreditCardDetailsViewModel.creditCardDetails.ExpiryYear, new { @class = "input--primary input--number", style = "max-width: 20px; display: inline", placeholder = "YY" })
+                            @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.ExpiryMonth)
+                            @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.ExpiryYear)
+                        </div>
+                    </div>
+                    <div class="justifize__box">
+                        <p class="type-semibold color-darken mb--">
+                            CV2 Number <span class='tooltip-wrap'>
+                                <span class="icon-wrap">
+                                    <svg role="img" class="icon icon--5x9 color-white">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-question_mark"></use>
+                                    </svg>
+                                </span> <span class="tooltip">The 3 digit security number on the back of your card</span>
+                            </span>
+                        </p>
+                        <div class="cv2-number-wrap">
+
+                            @Html.TextBoxFor(m => m.CreditCardDetailsViewModel.creditCardDetails.CV2, new { @class = "input--primary input--number", placeholder = "xxxx" })
+
+
+                            @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.CV2)
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="h1 type-light line-height-1-15 mb">Billing Address</h2>
+            <div class="large-and-up-ph++ medium-ph+ ph-">
+
+                @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.Address1)
+                @Html.TextBoxFor(m => m.CreditCardDetailsViewModel.creditCardDetails.Address1, new { @class = "input--primary input--full input--h42 type-semibold mb-", placeholder = "Address Line 1" })
+
+                @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.Address2)
+                @Html.TextBoxFor(m => m.CreditCardDetailsViewModel.creditCardDetails.Address2, new { @class = "input--primary input--full input--h42 type-semibold mb-", placeholder = "Address Line 2" })
+
+                @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.City)
+                @Html.TextBoxFor(m => m.CreditCardDetailsViewModel.creditCardDetails.City, new { @class = "input--primary input--full input--h42 type-semibold mb-", placeholder = "City" })
+
+                @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.PostCode)
+                @Html.TextBoxFor(m => m.CreditCardDetailsViewModel.creditCardDetails.PostCode, new { @class = "input--primary input--full input--h42 type-semibold mb-", placeholder = "PostCode" })
+
+                @Html.ValidationMessageFor(m => m.CreditCardDetailsViewModel.creditCardDetails.Country)
+                @Html.TextBoxFor(m => m.CreditCardDetailsViewModel.creditCardDetails.Country, new { @class = "input--primary input--full input--h42 type-semibold mb-", placeholder = "Country" })
+                <div class="terms-wrapper mb-">
+                    <label class="chooser ">
+                        <div class="flag flag--flush flag--fix">
+                            <div class="flag__img">
+                                <input class="chooser__input" type="checkbox" id="chkTerms" name="chkTerms1" value="Menu A">
+                                <span class="chooser__icon">
+
+                                    <svg role="img" class="icon ">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="flag__body">
+                                <span class="chooser__label color-gray-7 inline-block align-middle ml-"> I agree to the <a class='color-gray-7 text-underline' href='/Home/TermsAndConditions'>Terms and Conditions</a> </span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+                <button type="submit" id="btnBuyTickets" class="btn btn--primary btn--full btn--h54 mb++">Buy Tickets</button>
+                <span name="InProgress" id="InProgress"></span>
+            </div>
+
+        }
+    </div>
+</div>
+
+
+
+
+<div id="info-msg" class="info-msg mfp-hide is-success magnific-content ">
+    <div class="text-center">
+        <div class="info-msg__success">Info text</div>
+        <div class="info-msg__fail">Error message</div>
+    </div>
+</div>
+<div class="newsletter">
+    <a href="javascript:;" class="newsletter__button">
+        <div class="tableize tableize--full tableize--middle">
+            <div class="tableize__cell">
+                <div>
+                    <span>Newsletter</span>
+
+                    <svg role="img" class="icon icon-18x10">
+                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </a>
+    <span class="newsletter__content">
+        <form action="" class="full-height">
+            <div class="close-btn type-small color-white">Close <span class="type-bold">X</span></div>
+            <div class="tableize tableize--full tableize--middle">
+                <div class="tableize__cell">
+                    <div>
+                        <p class="type-small type-bold color-white mb--">Find out of best Grub Clubs</p>
+                        <input type="email" class="input input--primary" placeholder="Email address">
+                        <button class="btn type-uppercase type-small type-bold">ok</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </span>
+</div>
+
+
+
+

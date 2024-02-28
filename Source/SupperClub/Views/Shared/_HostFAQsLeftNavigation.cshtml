@@ -1,0 +1,61 @@
+﻿<script type="text/javascript">
+    function onClickbtnHostResources() {
+        var _isLogin = "@SupperClub.Code.UserMethods.IsLoggedIn";
+        if (_isLogin.toLowerCase() == "true") {
+            window.open(
+              'http://host-resources.grubclub.com/',
+              '_blank' // <- This is what makes it open in a new window.
+            );
+        }
+        else {
+            window.location.href = '@Url.Action("LogOn", "account", new { returnUrl = "http://host-resources.grubclub.com/" })';
+        }
+        return false;
+    }
+   
+    $(function () {
+        var _url = window.location.href;
+        $(".list-bare").each(function () {
+            $(this).removeClass("is-active");
+        });
+        if (_url.toLowerCase().indexOf("welcome") >= 0) {
+            $("#host-welcome").addClass("is-active");
+        }
+        else if (_url.toLowerCase().indexOf("working-with-grubclub") >= 0) {
+            $("#working-with-grubclub").addClass("is-active");
+        }
+        else if (_url.toLowerCase().indexOf("what-we-list-on-grubclub") >= 0) {
+            $("#what-we-list").addClass("is-active");
+        }
+        else if (_url.toLowerCase().indexOf("how-to-start-a-grubclub") >= 0) {
+            $("#setting-up-a-grubclub").addClass("is-active");
+        }
+        else if (_url.toLowerCase().indexOf("how-to-manage-your-grubclub") >= 0) {
+            $("#uploading-your-grubclub").addClass("is-active");
+        }
+        else {
+            $("#host-welcome").addClass("is-active");
+        }
+    });
+</script>
+
+<aside class="layout__item large-and-up-1/4 medium-1/2 mt">
+    <nav class='nav-about mb'>
+        <ul class="list-bare">
+            <li><a href="/host/welcome" id="host-welcome">HOME</a></li>
+            <li><a href="/working-with-grubclub" id="working-with-grubclub">Working With Grub Club</a></li>
+            <li><a href="/what-we-list-on-grubclub" id="what-we-list">What We List</a></li>
+            <li><a href="/how-to-start-a-grubclub" id="setting-up-a-grubclub">Setting up a Grub Club</a></li>
+            <li><a href="/how-to-manage-your-grubclub" id="uploading-your-grubclub">Uploading onto Grub Club</a></li>
+
+        </ul>
+    </nav>
+    <br/>
+    <a id="btnHostResources" href="#" onclick="onClickbtnHostResources();" class="btn btn--primary btn--full btn--radius type-huge mb-">Host resources</a>
+
+    <a id="btnHostVenues" href="http://venues.grubclub.com/#/public/venue?token=QFcWlYcZOjAFMZ5HQW2uJyuQre9KCGOK" class="btn btn--primary btn--full btn--radius type-huge mb-" target="_blank">List your venue</a>
+
+    <a id="btnRentEquipments" href="https://docs.google.com/forms/d/e/1FAIpQLSd-iFZinmHdEX4FwXtMKr0_ex22aQvkCkTC0MQxW-bvg5zagQ/viewform" class="btn btn--primary btn--radius mb-" style="font-size:18px !important;padding-top:5px !important;padding-left:30px !important; padding-right:30px !important; white-space: pre-wrap !important;line-height:20px !important;height:70px !important;" target="_blank">List your kitchen equipment here to rent or lend</a>
+
+    <a id="btnFoodBlogger" href="https://docs.google.com/spreadsheets/d/1i-cS38vTp5rnikD4_aoEQNKuM2uM3J9rBovGuN2ilLs/edit?usp=sharing" class="btn btn--primary btn--radius type-huge mb-" style="font-size:18px !important;padding-left:30px !important; padding-right:30px !important;" target="_blank">Food Blogger Contacts</a>
+</aside>

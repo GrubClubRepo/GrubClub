@@ -1,0 +1,83 @@
+﻿@model SupperClub.Models.HomePage
+@{
+    ViewBag.Title = "Pop Up Restaurants| Eat Out with Grub Club";
+    ViewBag.Description = "Grub Club connects foodies with the best creative chefs in your area. We are a platform for entrepreneurial Chefs. Come support a new generation of restaurants and discover the next big chef.";
+}
+@section PageSpecificScripts {
+    <link rel="canonical" href="http://grubclub.com/"/>
+    <link rel="stylesheet" type="text/css"  href="@Url.Content("~/Content/css/datepicker/jquery-ui-1.8.23.custom.css")" />
+    <style>
+        .fadein { position:relative; height:220px; width:500px; }
+        .active { position:absolute; left:0; top:0; }
+    </style>
+
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    @*This script handles additional custom date validation on dd/MM/yy*@
+    <script src="@Url.Content("~/Scripts/jquery.validate.custom.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.json-2.4.min.js")" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+    var refreshIntervalId = 0;
+    $(document).ready(function () {
+
+        $("#testApi").click(function () {
+            //var arr = new Array();
+            //var o = { "user": 2, "menuOptionId": 0 };
+            //arr.push(o);
+            
+            //var x = $.toJSON(arr);
+            //alert(x);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("createticketbasket", "API")',
+                //data: { "deviceToken":123, "email":"peter@ubinow.com","fbId":100006730930064, "fbJson":'{"birthday" : "01/01/1986", "email" : "peter@ubinow.com", "first_name" : "Dev","gender" : "male","id" : "100006730930064","last_name" : "Peter","link" : "https://www.facebook.com/dev.peter.522","locale" : "en_US","name" : "Dev Peter","timezone" : "0","updated_time" : "2013-10-01T13:06:32+0000","username" : "dev.peter.522","verified" : true,  "friends":[{ "first_name":"Dev", "id":100003213733746, "last_name":"Harrison",  "name":"Dev Harrison", "username":"dev.harrison.3" }, { "first_name":"Dev", "id":100006170042752, "last_name":"Jordi", "name":"Dev Jordi",  "username":"dev.jordi" } ]}' },
+                //data: { eventIds: [254,256], userId: '5C4A9BE6-AC67-481C-AE46-033135122EE9' },
+                //data: { eventId: 249, userId: '37692F59-6941-4DE9-B758-FC6951B88FB0', reviewDetails: '{"rating":4, "reviewTitle":"testTitle","reviewText":"testText123","postAsAnonymous":true}' },
+                //data: {eventId:261,seatingId:0,userId:"B98FCAEB-6761-4F56-9B2D-ABB9FAB56A5B",bookingDetails:'[{menuOptionId:"0",numberOfTickets:1}]'},
+                data: { "eventId": 261, "seatingId": 0, "userId": "37692F59-6941-4DE9-B758-FC6951B88FB0", "bookingDetails": "[{'menuOptionId':0,'numberOfTickets':1}]" },
+                cache: false,
+                dataType: 'json',
+                traditional: true,
+                success: function (result) {
+
+                    alert(result.message);
+                },
+                error: function (error) {
+                    alert("error");
+                }
+            });
+        });
+    });
+
+    
+
+    </script>
+
+}
+     
+        <div class="eight columns">
+         <div class="form-group">
+                <label for="fbId">FBId:</label>
+                <input type="text" class="form-control" id="fbId" />
+            </div>
+            <div class="form-group">
+                <label for="em">Email address:</label>
+                <input type="text" class="form-control" id="em" />
+            </div>
+
+            <div class="form-group">
+                <label for="dt">Device Token</label>
+                <input type="text" class="form-control" id="dt" />
+            </div>
+            <div class="form-group">
+                <label for="fbjs">FBJson</label>
+                <input type="text" class="form-control" id="fbjs" />
+            </div>
+
+            <input type="button" id="testApi" value="click" />
+                Sign Up
+            </button>
+                 
+        </div>		
+   

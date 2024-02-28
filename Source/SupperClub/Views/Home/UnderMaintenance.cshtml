@@ -1,0 +1,32 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+ 
+@{
+    ViewBag.Title = "Page under maintenance";
+    try
+    {
+        
+        Response.AddHeader("Status Code", "200"); 
+        
+        string uName = string.IsNullOrEmpty(SupperClub.Code.UserMethods.UserName) ? "Unknown" : SupperClub.Code.UserMethods.UserName;
+        SupperClub.Logger.SystemLogging.LogMessageDirect(string.Format("User: {0} - Landed at 404 Page.", uName), SupperClub.Logger.LogLevel.WARN);
+        
+    }
+    catch
+    {
+        // Just in case this block of code fails, do nothing so the page still renders
+    }
+}
+
+<div class="container pv">
+    <div class="layout">
+        <div class="layout__item large-and-up-1/2">
+            <h1 class="type-x-huge color-orange type-bold mb"><span class='type-super-huge type-uppercase line-height-1'></span><br>The page you are looking for is under maintenance right now. It will be up again in few hours.Please try later!</h1>
+            <p class="opacity-7 type-light"></p>
+        </div>
+        <div class="layout__item large-and-up-1/2">
+            <div class="pt+">
+                <img src="/content/images/404.png" alt="">
+            </div>
+        </div>
+    </div>
+</div>

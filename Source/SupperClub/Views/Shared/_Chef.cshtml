@@ -1,0 +1,19 @@
+﻿@model SupperClub.Domain.SupperClub
+<!-- 960 Container Start -->
+<div class="container results-column events-results">
+    <div class="four columns" >
+        <a href="@Url.Action("DetailsByIdWithName", "Event", new { eventId = Model.Id, eventSeoFriendlyName = Model.UrlFriendlyName })">
+            <img src="@Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + Model.ImagePath)" alt="@Model.Name | GrubClub" class="EventImage">
+        </a>
+    </div>
+
+    <div class="twelve columns">
+        <h4>
+            <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.UrlFriendlyName)">@Model.Name</a>
+        </h4>
+        <p class="Summary">
+            @Html.DisplayWithBreaks(Model.Summary)
+        </p>
+    </div>
+
+</div>

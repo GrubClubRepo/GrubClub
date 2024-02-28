@@ -1,0 +1,259 @@
+﻿@model SupperClub.Models.HomePage
+@{
+    ViewBag.Title = "Pop Up Restaurants| Eat Out with Grub Club";
+    ViewBag.Description = "Grub Club connects foodies with the best creative chefs in your area. We are a platform for entrepreneurial Chefs. Come support a new generation of restaurants and discover the next big chef.";
+}
+@section PageSpecificScripts {
+    <link rel="canonical" href="http://grubclub.com/"/>
+    <link rel="stylesheet" type="text/css"  href="@Url.Content("~/Content/css/datepicker/jquery-ui-1.8.23.custom.css")" />
+    <style>
+        .fadein { position:relative; height:220px; width:500px; }
+        .active { position:absolute; left:0; top:0; }
+    </style>
+
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    @*This script handles additional custom date validation on dd/MM/yy*@
+    <script src="@Url.Content("~/Scripts/jquery.validate.custom.js")" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+    var refreshIntervalId = 0;
+    $(document).ready(function () {
+        $('.date').datepicker({ 
+            dateFormat: "dd/mm/yy", 
+            minDate: new Date(@DateTime.Now.Year, @DateTime.Now.Month - 1, @DateTime.Now.Day) 
+        });
+        
+        $('#btnSearch').click(function () {
+            if($("#SearchForm").validate().form())
+                {
+                    $("#SearchForm").submit();
+                }
+        });
+    });
+
+    function Subscribe() {
+        var email = $('#SubscribeEmailAddress').val();
+        if(email != '' && email != null){
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Subscribe","Home")',
+                data: { emailAddress: email },
+                cache: false,
+                dataType: 'json text',
+                traditional: true,
+                success: function (result) {
+                    if(result == "true")
+                    {
+                        $('#SubscribeEmailAddress').hide();
+                        $('#btnSubscribe').hide();
+                        $('#txtSubscribeError').hide();
+
+                        $('#hdrSubscribe').text('Welcome to the Club!');
+                        $('#txtSubscribe').text("We'll let you know about any new events and any other news!");
+                    }
+                    else
+                    {
+                        $('#txtSubscribeError').text("Looks like there is a problem with your email address, please try again!");
+                        $('#txtSubscribeError').show();
+                    }
+                },
+                error: function () {
+                    alert("Could not save email address.");
+                }
+            });
+        }
+    }
+    
+    $(function () {
+        $('.fadein .active:gt(0)').hide();
+        refreshIntervalId = setInterval(function () { $('.fadein .active:eq(0)').fadeOut().next('.active').fadeIn().end().appendTo('.fadein'); }, 5000);
+    });
+
+    function LatestEventSliderStop()
+    {
+        clearInterval(refreshIntervalId);
+    };
+
+    function LatestEventsSlider()
+    {
+        refreshIntervalId = setInterval(function () { $('.fadein .active:eq(0)').fadeOut().next('.active').fadeIn().end().appendTo('.fadein'); }, 5000);
+    };
+
+    </script>
+
+}
+<!-- Slider -->
+<div id="slider">
+    <!-- Flexslider Start-->
+    <div class="flexslider" style="background: #fafafa;">
+        <ul class="slides" style="position:relative;">
+            <!-- Slide -->
+			<li class="custom-slide">
+				<div class="container" style="width:100%; background: url(@Url.Content("~/Content/images/Carousel_image.1.jpg)") no-repeat;width:100%;height:100%;repeat:no-repeat; background-position:top center; background-color:#703A29;">
+					<div class="sixteen columns">
+						<div class="slider_description">
+                            <h1>Discover and Book</h1>
+							<h2>Home-Cooked Meals by Creative Chefs across London</h2>
+						</div>
+					</div>
+				</div>
+			</li>
+			
+			<!-- Slide -->
+			<li class="custom-slide">
+				<div class="container" style="background: url(@Url.Content("~/Content/images/Carousel_image.2.jpg)") no-repeat;width:100%;height:100%; repeat: no-repeat; background-position:top center; background-color:#703A29;">
+					<div class="sixteen columns">
+						<div class="slider_description" >
+                            <h1>Meet New People</h1>
+							<h2>And Dine in Great New Spaces Near You</h2>
+						</div>
+					</div>
+				</div>
+			</li>
+					
+			<!-- Slide -->
+			<li class="custom-slide">
+				<div class="container" style="background: url(@Url.Content("~/Content/images/Carousel_image.3.jpg)") no-repeat;width:100%;height:100%; repeat: no-repeat; background-position:top center; background-color:#703A29;">
+					<div class="sixteen columns">
+						<div class="slider_description">
+                            <h1>Discover Exciting Food for Less</h1>  
+							<h2>Great food from £8 onwards......</h2>
+						</div>
+					</div>
+				</div>
+			</li>
+        </ul>
+    </div>
+    <!-- Flexslider End-->
+</div>
+<!-- End Slider -->
+
+<!--Search bar Start -->
+<div class="container search-bar">
+  		<!--Search fields Start -->
+        @using (Html.BeginForm("HomeSearchResultNew", "Search", FormMethod.Post, new { id = "SearchForm", name = "SearchForm", @class = "container search-fields-container" }))
+        {
+             <ul class="container">
+                <li class="three columns">
+                    <span class="input-icon-container">
+                        <img id="imgSearch" src="@Url.Content("~/Content/images/i-calender.png")" width="34" height="34" alt="calender-icon" onclick="$('#HomeSearch_StartDate').focus(); return false;" />
+                    </span>
+                    @Html.EditorFor(m => m.HomeSearch.StartDate, "SearchDatePicker")
+                </li>
+                <li class="three columns">
+                    <span class="input-icon-container" >
+                        <img src="@Url.Content("~/Content/images/i-map.png")" width="34" height="34" alt="map-icon" onclick="$('#HomeSearch_Location').focus(); return false;" />
+                    </span>
+                    @Html.TextBoxFor(m => m.HomeSearch.Location, new { @class = "search-input", placeholder = "Where?", type = "search" })
+                </li>
+                <li class="three columns">
+                    <span class="input-icon-container" >
+                        <img src="@Url.Content("~/Content/images/i-ppl.png")" width="34" height="34" alt="people-icon" onclick="$('#HomeSearch_Guests').focus(); return false;" />
+                    </span>
+                    @Html.TextBoxFor(m => m.HomeSearch.Guests, new { @class = "search-input", placeholder = "How many?", type = "search" })
+                </li>
+              
+                <li class="three columns">
+                    <span class="input-icon-container">
+                        <img src="@Url.Content("~/Content/images/i-keyword.png")" width="34" height="34" alt="keyword-icon" onclick="$('#HomeSearch_Keyword').focus(); return false;" />
+                    </span>
+                    @Html.TextBoxFor(m => m.HomeSearch.Keyword, new { @class = "search-input", placeholder = "Key Word", type = "search" })
+                </li>
+                <li class="three columns search-button-container">
+                    <span class="search-button button" onclick="$('#SearchForm').submit()">
+                        <i class="icon-search icon-white"></i>Find It
+                    </span>
+                </li>
+                @*This button to allow Enter key submission*@
+                <li><input type="submit" id="btnsubmitForm" style="visibility:hidden; padding:0px" /></li>
+            </ul>
+        }
+		<!-- Search fields End -->   
+</div>
+<!--- End of search bar --->
+
+<!--- Pattern design row --->
+<div class="container pattern-design" style=""></div>
+
+<!--- Sub title column --->
+<div class="container sub-title">
+    <div class="container">
+        <div class="eight columns">
+            <h2>Why Hello There!</h2>
+            <p>Grub Club connects foodies with new and creative Chefs across London.</p>
+            <p style="font-size:14px; color:#FF6700; font-weight:bold;">What is a Grub Club we hear you say?</p> 
+            <p>A Grub Club is like a restaurant but a lot more fun! We make sure that our handpicked Chefs serve up the most delicious food in often quirky spaces.</p>
+            <p>We do our best to ensure there is a communal feel to the meal, so that you get to meet some great people.</p>
+            <p>Let us take you back to a simpler time when it was easy to meet and make friends......</p>
+        </div>
+       	<div class="eight columns">
+            <h2>Top Grub Clubs</h2>
+            @if (Model.RecentlyAddedEvents != null && Model.RecentlyAddedEvents.Count > 0)
+            {
+                <div class="fadein" id="eventSlider" onmouseover="LatestEventSliderStop();" onmouseout="LatestEventsSlider();">
+        
+                    @foreach (var _event in Model.RecentlyAddedEvents.Take(4))
+                    {
+                     <div class="active">
+                     <div class="four columns recently-added-events-img-box">
+                
+                     <a href="@Url.Action("DetailsByIdWithName", "Event", new { eventSeoFriendlyName = _event.UrlFriendlyName, eventId = _event.Id })">
+                        <img src="@Url.Content(SupperClub.Code.ServerMethods.EventImagePath + _event.ImagePath)" alt="" />
+                     </a>
+                        <p>
+                        <span>DATE: </span>@_event.Start.ToString("ddd, d MMM yyyy")<br/>   
+                        <span>TIME: </span>@(_event.Start.ToShortTimeString() + " - " + _event.End.ToShortTimeString())<br/>
+                        <span>SPACES: </span>@_event.Guests.ToString()
+                        </p> 
+                    </div> 
+             
+		             <div class="four columns" style="width:200px">
+                        <h5><a href="@Url.Action("DetailsByIdWithName", "Event", new { eventSeoFriendlyName = _event.UrlFriendlyName, eventId = _event.Id })">@_event.Name</a></h5>
+                        <p>
+                        @Html.Raw(_event.Description)
+                        </p>
+                   </div>
+                    </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="eight columns">
+                    <p>Sorry no recent events from any active Grub Clubs to show</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--- End of Sub title column --->
+
+<!-- 960 Container Start -->
+<div class="container sub-title">  
+<div class="container">
+     <div class="eight columns">
+            <h2 id="hdrSubscribe">Sign Up to Our Newsletter!</h2>
+            <p id="txtSubscribe">Be the First to Know!</p>
+            <p id="txtSubscribeError" style="color: Red; display: none"></p>
+            @Html.TextBox("SubscribeEmailAddress", null, new { @class = "search-input", placeholder = "your email address", type = "search", style = "margin-left: 0px; margin-right: 5px; max-width: 100%; width: 212px" })
+            <span id="btnSubscribe" class="orange button" onclick="Subscribe(); return false;">
+                Add
+            </span>
+			<br />
+		
+        </div>
+
+    <!-- Do you want to be involved in the Club -->
+    <div class="eight columns get-involved">
+    <h2>See How Grub Club Works</h2>	
+			<div class="recently-added-events-vdo-box">
+			<iframe src="http://player.vimeo.com/video/65300127?title=0&amp;byline=0&amp;portrait=0&amp;color=ff6700" width="300" height="169" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+			<p>Filmed and edited by our friends at <a href="http://www.manuelfernandez.co.uk">www.manuelfernandez.co.uk</a></p>
+			</div>        
+    </div>
+    </div>
+    <div class="clearfix">
+    </div>
+</div>
+<!-- 960 Container End -->

@@ -1,0 +1,521 @@
+﻿@model SupperClub.Models.NewCMSHomeModel
+@{
+    ViewBag.Title = "Pop Up Restaurants| Eat Out with Grub Club";
+    ViewBag.Description = "Grub Club connects foodies with the best creative chefs in your area. We are a platform for entrepreneurial Chefs. Come support a new generation of restaurants and discover the next big chef.";
+}
+
+@section PageSpecificScripts {
+    <style>
+        
+        table {
+            border: 1px solid black;
+            width: 100%;
+            align-content: center;
+        }
+
+        th, td {
+            border: 1px solid black;
+            height: 20px;
+            width: 200px;
+        }
+
+        img {
+            height: 100px;
+            width: 150px;
+        }
+    </style>
+    <script type="text/javascript">
+
+        function heroEdit() {
+
+
+
+            document.getElementById("heroEdit").style.display = "block";
+            document.getElementById("heroText").style.display = "none";
+
+        }
+
+        function heroCancel() {
+
+
+
+            document.getElementById("heroEdit").style.display = "none";
+            document.getElementById("heroText").style.display = "block";
+
+        }
+
+        function curatedEdit(item) {
+
+            var a = "curatedEdit" + item;
+            var b = "curatedText" + item;
+
+            document.getElementById(a).style.display = "block";
+            document.getElementById(b).style.display = "none";
+        }
+
+        function curatedCancel(item) {
+
+            var a = "curatedEdit" + item;
+            var b = "curatedText" + item;
+
+            document.getElementById(a).style.display = "none";
+            document.getElementById(b).style.display = "block";
+        }
+        function OurStoriesEdit(item) {
+
+            var a = "OurStoriesEdit" + item;
+            var b = "OurStoriesText" + item;
+
+            document.getElementById(a).style.display = "block";
+            document.getElementById(b).style.display = "none";
+        }
+
+        function OurStoriesCancel(item) {
+
+            var a = "OurStoriesEdit" + item;
+            var b = "OurStoriesText" + item;
+
+            document.getElementById(a).style.display = "none";
+            document.getElementById(b).style.display = "block";
+        }
+
+        function heroSave() {
+            saveherodetais();
+            // document.getElementById("heroEdit").style.display="none";
+            //
+            document.getElementById("heroText").style.display = "block";
+        }
+
+        function saveherodetais() {
+            debugger;
+            var txt1 = document.getElementById("heroTextLine1").value
+            var txt2 = document.getElementById("heroTextLine2").value
+            var link1 = document.getElementById("heroLink").value
+            var image=document.getElementById("fileHero").value;
+            savedetails(txt1, txt2, link1, image);
+        }
+
+        function savedetails(txt1,txt2,link,image) {
+            var a =
+                {
+                    TextLine1:txt1,
+                    TextLine2: txt2,
+                    Link: link,
+                    file:image
+                }
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Home", "Admin")',
+                contentType: "application/json",
+                dataType: "json",
+
+                data: JSON.stringify({
+                    TextLine1:txt1,
+                    TextLine2: txt2,
+                    Link: link,
+                    file:image
+                }),
+                success: function(response) {
+                },
+                error: function (response) {
+                    alert(response.status);
+                }
+            });
+        }
+    </script>
+}
+<div class="container">
+    <h3 style="width:100%; text-align:center;"> Hero Section </h3> <br />
+    @using (Html.BeginForm("Home", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "heroForm" }))
+{
+
+    <table id="heroText">
+        <tr>
+            <th> Text Line1  </th>
+            <th> Text Line2  </th>
+            <th> Link </th>
+            <th> Image </th>
+            <th> Action </th>
+        </tr>
+        <tr>
+
+            <td>@ViewBag.Hero[0].TextLine1</td>
+
+            <td>@ViewBag.Hero[0].TextLine2</td>
+
+            <td>@ViewBag.Hero[0].Link</td>
+
+            <td>
+                <img src="@ViewBag.Hero[0].ImagePath" />
+            </td>
+            <td>
+
+                <input type="button" value="Edit" id="btnHeroEdit" onclick="javascript:heroEdit();">
+            </td>
+        </tr>
+        </table>
+    <table id="heroEdit" style="display:none;">
+        <tr>
+            <th> Text Line1  </th>
+            <th> Text Line2  </th>
+            <th> Link </th>
+            <th> Image </th>
+            <th> Action </th>
+        </tr>
+
+        <tr>
+
+            <td>
+                <input type="text" name="herotext1" id="heroTextLine1" value="@ViewBag.Hero[0].TextLine1">
+            </td>
+
+            <td>
+                <input type="text" name="herotext2" id="heroTextLine2" value="@ViewBag.Hero[0].TextLine2">
+            </td>
+
+            <td>
+                <input type="text" name="heroLink" id="heroLink" value="@ViewBag.Hero[0].Link">
+            </td>
+
+            <td>
+                <input type="file" name="file" id="fileHero" value="@ViewBag.Hero[0].ImagePath">
+                <input type="text" name="heroOldFilePath" value="@ViewBag.Hero[0].ImagePath" style="display:none;" />
+            </td>
+
+            <td>
+                <input type="text" name="heroId" id="heroId" value="@ViewBag.Hero[0].Id" style="display:none;">
+
+                <input type="text" name="heroPage" value="Home" style="display:none;">
+                <input type="text" name="heroSection" value="Hero" style="display:none;">
+                <input type="submit" value="Save" id="btnHeroSave">
+                <input type="button" value="Cancel" onclick="javascript:heroCancel();" />
+            </td>
+        </tr>
+    </table>
+
+}
+
+</div>
+<div class="container">
+    <h3 style="width:100%; text-align:center;">    curated By Us </h3><br />
+
+    @using (Html.BeginForm("Home", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table id="curatedText1">
+        <tr>
+            <th> Text Line1  </th>
+
+            <th> Link </th>
+            <th> Image </th>
+            <th>Action</th>
+        </tr>
+
+        <tr>
+
+            <td>@ViewBag.Curated[0].TextLine1</td>
+
+
+
+            <td>@ViewBag.Curated[0].Link</td>
+
+            <td><img src="@ViewBag.Curated[0].ImagePath" /></td>
+            <td>
+
+                <input type="button" value="Edit" onclick="javascript: curatedEdit(1);">
+            </td>
+        </tr>
+        </table>
+    <table id="curatedEdit1" style="display:none;">
+        <tr>
+            <th> Text Line1  </th>
+
+            <th> Link </th>
+            <th> Image </th>
+            <th>Action</th>
+        </tr>
+        <tr>
+
+            <td><input type="text" name="herotext1" value="@ViewBag.Curated[0].TextLine1"></td>
+
+
+
+            <td><input type="text" name="heroLink" value="@ViewBag.Curated[0].Link"></td>
+
+            <td>
+                <input type="file" name="file">
+                <input type="text" name="heroOldFilePath" value="@ViewBag.Curated[0].ImagePath" style="display:none;" />
+            </td>
+            <td>
+
+                <input type="text" name="heroId" value="@ViewBag.Curated[0].Id" style="display:none;">
+                <input type="text" name="heroPage" value="Home" style="display:none;">
+                <input type="text" name="heroSection" value="Curated" style="display:none;">
+                <input type="submit" value="Save">
+                <input type="button" value="Cancel" onclick="javascript: curatedCancel(1);;" />
+            </td>
+        </tr>
+
+
+
+    </table>
+}
+
+</div>
+<div class="container">
+    @using (Html.BeginForm("Home", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table id="curatedText2" style="border-top:0px;">
+       
+        <tr>
+
+            <td>@ViewBag.Curated[1].TextLine1</td>
+
+            <td>@ViewBag.Curated[1].Link</td>
+
+            <td><img src="@ViewBag.Curated[1].ImagePath" /></td>
+            <td>
+
+                <input type="button" value="Edit" onclick="javascript: curatedEdit(2);">
+            </td>
+        </tr>
+        </table>
+    <table id="curatedEdit2" style="display:none;">
+       
+        <tr>
+
+            <td>
+                <input type="text" name="herotext1" value="@ViewBag.Curated[1].TextLine1">
+            </td>
+
+
+
+            <td>
+                <input type="text" name="heroLink" value="@ViewBag.Curated[1].Link">
+            </td>
+
+            <td>
+                <input type="file" name="file">
+                <input type="text" name="heroOldFilePath" value="@ViewBag.Curated[1].ImagePath" style="display:none;" />
+            </td>
+
+            <td>
+                <input type="text" name="heroId" value="@ViewBag.Curated[1].Id" style="display:none;">
+                <input type="text" name="heroPage" value="Home" style="display:none;">
+                <input type="text" name="heroSection" value="Curated" style="display:none;">
+                <input type="submit" value="Save">
+                <input type="button" value="Cancel" onclick="javascript: curatedCancel(2);" />
+
+            </td>
+        </tr>
+
+    </table>
+}
+</div>
+<div class="container">
+    @using (Html.BeginForm("Home", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table id="curatedText3">
+   
+        <tr>
+
+            <td>@ViewBag.Curated[2].TextLine1</td>
+
+            <td>@ViewBag.Curated[2].Link</td>
+
+            <td><img src="@ViewBag.Curated[2].ImagePath" /></td>
+            <td>
+
+                <input type="button" value="Edit" onclick="javascript: curatedEdit(3);">
+            </td>
+        </tr>
+        </table>
+    <table id="curatedEdit3" style="display:none;">
+      
+        <tr>
+
+            <td>
+                <input type="text" name="herotext1" value="@ViewBag.Curated[2].TextLine1">
+            </td>
+
+            <td>
+                <input type="text" name="heroLink" value="@ViewBag.Curated[2].Link">
+            </td>
+
+            <td>
+                <input type="file" name="file">
+                <input type="text" name="heroOldFilePath" value="@ViewBag.Curated[2].ImagePath" style="display:none;" />
+            </td>
+
+            <td>
+                <input type="text" name="heroId" value="@ViewBag.Curated[2].Id" style="display:none;">
+                <input type="text" name="heroPage" value="Home" style="display:none;">
+                <input type="text" name="heroSection" value="Curated" style="display:none;">
+                <input type="submit" value="Save">
+                <input type="button" value="Cancel" onclick="javascript: curatedCancel(3);" />
+
+            </td>
+        </tr>
+    </table>
+}
+</div>
+<div class="container">
+    <h3 style="width:100%; text-align:center;"> Stories behind Grub Club  </h3> <br />
+
+        @using (Html.BeginForm("Home", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table id="OurStoriesText1">
+        <tr>
+            <th> Text Line1  </th>
+
+            <th> Link </th>
+            <th> Image </th>
+            <th>Action</th>
+        </tr>
+        <tr>
+
+            <td>@ViewBag.OurStories[0].TextLine1</td>
+
+            <td>@ViewBag.OurStories[0].Link</td>
+
+            <td><img src="@ViewBag.OurStories[0].ImagePath" /></td>
+            <td>
+
+                <input type="button" value="Edit" onclick="javascript: OurStoriesEdit(1);">
+            </td>
+        </tr>
+        </table>
+    <table id="OurStoriesEdit1" style="display:none;">
+        <tr>
+            <th> Text Line1  </th>
+
+            <th> Link </th>
+            <th> Image </th>
+            <th>Action</th>
+        </tr>
+        <tr>
+
+            <td>
+                <input type="text" name="herotext1" value="@ViewBag.OurStories[0].TextLine1">
+            </td>
+
+         
+
+            <td>
+                <input type="text" name="heroLink" value="@ViewBag.OurStories[0].Link">
+            </td>
+
+            <td>
+                <input type="file" name="file">
+                <input type="text" name="heroOldFilePath" value="@ViewBag.OurStories[0].ImagePath" style="display:none;" />
+            </td>
+
+            <td>
+                <input type="text" name="heroId" value="@ViewBag.OurStories[0].Id" style="display:none;">
+                <input type="text" name="heroPage" value="Home" style="display:none;">
+                <input type="text" name="heroSection" value="OurStories" style="display:none;">
+                <input type="submit" value="Save">
+                <input type="button" value="Cancel" onclick="javascript: OurStoriesCancel(1);" />
+            </td>
+        </tr>
+    </table>
+}
+    </div>
+<div class="container">
+    @using (Html.BeginForm("Home", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+        <table id="OurStoriesText2">
+        
+        <tr>
+
+            <td>@ViewBag.OurStories[1].TextLine1</td>
+
+            <td>@ViewBag.OurStories[1].Link</td>
+
+            <td><img src="@ViewBag.OurStories[1].ImagePath" /></td>
+            <td>
+
+                <input type="button" value="Edit" onclick="javascript: OurStoriesEdit(2);">
+            </td>
+        </tr>
+    </table>
+    <table id="OurStoriesEdit2" style="display:none;">
+        
+        <tr>
+
+            <td>
+                <input type="text" name="herotext1" value="@ViewBag.OurStories[1].TextLine1">
+            </td>
+
+
+            <td>
+                <input type="text" name="heroLink" value="@ViewBag.OurStories[1].Link">
+            </td>
+
+            <td>
+                <input type="file" name="file">
+                <input type="text" name="heroOldFilePath" value="@ViewBag.OurStories[1].ImagePath" style="display:none;" />
+            </td>
+
+            <td>
+                <input type="text" name="heroId" value="@ViewBag.OurStories[1].Id" style="display:none;">
+                <input type="text" name="heroPage" value="Home" style="display:none;">
+                <input type="text" name="heroSection" value="OurStories" style="display:none;">
+                <input type="submit" value="Save">
+                <input type="button" value="Cancel" onclick="javascript: OurStoriesCancel(2);" />
+
+            </td>
+        </tr>
+    </table>
+}
+    </div>
+<div class="container">
+
+    @using (Html.BeginForm("Home", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table id="OurStoriesText3">
+        
+        <tr>
+
+            <td>@ViewBag.OurStories[2].TextLine1</td>
+
+            <td>@ViewBag.OurStories[2].Link</td>
+
+            <td><img src="@ViewBag.OurStories[2].ImagePath" /></td>
+            <td>
+
+                <input type="button" value="Edit" onclick="javascript: OurStoriesEdit(3);">
+            </td>
+        </tr>
+        </table>
+    <table id="OurStoriesEdit3" style="display:none;">
+        
+
+        <tr>
+
+            <td>
+                <input type="text" name="herotext1" value="@ViewBag.OurStories[2].TextLine1">
+            </td>
+
+            <td>
+                <input type="text" name="heroLink" value="@ViewBag.OurStories[2].Link">
+            </td>
+
+            <td>
+                <input type="file" name="file">
+                <input type="text" name="heroOldFilePath" value="@ViewBag.OurStories[2].ImagePath" style="display:none;" />
+            </td>
+
+            <td>
+                <input type="text" name="heroId" value="@ViewBag.OurStories[2].Id" style="display:none;">
+                <input type="text" name="heroPage" value="Home" style="display:none;">
+                <input type="text" name="heroSection" value="OurStories" style="display:none;">
+                <input type="submit" value="Save">
+                <input type="button" value="Cancel" onclick="javascript: OurStoriesCancel(3);" />
+
+            </td>
+        </tr>
+
+    </table>
+}
+
+    </div>

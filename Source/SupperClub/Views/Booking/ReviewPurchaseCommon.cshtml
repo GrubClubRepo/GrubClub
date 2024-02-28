@@ -1,0 +1,281 @@
+﻿@model SupperClub.Models.BookingModel
+
+@{
+    ViewBag.Title = "Review Purchase";
+}
+
+@section PageSpecificScripts {
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+   <script type="text/javascript">
+       $(document).ready(function () {
+           
+            $("#editContact").hide();
+            $("#showContact").show();
+            $(".discountRow").hide();
+            $("#voucherDescription").text("");
+            $("#reviewPurchase").submit(function () {
+                var cnr = "@Model.IsContactNumberRequired";
+                //if (cnr.toUpperCase() == "TRUE") {
+                //    if ($("#showContact").length > 0) {
+                //        $("#updateContactNumber").val(false);
+                //        return true;
+                //    }
+                //    else if ($("#iContact").length > 0) {
+                //        var phone = $("#iContact").val();
+                //        //if (IsPhoneNumber(phone)) {
+                //        //    $("#contactNumber").val(phone);
+                //        //    $("#updateContactNumber").val(true);
+                //        //    return true;
+                //        //}
+                //        //else {
+                //        //    alert("Please enter a 11 digit phone number. The number entered is not in a valid format.");
+                //        //    return false;
+                //        //}
+                //    }
+                //    else {
+                //        alert("Contact number is required!");
+                //        return false;
+                //    }
+                //}
+                //else {
+                //    if ($("#iContact").length > 0) {
+                //        var phone = $("#iContact").val();
+                //        //if (IsPhoneNumber(phone)) {
+                //        //    $("#contactNumber").val(phone);
+                //        //    $("#updateContactNumber").val(true);
+                //        //    return true;
+                //        //}
+                //    }
+                //}
+
+
+            });
+
+            $("#editContactNumber").click(function () {
+                if ($("#editContactNumber").is(':visible')) {
+                    $("#iEditCurrentNumber").val('');
+                    $("#editContact").show();
+                    $("#showContact").hide();
+                }
+            });
+
+            $("#editCancel").click(function () {
+                if ($("#editContact").is(':visible')) {
+                    $("#iEditCurrentNumber").val('');
+                    $("#editContact").hide();
+                    $("#showContact").show();
+                }
+            });
+
+            $("#editUpdate").click(function () {
+                if ($("#iEditCurrentNumber").length > 0) {
+                    var phone = $("#iEditCurrentNumber").val();
+                    if (IsPhoneNumber(phone)) {
+                        $.getJSON('@Url.Action("SaveUserContactNumber", "Booking")', { phoneNumber: phone }, function (isSuccess) {
+                            alert("Contact number updated successfully.");
+                            $("#iCurrentNumber").val(phone);
+                            $("#editContact").hide();
+                            $("#showContact").show();
+                            return isSuccess;
+                        });
+                    }
+                    else {
+                        alert("Please enter a 11 digit phone number. The number entered is not in a valid format.");
+                        return false;
+                    }
+                }
+                else {
+                    alert("Contact number is required!");
+                    return false;
+                }
+            });
+            $("#applyVoucherCode").click(function () {
+                
+                if ($("#txtVoucherCode").length > 0)
+                {
+                    var voucherCode = $("#txtVoucherCode").val();
+
+                    $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("CheckVoucherCode", "Booking")',
+                    data: { voucherCode: voucherCode, eventId : @Model.eventId, totalBookings : @Model.numberOfTickets, basketValue : @Model.totalDue },
+                    success:function(validateResult){
+                    if (validateResult > 0)
+                    {
+                        $.getJSON('@Url.Action("ApplyVoucherCode", "Booking")', { voucherId: validateResult }, function (result)
+                        {
+                            if (result.Status == 0) {
+                                alert("Error applying voucher code. Please try again.");
+                                return false;
+                            }
+                            if (result.Status == -1) {
+                                location.href = '@Url.Action("SessionExpired", "Booking")';
+                                return;
+                            }
+                            else
+                            {
+                                var totalAfterDiscount = parseFloat(@Model.totalDue.ToString("N2")) - result.Discount.toFixed(2);
+                                if(totalAfterDiscount <= 0)
+                                {
+                                    totalAfterDiscount = 0;
+                                    $("#payWithCard").val("Book Free!");
+                                }
+                                $("#discount").val(result.Discount);
+                                $("#voucherDescription").text(result.VoucherDescription);
+                                $("#tdDiscount").html("£" + result.Discount.toFixed(2));
+                                $("#tdTotalAfterDiscount").html("£" + totalAfterDiscount.toFixed(2));
+                                $(".discountRow").show();
+                                return true;
+                            }
+                        });
+                    }
+                    else
+                    {
+                        if(validateResult < 0)
+                        {
+                            var message = "Invalid Voucher Code.";
+                            switch (validateResult)
+                            {
+                                case -1:
+                                    message = "This Voucher Code has expired.";
+                                    break;
+                                case -2:
+                                    message = "This Voucher Code is not valid for current booking.";
+                                    break;
+                                case -3:
+                                    message = "You have already used this voucher for previous bookings.";
+                                    break;
+                                case -4:
+                                    message = "This Voucher Code has expired.";
+                                    break;
+                                case -5:
+                                    message = "This voucher code can not be applied to your basket. Minimum basket value is more than current basket value.";
+                                    break;
+                                default:
+                                    message = "Error applying voucher code. Please try again.";
+                                    break;
+                            }
+                            $.ajax({
+                                type: 'GET',
+                                url: '@Url.Action("GetVoucherDetails", "Booking")',
+                                data: { voucherCode: voucherCode },
+                                success:function(result){
+                                    if(result != null && result.Id > 0)
+                                        $("#voucherDescription").text(result.Description);
+                                    alert(message);
+                                },
+                                error:function(){
+                                    alert(message);
+                                }
+                            });
+                        }
+                        else
+                        {
+                            alert("Invalid Voucher Code. Please enter a valid voucher code.");
+                        }
+                        return false;
+                    }
+                  },
+                  error:function(){
+                    alert("Error applying voucher code. Please try again.");
+                  }
+                 });
+                }
+                else {
+                    alert("Please enter a voucher code!");
+                    return false;
+                }
+            });
+
+            function IsPhoneNumber(phoneNumber) {
+                var regex1 = /^\(?(?:(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?\(?(?:0\)?[\s-]?\(?)?|0)(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}|\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4}|\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3})|\d{5}\)?[\s-]?\d{4,5}|8(?:00[\s-]?11[\s-]?11|45[\s-]?46[\s-]?4\d))(?:(?:[\s-]?(?:x|ext\.?\s?|\#)\d+)?)$/;
+                return regex1.test(phoneNumber);
+            }
+        });
+</script>
+}
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <!-- 960 Container Start -->
+    <div class="container mb+ mt+">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "reviewPurchase" }))
+        {
+            <div class="layout__item large-and-up-3/4 mb+">
+                <!-- Purchase Summary -->
+                <div class="mb">
+                    <h2 class="type-light mb">Purchase Summary</h2>
+                </div>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="large-and-up-1/2 pl pt" style="font-weight:bold;">Details</td>
+                            @*<th>Tickets</th>*@
+                            <td class="large-and-up-1/2 pl pt" style="font-weight:bold;">Total</td>
+                        </tr>
+
+                        <tr>
+                            <td class="large-and-up-1/2 pl pt">
+                                @Html.HiddenFor(x => x.seatingId)
+                                @Html.HiddenFor(x => x.numberOfTickets)
+                                @Html.HiddenFor(x => x.eventId)
+                                @Html.HiddenFor(x => x.bookingMenuModel)
+                                @Html.HiddenFor(x => x.bookingSeatingModel)
+                                Gift Voucher
+                            </td>
+                            @*<td>@Html.DisplayFor(x => x.numberOfTickets)</td>*@
+                            <td class="large-and-up-1/2 pl pt">£@Html.DisplayFor(x => x.totalDue)</td>
+                        </tr>
+                        <tr class="discountRow">
+                            <td colspan="2">
+                                Discount:
+                            </td>
+                            <td id="tdDiscount">£@Html.DisplayFor(x => x.discount)</td>
+                        </tr>
+                        <tr>
+                            <td class="large-and-up-1/2 pl pt"></td>
+                            <td class="large-and-up-1/2 pl pt">
+                                @if (Model.totalDue == 0 || (Model.discount > 0 && ((Model.totalDue - Model.discount) <= 0)))
+                                {
+                                    <a href="@Url.Action("FreeBooking", "Booking")" class="button medium green" style="float: right">Book Free!</a>
+                                }
+                                else
+                                {
+                                    <div>
+                                        @if (ViewBag.AllowSagePay == "true")
+                                        {
+                                            <input type="submit" value="Pay with Card" class="btn btn--primary btn--huge float-center" style="float: right" id="payWithCardSagePay" />
+                                        }
+                                        @if (ViewBag.AllowPayPal == "true")
+                                        {
+                                            <a href="@Url.Action("PayPalExpressCheckout", "Booking")" style="float: right">
+                                                <img src="https://www.paypalobjects.com/en_US/i/btn/btn_xpressCheckout.gif" align="left" style="margin-right:7px;" />
+                                            </a>
+                                            <br /><br />
+                                            <p style="float: right">You can also pay by card through PayPal</p>
+                                        }
+                                        @if (ViewBag.AllowBrainTree == "true")
+                                        {
+                                            <input type="submit" value="Pay with Card" class="btn btn--primary btn--huge float-center" style="float: right" id="payWithCard" />
+                                        }
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            
+    }
+    </div>
+    <!-- 960 Container End -->
+}

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="csstransforms no-csstransforms3d csstransitions js" lang="en"><!--<![endif]--><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <!-- Basic Page Needs
+     ================================================== -->
+    <meta charset="utf-8">
+    <title>Payment Details</title>
+
+    <!-- Mobile Specific
+     ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+     ================================================== -->
+    <link rel="stylesheet" type="text/css" href="files/style.css">
+    <link rel="stylesheet" type="text/css" href="files/supperclubcustom.css">
+    <link rel="stylesheet" type="text/css" href="files/css.css">
+
+    <!-- Java Script
+     ================================================== -->
+    <script src="files/ga.js" async="" type="text/javascript"></script><script src="files/jquery-1.js" type="text/javascript"></script>
+    <script src="files/jquery-ui-1.js" type="text/javascript"></script>
+
+    <!-- Template HTML Scripts
+     ================================================== -->
+    <script src="files/flexslider.js" type="text/javascript"></script>
+    <script src="files/jquery_002.js" type="text/javascript"></script>
+    <script src="files/custom.js" type="text/javascript"></script>
+    <script src="files/ender.js" type="text/javascript"></script>
+    <script src="files/selectnav.js" type="text/javascript"></script>
+    <script src="files/imagebox.js" type="text/javascript"></script>
+    <script src="files/carousel.js" type="text/javascript"></script>
+    <script src="files/twitter.js" type="text/javascript"></script>
+    <script src="files/tooltip.js" type="text/javascript"></script>
+    <script src="files/popover.js" type="text/javascript"></script>
+    <script src="files/effects.js" type="text/javascript"></script>
+    <!-- Page Specific Java Script -->
+    
+    <script src="files/jquery_003.js" type="text/javascript"></script>
+    <script src="files/jquery.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+            $('#creditCardDetails_CardType').change(function () {
+                if ($(this).val() == "MAESTRO") {
+                    $("#Maestro").show();
+                }
+                else {
+                    $("#Maestro").hide();
+                }
+            });
+        });
+    </script>
+    
+</head>
+
+<body>
+<!-- Header -->
+<div id="header">
+
+	<!-- 960 Container Start -->
+	<div class="container ie-dropdown-fix">
+	
+		<!-- Logo -->
+		<div class="four columns">
+			<a href="https://www.grubclub.com/"><img src="files/logo.png" alt=""></a>
+		</div>
+		
+		<!-- Main Navigation Start -->
+		<div class="twelve columns">
+			<div id="navigation">
+				<ul id="nav">
+					<li class="toplevel"><a class="current" href="https://www.grubclub.com/Search">Find a Grub Club</a>
+                        <ul>
+                            <li><a href="https://www.grubclub.com/Search">Find a Grub Club</a></li>
+                            <li><a href="https://www.grubclub.com/Home/HowItWorksGuests">How It Works For Guests</a></li>
+                            <li><a href="https://www.grubclub.com/Home/FAQsGuest">FAQs for Guests</a></li>    
+                        </ul>
+                    </li>
+                         <li><a href="https://www.grubclub.com/Event/CreateEvent?supperClubId=3">Host New Event</a>
+                              <ul>
+                                  <li><a href="https://www.grubclub.com/Event/CreateEvent?supperClubId=3">Host New Event</a></li>
+                                    <li><a href="https://www.grubclub.com/Home/HowItWorksHosts">How It Works For Hosts</a></li>
+                                    <li><a href="https://www.grubclub.com/Home/FAQsHost">FAQs for Hosts</a></li>
+                                    <li><a href="https://www.grubclub.com/Home/HowToHost">How To Host a Grub Club</a></li>
+                                </ul>
+                           </li>
+                         <li class="toplevel"><a href="https://www.grubclub.com/Event/MyHostedEvents">My Events</a>
+                        <ul>
+                            <li><a href="https://www.grubclub.com/Event/MyEvents">My Events - Attending</a></li>
+                            <li><a href="https://www.grubclub.com/Event/MyHostedEvents">My Events - Hosting</a></li>
+                        </ul>
+                    </li>
+                    
+                    
+                    <li class="toplevel"><a href="https://www.grubclub.com/Account/UserDetails">My Account</a>
+						<ul>
+                            <li><a href="https://www.grubclub.com/Account/UserDetails">My Account Details</a></li>
+                            <li><a href="https://www.grubclub.com/Host/Details?supperClubId=3">My Grub Club Details</a></li>
+                            <li><a href="https://www.grubclub.com/Account/ChangePassword">Change Password</a></li>
+							<li><a href="https://www.grubclub.com/Account/LogOff">Log Off</a></li>
+						</ul>
+					</li>
+
+				</ul><select class="selectnav" id="selectnav1"><option selected="selected" value="">Menu</option><option value="https://www.grubclub.com/Search">Find a Grub Club</option><option value="https://www.grubclub.com/Search">- Find a Grub Club</option><option value="https://www.grubclub.com/Home/HowItWorksGuests">- How It Works For Guests</option><option value="https://www.grubclub.com/Home/FAQsGuest">- FAQs for Guests</option><option value="https://www.grubclub.com/Event/CreateEvent?supperClubId=3">Host New Event</option><option value="https://www.grubclub.com/Event/CreateEvent?supperClubId=3">- Host New Event</option><option value="https://www.grubclub.com/Home/HowItWorksHosts">- How It Works For Hosts</option><option value="https://www.grubclub.com/Home/FAQsHost">- FAQs for Hosts</option><option value="https://www.grubclub.com/Home/HowToHost">- How To Host a Grub Club</option><option value="https://www.grubclub.com/Event/MyHostedEvents">My Events</option><option value="https://www.grubclub.com/Event/MyEvents">- My Events - Attending</option><option value="https://www.grubclub.com/Event/MyHostedEvents">- My Events - Hosting</option><option value="https://www.grubclub.com/Account/UserDetails">My Account</option><option value="https://www.grubclub.com/Account/UserDetails">- My Account Details</option><option value="https://www.grubclub.com/Host/Details?supperClubId=3">- My Grub Club Details</option><option value="https://www.grubclub.com/Account/ChangePassword">- Change Password</option><option value="https://www.grubclub.com/Account/LogOff">- Log Off</option></select>
+			</div>
+		</div>
+		<!-- Main Navigation End -->
+		
+	</div>
+	<!-- 960 Container End -->
+
+</div>
+<!-- End Header -->
+
+
+
+
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>Booking / Payment Details</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+<!-- 960 Container Start -->
+<div class="container">
+<form novalidate="novalidate" action="/Booking/CreditCardDetails" method="post">    <div class="sixteen columns">
+        <ul id="breadcrumbs">
+            <li>Tickets <span>-</span></li>
+            <li>Review <span>-</span></li>
+            <li class="active" style="color: #F60">Payment</li>
+        </ul>
+        
+    </div>
+<input data-val="true" data-val-number="The field eventId must be a number." data-val-required="The eventId field is required." id="bookingModel_eventId" name="bookingModel.eventId" value="7" type="hidden"><input data-val="true" data-val-number="The field numberOfTickets must be a number." data-val-range="You can buy 1 to 10 tickets only" data-val-range-max="10" data-val-range-min="1" data-val-regex="You must enter a valid number of tickets" data-val-regex-pattern="^-?\d+$" data-val-required="*" id="bookingModel_numberOfTickets" name="bookingModel.numberOfTickets" value="1" type="hidden">    <div class="eight columns">
+
+        <div class="container sub-title2">
+            <h2>Credit Card Details</h2>
+        </div>
+        
+        <!-- Choose Card Type -->
+        <div class="field">
+            <label for="creditCardDetails_CardType">Card Type</label>
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.CardType" data-valmsg-replace="true"></span>
+            <select class="custom_select" id="creditCardDetails_CardType" name="creditCardDetails.CardType"><option value="">Select</option>
+<option selected="selected" value="MC">Mastercard</option>
+<option value="VISA">Visa</option>
+<option value="MAESTRO">Maestro</option>
+<option value="AMEX">American Express</option>
+</select>
+        </div>
+
+
+        <div class="field">
+            <label for="creditCardDetails_CreditCardNumber">Credit Card Number</label>
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.CreditCardNumber" data-valmsg-replace="true"></span>
+            
+
+<input title="Payment Details" data-val="true" data-val-creditcard="This is not a valid Credit Card Number" data-val-required="*" id="creditCardDetails_CreditCardNumber" name="creditCardDetails.CreditCardNumber" placeholder="" value="5404000000000001" type="text">
+        </div>
+
+        <!-- Optional for Maestro only -->
+        <div id="Maestro" style="display:none;">
+            <div>
+                <label for="creditCardDetails_StartMonth">Start Date (MM/YY)</label>
+                <input data-val="true" data-val-digits="The field Start Date (MM/YY) should contain only digits" data-val-number="The field Start Date (MM/YY) must be a number." data-val-range="Start Month not valid" data-val-range-max="12" data-val-range-min="1" id="creditCardDetails_StartMonth" name="creditCardDetails.StartMonth" placeholder="MM" style="max-width: 20px; display: inline" type="text">
+                /
+                <input data-val="true" data-val-digits="The field StartYear should contain only digits" data-val-number="The field StartYear must be a number." id="creditCardDetails_StartYear" name="creditCardDetails.StartYear" placeholder="YY" style="max-width: 20px; display: inline" type="text">
+                <span class="field-validation-valid" data-valmsg-for="creditCardDetails.StartYear" data-valmsg-replace="true"></span>
+                <span class="field-validation-valid" data-valmsg-for="creditCardDetails.ExpiryYear" data-valmsg-replace="true"></span>
+            </div>
+            <div class="field">
+                <label for="creditCardDetails_IssueNumber">Issue Number</label>
+                <span class="field-validation-valid" data-valmsg-for="creditCardDetails.IssueNumber" data-valmsg-replace="true"></span>
+                
+
+<input title="Payment Details" data-val="true" data-val-number="The field Issue Number must be a number." id="creditCardDetails_IssueNumber" name="creditCardDetails.IssueNumber" placeholder="" type="text">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="creditCardDetails_ExpiryMonth">Expiry Date (MM/YY)</label>
+            <input data-val="true" data-val-digits="The field Expiry Date (MM/YY) should contain only digits" data-val-number="The field Expiry Date (MM/YY) must be a number." data-val-range="Expiry Month not valid" data-val-range-max="12" data-val-range-min="1" data-val-required="*" id="creditCardDetails_ExpiryMonth" name="creditCardDetails.ExpiryMonth" placeholder="MM" style="max-width: 20px; display: inline" value="1" type="text">
+            /
+            <input data-val="true" data-val-digits="The field ExpiryYear should contain only digits" data-val-number="The field ExpiryYear must be a number." data-val-range="Expiry Year not valid" data-val-range-max="99" data-val-range-min="0" data-val-required="*" id="creditCardDetails_ExpiryYear" name="creditCardDetails.ExpiryYear" placeholder="YY" style="max-width: 20px; display: inline" value="15" type="text">
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.ExpiryMonth" data-valmsg-replace="true"></span>
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.ExpiryYear" data-valmsg-replace="true"></span>
+        </div>
+        <div class="field">
+            <label for="creditCardDetails_CV2">CV2 Number</label>
+            <p>(The 3 digit security number on the back of your card)</p>
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.CV2" data-valmsg-replace="true"></span>
+            <input class="text-box single-line password" data-val="true" data-val-digits="The field CV2 Number should contain only digits" data-val-number="The field CV2 Number must be a number." data-val-range="CV2 should be a 3 digit number" data-val-range-max="999" data-val-range-min="0" data-val-required="*" id="creditCardDetails_CV2" name="creditCardDetails.CV2" value="123" type="password">
+        </div>
+        <div class="field">
+            <label for="creditCardDetails_CardHolder">Name on the Card</label>
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.CardHolder" data-valmsg-replace="true"></span>
+            
+
+<input title="Payment Details" data-val="true" data-val-required="*" id="creditCardDetails_CardHolder" name="creditCardDetails.CardHolder" placeholder="" value="Mr P Herman" type="text">
+        </div>
+    </div>
+    <div class="eight columns">
+        <h4 class="headline">Address Details for this card</h4>
+        <div class="field">
+            <label for="creditCardDetails_Address1">Address Line 1</label>
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.Address1" data-valmsg-replace="true"></span>
+            <input data-val="true" data-val-required="*" id="creditCardDetails_Address1" name="creditCardDetails.Address1" value="88" type="text">
+        </div>
+        <div class="field">
+            <label for="creditCardDetails_Address2">Address Line 2</label>
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.Address2" data-valmsg-replace="true"></span>
+            <input id="creditCardDetails_Address2" name="creditCardDetails.Address2" value="Camden" type="text">
+        </div>
+        <div class="field">
+            <label for="creditCardDetails_City">City</label>
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.City" data-valmsg-replace="true"></span>
+            <input data-val="true" data-val-required="*" id="creditCardDetails_City" name="creditCardDetails.City" value="London" type="text">
+        </div>
+        <div class="field">
+            <label for="creditCardDetails_PostCode">Post Code</label>
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.PostCode" data-valmsg-replace="true"></span>
+            <input data-val="true" data-val-required="*" id="creditCardDetails_PostCode" name="creditCardDetails.PostCode" value="412" type="text">
+        </div>
+        <div class="field">
+            <label for="creditCardDetails_Country">Country</label>
+            <span class="field-validation-valid" data-valmsg-for="creditCardDetails.Country" data-valmsg-replace="true"></span>
+            <input data-val="true" data-val-required="*" id="creditCardDetails_Country" name="creditCardDetails.Country" value="GB" type="text">
+        </div>
+    </div>
+    <!-- darius: addedd class 'two-buttons' -->
+    <div class="sixteen columns two-buttons">
+        <a href="https://www.grubclub.com/Booking/CancelBooking?eventId=7" class="button medium red" style="float: right">
+                <i class="icon-remove icon-white"></i>Cancel Booking</a>
+        
+        <input value="Make Purchase" class="button medium green" style="float: left" type="submit">
+    </div>
+</form></div>
+<!-- 960 Container End -->
+
+
+<!-- Footer Start -->
+<div id="footer">
+
+	<!-- 960 Container -->
+	<div class="container">
+		
+		<!-- About -->
+		<div class="one-third column">
+			<h5>About Us</h5>
+			<p>This is a story of two food obsessed people who realised they 
+simply wanted to share what they loved doing every day: get people 
+together to share laughter around a dinner table... <a href="https://www.grubclub.com/Home/AboutUs">read more</a></p>
+            <p>We are just starting out so any <a href="https://www.grubclub.com/Home/ContactUs?messageText=I%27ve%20got%20some%20feedback%20and%20it%27s%20about%20">feedback</a> is welcome!</p>
+		</div>
+		
+		<!-- Useful Links -->
+		<div class="one-third column">
+			<h5>Useful Links</h5>
+			<ul class="links-list">
+                <li><a href="https://www.grubclub.com/Home/NotesFromASupperClub">Notes From A Supper Club</a></li>
+			</ul>
+		</div>
+		
+		<!-- Latest From Blog
+		<div class="four columns">
+			<h5>Latest From The Blog</h5>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_01.png" alt="" /></a>
+				<p><a href="#">Maecenas metus lore nulla, facili, pretium lipsum sit.</a></p>
+				<span>28 June 2012</span>
+			</div>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_02.png" alt="" /></a>
+				<p><a href="#">Aean metus lore nulla, facili, pretium lipsum dolor.</a></p>
+				<span>26 June 2012</span>
+			</div>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_03.png" alt="" /></a>
+				<p><a href="#">Metus lore lipsum nullam, facili, pretiumea lipsum.</a></p>
+				<span>22 June 2012</span>
+			</div>
+		</div> -->
+		
+		<!-- Twitter -->
+		<div class="one-third column">
+			<h5>Latest Tweets</h5>
+			<ul id="twitter"><li><span>Some #cooking tips from @<a href="http://twitter.com/Ottolenghi">Ottolenghi</a> and a short video on his #food #rituals.  <a href="http://t.co/JfJoqI5B">http://t.co/JfJoqI5B</a></span> <br><b><a href="http://twitter.com/grub_club/statuses/282568859351912448">about 2 hours ago</a></b></li><li><span>For the #French-speakers out there: some seriously mouthwatering #recipes <a href="http://t.co/umNUPpzv">http://t.co/umNUPpzv</a>. Carambar #macaroons? Yes please!</span> <br><b><a href="http://twitter.com/grub_club/statuses/282520252682756097">about 6 hours ago</a></b></li></ul>
+				<script type="text/javascript">
+				    jQuery(document).ready(function ($) {
+				        $.getJSON('http://api.twitter.com/1/statuses/user_timeline/Grub_Club.json?count=2&callback=?', function (tweets) {
+				            $("#twitter").html(tz_format_twitter(tweets));
+				        });
+				    });
+				</script>
+			<div class="clearfix"></div>
+		</div>
+
+	</div>
+	<!-- 960 Container End -->
+	
+</div>
+<!-- Footer End -->
+
+<!--  Footer Copyright-->
+<div id="footer-bottom">
+
+	<!-- 960 Container -->
+	<div class="container">
+				
+		<div class="eight columns">
+			<div id="copyright">© Copyright 2012 by <a href="https://www.grubclub.com/Home/ContactUs">GrubClub</a>. All Rights Reserved. <a href="https://www.grubclub.com/Home/TermsAndConditions">Terms and Conditions</a></div>
+		</div>
+		
+        
+
+		<div class="eight columns">
+			<ul class="social-links">
+				
+                <li>
+                    <a href="#" onclick="window.open('http://www.twitter.com/Grub_Club');" rel="tooltip" title="Twitter">
+                        <img src="files/twitter.png" alt="Facebook"></a>
+                </li>
+                <li>
+                    <a href="#" onclick="window.open('http://www.facebook.com/GrubClub1');" rel="tooltip" title="Facebook">
+                        <img src="files/facebook.png" alt="Facebook"></a>
+                </li>
+                <li>
+                    <a href="https://www.grubclub.com/Home/ContactUs" rel="tooltip" title="Contact">
+                        <img src="files/mail.png" alt="Contact"></a>
+                </li>
+				<!--<li class="digg"><a href="#">Digg</a></li>
+				<li class="vimeo"><a href="#">Vimeo</a></li>
+				<li class="youtube"><a href="#">YouTube</a></li>
+				<li class="skype"><a href="#">Skype</a></li>-->
+			</ul>
+		</div>
+
+	</div>
+	<!-- End 960 Container -->
+	
+</div>
+<!--  Footer Copyright End -->
+
+    <!-- Google Analytics -->    
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36514914-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+<!-- Back To Top Button -->
+<div id="backtotop"><a href="#"></a></div>
+
+<!-- Imagebox Build -->
+<script src="files/imagebox_002.js" type="text/javascript"></script><div id="ib-overlay"></div>
+
+<!-- Menu Highlighter -->
+<script type="text/javascript">
+    var loc = window.location.pathname;
+    var selectedMenuLink = $('li>a[href$="' + loc + '"]');
+    var link = selectedMenuLink[0];
+    if (link != null) {
+        $(".toplevel>a").removeClass("current");
+        if ($(link).parent().hasClass('toplevel')) {
+            $(link).addClass('current');
+        }
+        else {
+            // Assign the nearest top level menu item
+            var topLink = $(link).closest('.toplevel').children(':first-child a');
+            $(topLink).addClass("current");
+        }
+    }
+</script>
+
+
+</body></html>

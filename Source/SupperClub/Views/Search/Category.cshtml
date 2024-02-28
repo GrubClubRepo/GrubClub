@@ -1,0 +1,31 @@
+@model SupperClub.Models.SearchCategoryModel
+@{
+    ViewBag.Title = "Find and Book your Favourite Pop Up Restaurants | Eat Out with Grub Club";
+    ViewBag.Description = "Search for the latest Pop Up Restaurants and Supperclubs in your area. Be the first to try our creative chef’s latest creations.";
+}
+
+@section PageSpecificScripts {
+}
+
+
+@*<div class="container sub-title2">
+    <h2>@Model.Name</h2>
+</div>*@
+
+<div class="container">
+    <h2>Check out these Amazing Dining Experiences</h2>
+    <br />
+    <ul class="links-list">
+                    @foreach (SupperClub.Domain.Tag t in Model.CategoryTags)
+                    {
+                        <li>
+                            <a href="@Url.Action("CategorySearchResult", "Search", new { categoryname = Model.CategoryUrlFriendlyName, tagname = t.UrlFriendlyName })">
+                                
+                                <span style="color:orange;">@t.Name</span>
+                                
+                            </a>
+                        </li>
+                        <br/>
+                     }
+    </ul>
+</div>

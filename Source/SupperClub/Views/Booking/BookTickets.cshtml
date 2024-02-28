@@ -1,0 +1,881 @@
+﻿@model SupperClub.Models.BookTicketsModel
+
+
+@section PageSpecificScripts {
+    <style>
+        a.disabled { background-color: white !important }
+    </style>
+    <script type="text/javascript">
+
+    function initialize()
+    {
+        @Html.Raw(string.Format("var mapCenter = new google.maps.LatLng({0}, {1});", Model.Event.Latitude.ToString("F3"), Model.Event.Longitude.ToString("F3")))
+
+        var mapOptions = {
+            zoom: 13,
+            maxZoom: 15,
+            scrollwheel: true,
+            zoomControl: true,
+            streetViewControl: false,
+            disableDefaultUI: false,
+            panControl:true,
+            center: mapCenter,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById('map-single-pin'), mapOptions);
+        google.maps.event.addDomListener(window, 'load', initialize);
+        var marker = new google.maps.Marker({
+            map: map,
+            @Html.Raw(string.Format("position : new google.maps.LatLng({0}, {1}),", Model.Event.Latitude.ToString("F3"), Model.Event.Longitude.ToString("F3")))
+            title: ''
+        });
+        var circle = new google.maps.Circle({
+            map: map,
+            @Html.Raw(string.Format("radius: {0},", SupperClub.Code.ServerMethods.GoogleMapsCircleRadius))    // metres
+            strokeWeight:1,
+            strokeColor:'#AA0000',
+            clickable: false,
+            editable: false,
+            fillColor: '#AA0000',
+            fillOpacity: 0.2,
+            strokeOpacity:0.1
+        });
+        circle.bindTo('center', marker, 'position');
+        marker.setVisible(true);
+    };
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+    $(document).ready(function () {
+        @*@if(ViewBag.ShowCondition)
+        { 
+        checkAndEnableBuyTickets();
+        }*@
+        if(@Model.BookingModel.voucherId == 0)
+        {
+            $("#discountRow").hide();
+            $("#sideBarVoucherDescription").hide();
+        }
+        function showErrorPopup(errorMsg)
+        {
+            $(".message-popup-wraper .messages-popup").addClass("is-hidden");
+            $("#errorMsgText").text(errorMsg);
+            $(".messages-popup--added").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(20000).queue(function () { $(this).remove() }),
+            $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") });
+            $("#proceedToPayment").prop( "disabled", true );
+            enableSpanners();
+        }
+        function enableSpanners()
+        {
+            //$(".number-spinner .number-spinner__up").prop( "disabled", false );
+            //$(".number-spinner .number-spinner__down").prop( "disabled", false );
+            $(".number-spinner .number-spinner__up").removeClass('disabled');
+            $(".number-spinner .number-spinner__down").removeClass('disabled');
+        }
+        function disableSpanners()
+        {
+            //debugger;
+            //$(".number-spinner .number-spinner__up").prop( "disabled", true );
+            //$(".number-spinner .number-spinner__down").prop( "disabled", true );
+            $(".number-spinner .number-spinner__up").addClass('disabled');
+            $(".number-spinner .number-spinner__down").addClass('disabled');
+        }
+        function updateTotal() {
+            //debugger;
+            var selectedNumberOfTickets = $("#txtSingleMenu").val();
+            var costPerTicket = @Model.BookingModel.totalTicketCost;
+            var currency = "@Model.BookingModel.currency";
+            var seatId = @Model.BookingModel.seatingId;
+            var str = "";
+            if($("input[type='radio'][name='seatingTime']").length > 0)
+            {
+                var selectedVal = $("input[type='radio'][name='seatingTime']:checked").val();
+                if(selectedVal >= 0)
+                    seatId = selectedVal;
+            }
+           // debugger;
+            if (isNaN(selectedNumberOfTickets) || selectedNumberOfTickets =="" || selectedNumberOfTickets == 0)
+            {   
+                showErrorPopup("Please select some tickets!");                            
+                $( "#proceedToPayment" ).prop( "disabled", true );
+                return;
+            }
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("UpdateTickets", "Booking")',
+                contentType: "application/json",
+                dataType: "json",
+                data: { numberTicketsRequested: selectedNumberOfTickets, seatingId : seatId, strBmm : str },
+                success: function(updateTickets) {
+                    if (updateTickets.Success == false) {
+                        $( "#proceedToPayment" ).prop( "disabled", true );
+                        // Session Timed out or no basket found (no cookie)
+                        if(updateTickets.NumberTicketsAllocated == 0) {
+                            window.location = '@Url.Action("SessionExpired", "Booking")';
+                            return;
+                        }
+                        if(updateTickets.NumberTicketsAvailable == 0)
+                        {
+                            // Sold out
+                            if(seatId > 0)
+                            {
+                                showErrorPopup("Sorry but we were not able to allocate the number of tickets you wanted for this seating. You can try to book a different seating!");
+                            }
+                            else
+                            {
+                                showErrorPopup("Sorry but we were not able to allocate the number of tickets you wanted. They've been snapped up!");
+                            }
+                            //alert("Sorry but we were not able to allocate the number of tickets you wanted. They've been snapped up!");
+                            return;
+                        }
+                        else if(updateTickets.NumberTicketsAvailable < selectedNumberOfTickets)
+                        {
+                            if(seatId > 0)
+                                showErrorPopup("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets available for this seating. You can try to book a different seating or reduce total seats!");
+                            else
+                                showErrorPopup("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets left for this event!");
+                            
+                            $( "#proceedToPayment" ).prop( "disabled", true );
+                            return;
+                        }
+                        // Set the selected value back to its previous value
+                        $('#BookingModel_numberOfTickets').val(updateTickets.NumberTicketsAllocated);
+                        var numberOfTickets = updateTickets.NumberTicketsAllocated;
+                        //debugger;
+                        if (Number(numberOfTickets)) {
+                            var totalDue = numberOfTickets * costPerTicket;
+                            $("[name='totalPrice']").html((totalDue - updateTickets.DiscountAmount).toFixed(2));
+                            if(updateTickets.DiscountAmount > 0) {
+                                $("[name='totalDiscount']").html(updateTickets.DiscountAmount.toFixed(2));
+                            }
+                        }
+                        enableSpanners();
+                    }
+                    else
+                    {
+                        var numberOfTickets = updateTickets.NumberTicketsAllocated;
+                        //debugger;
+                        if (Number(numberOfTickets)) {
+                            var totalDue = numberOfTickets * costPerTicket;
+                            $("[name='totalPrice']").html((totalDue - updateTickets.DiscountAmount).toFixed(2));
+                            if(updateTickets.DiscountAmount > 0) {
+                                $("[name='totalDiscount']").html(updateTickets.DiscountAmount.toFixed(2));
+                            }
+                        }
+                        $( "#proceedToPayment" ).prop( "disabled", false );
+                        if(totalDue - updateTickets.DiscountAmount <= 0)
+                        {
+                            $("#proceedToPayment").text("Book Free!");
+                        }
+                        else
+                        {
+                            $("#proceedToPayment").text("Proceed to payment!");
+                        }
+                        enableSpanners();
+                    }
+                    // Update the cost. TODO: Currency symbol conversion
+
+                },
+                error: function(response) {
+                    showErrorPopup("Sorry, there was some error processing your request");
+                }
+            });
+        }
+
+        function updateMenuTickets() {
+            var seatId = @Model.BookingModel.seatingId;
+            if($("input[type='radio'][name='seatingTime']").length > 0)
+            {
+                var selectedVal = $("input[type='radio'][name='seatingTime']:checked").val();
+                if(selectedVal >= 0)
+                    seatId = selectedVal;
+            }
+            var totalAmt = 0;
+            var numOfTickets = 0;
+            var num_tr = $('#menuSel tr').length-1;
+            var t = document.getElementById('menuSel');
+            var rate = 0;
+            rate = 0*1.0;
+            var qty = 0;
+            var amount = 0;
+            var myStr = "";
+
+            for(var i = 1; i <= num_tr;i++) {
+                var rate1 = $(t.rows[i].cells[2]).closest('tr').find('.bmmTicketCost').text();
+
+                var menuId = parseInt($.trim($(t.rows[i].cells[3]).closest('tr').find('.bmmId').text()));
+
+                rate1= rate1.toString().replace("£","");
+                rate=parseFloat(rate1);
+                qty = parseInt($(t.rows[i].cells[1]).closest('tr').find("[name='menutickets']").val());
+
+                amount = qty * rate;
+
+                //alert(menuId + "," + qty + "," + rate + "," +amount);
+
+                //$(t.rows[i].cells[3]).html("£" + amount.toFixed(2)); // output the values
+                totalAmt += amount;
+                numOfTickets += qty;
+                if(myStr.length > 0)
+                    myStr += ",";
+                myStr += menuId + "|"+ qty;
+            }
+            //var obj = JSON.stringify(myObj);
+            if(numOfTickets > 0)
+            {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("UpdateTickets", "Booking")',
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: { numberTicketsRequested: numOfTickets, seatingId : seatId, strBmm : myStr },
+                    success: function(updateTickets) {
+                        if (updateTickets.Success == false)
+                        {
+                            $( "#proceedToPayment" ).prop( "disabled", true );
+                            if(updateTickets.NumberTicketsAvailable == 0)
+                            {
+                                // Sold out
+                                if(seatId > 0)
+                                    showErrorPopup("Sorry but we were not able to allocate the number of tickets you wanted for this seating. You can try to book a different seating!");
+                                else
+                                    showErrorPopup("Sorry but we were not able to allocate the number of tickets you wanted. They've been snapped up!");
+                                return;
+                            }
+                            else if(updateTickets.NumberTicketsAvailable < numOfTickets)
+                            {
+                                if(seatId > 0)
+                                    showErrorPopup("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets available for this seating. You can try to book a different seating or reduce total seats!");
+                                else
+                                    showErrorPopup("Sorry but we have only " + updateTickets.NumberTicketsAvailable + " tickets left for this event!");
+                                return;
+                            }
+
+                            // Session Timed out or no basket found (no cookie)
+                            if(updateTickets.NumberTicketsAllocated == 0) {
+                                window.location = '@Url.Action("SessionExpired", "Booking")';
+                                return;
+                            }
+
+                        }
+                        else{
+                            //debugger;
+                            $("[name='totalPrice']").html((totalAmt - updateTickets.DiscountAmount).toFixed(2));
+                            if(updateTickets.DiscountAmount > 0) {
+                                $("[name='totalDiscount']").html(updateTickets.DiscountAmount.toFixed(2));
+                            }
+                            $( "#proceedToPayment" ).prop( "disabled", false );
+                            if(totalAmt - updateTickets.DiscountAmount <= 0)
+                            {
+                                $("#proceedToPayment").text("Book Free!");
+                            }
+                            else
+                            {
+                                $("#proceedToPayment").text("Proceed to payment!");
+                            }
+                            enableSpanners();
+                        }
+
+                    },
+                    error: function(response) {
+                        showErrorPopup("Sorry, there was some error processing your request");
+                    }
+                });
+            }
+            else
+            {
+                showErrorPopup("Sorry but total number of tickets can not be zero!");
+            }
+        }
+        function checkAndEnableBuyTickets() { debugger;
+            if ($("#chkTerms")[0].checked == true) {
+                $("#proceedToPayment").prop("disabled", false);
+            }
+            else {
+                $("#proceedToPayment").prop("disabled", true);
+            }
+        }
+        window.onbeforeunload = function (e) {
+            if ((window.event.clientY < 0)) {
+                return "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+            }
+        };
+        $(".number-spinner .number-spinner__up").on("click", function () {
+            //debugger;
+            if ($(this).hasClass('disabled')) return false;
+            var e = $(this).siblings("input");
+            n = e.val();
+            t = Number(n) + 1;
+            e.val(t);
+            disableSpanners();
+            if(("@Model.Event.MultiMenuOption").toLowerCase() == "true")
+            {
+                updateMenuTickets();
+            }
+            else
+            {
+                updateTotal();
+            }
+            //calculate_total_price();
+        });
+        $(".number-spinner .number-spinner__down").on("click", function () {
+            //debugger;
+            if ($(this).hasClass('disabled')) return false;
+            var e = $(this).siblings("input"),
+                n = e.val(),
+                t = Number(n) - 1;
+            0 >= t ? (e.val(0)) : (e.val(t));
+            disableSpanners();
+            if(("@Model.Event.MultiMenuOption").toLowerCase() == "true")
+            {
+                updateMenuTickets();
+            }
+            else
+            {
+                updateTotal();
+            }
+            //calculate_total_price();
+        });
+        $("#chkTerms").change(function () {
+            ////debugger;
+            checkAndEnableBuyTickets();
+        });
+        $(".choose-menu-table .number-spinner input").on("input change", function () {
+            disableSpanners();
+            
+            if(("@Model.Event.MultiMenuOption").toLowerCase() == "true")
+            {
+                updateMenuTickets();
+            }
+            else
+            {
+                updateTotal();
+            }
+            //calculate_total_price();
+        });
+        
+        $("#BookingModel_bookingRequirements").on("blur", function () {
+            //debugger;
+            var msgText = $("#BookingModel_bookingRequirements").val();
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("UpdateBookingRequirements", "Booking")',
+                contentType: "application/json",
+                dataType: "json",
+                data: { message: msgText },
+                success: function(success) {
+                },
+                error: function(success) {
+                }
+            });
+        });
+        function calculate_total_price() {
+            var sum_value_array = [];
+            $(".choose-menu-table .number-spinner input").each(function () {
+                var e = parseInt($(this).val()),
+                    n = $(this).parent().parent("td").siblings().find(".menu-sum").attr("data-price"),
+                    t = $(this).parents("td").siblings().find(".menu-sum b");
+                if (isNaN(e))
+                    t.html(0), sum_value_array.push(0);
+                else { var o = e * n; t.html(o.toFixed(2)), sum_value_array.push(o) }
+            });
+            //, console.log(sum_value_array);
+            var total = eval(sum_value_array.join("+")); $(".total-number b").html(total);
+        };
+
+        // Set selected seatingTime
+        $("input[type='radio'][name='seatingTime']").change(function () {
+            //debugger;
+            var selectedVal= $("input[type='radio'][name='seatingTime']:checked").val();
+            if(selectedVal >=0)
+                $('#BookingModel_seatingId').val(selectedVal);
+            if(("@Model.Event.MultiMenuOption").toLowerCase() == "true")
+                updateMenuTickets();
+            else
+                updateTotal();
+        });
+
+        $("#showMapLink").click(function () {
+            initialize();
+        });
+
+
+        $("#applyVoucherCode").click(function () {
+            //debugger;
+            if ($("#txtVoucherCode").length > 0)
+            {
+                var voucherCode = $("#txtVoucherCode").val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("CheckVoucherCode", "Booking")',
+                    data: { voucherCode: voucherCode, eventId : @Model.BookingModel.eventId, totalBookings : @Model.BookingModel.numberOfTickets, basketValue : @Model.BookingModel.totalDue },
+                    success:function(validateResult){
+                        if (validateResult > 0)
+                        {
+                            $.getJSON('@Url.Action("ApplyVoucherCode", "Booking")', { voucherId: validateResult }, function (result)
+                            {
+                                if (result.Status == 0) {
+                                    showErrorPopup("Error applying voucher code. Please try again.");
+                                    return false;
+                                }
+                                if (result.Status == -1) {
+                                    location.href = '@Url.Action("SessionExpired", "Booking")';
+                                    return;
+                                }
+                                else
+                                {
+                                    //debugger;
+                                    var totalAfterDiscount = result.TotalAfterDiscount.toFixed(2);
+                                    if(totalAfterDiscount <= 0)
+                                    {
+                                        totalAfterDiscount = 0.00;
+                                        $("#proceedToPayment").text("Book Free!");
+                                    }
+                                    $("#BookingModel_voucherDescription").val(result.VoucherDescription);
+                                    //$("#lblVoucherDescription").text(result.VoucherDescription);
+                                    $("#lblSideBarVD").text(result.VoucherDescription);
+                                    $("#lblVoucherTitle").text(result.VoucherDescription);
+                                    $("[name='totalDiscount']").html(result.Discount.toFixed(2));
+                                    $("#discountRow").show();
+                                    $("#sideBarVoucherDescription").show();
+                                    $("[name='totalPrice']").html(totalAfterDiscount);
+                                    $(".select__item pl").focus();
+                                    $(".messages-popup--removed").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(10000).queue(function () {
+                                        $(this).remove()
+                                    }),
+                                    $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") });
+                                    return true;
+                                }
+                            });
+                        }
+                        else
+                        {
+                            debugger;
+                            if(validateResult < 0)
+                            {
+                                var message = "Invalid Voucher Code.";
+                                switch (validateResult)
+                                {
+                                    case -1:
+                                        message = "This Voucher Code has expired.";
+                                        break;
+                                    case -2:
+                                        message = "This Voucher Code is not valid for current booking.";
+                                        break;
+                                    case -3:
+                                        message = "You have already used this voucher for previous bookings.";
+                                        break;
+                                    case -4:
+                                        message = "This Voucher Code has expired.";
+                                        break;
+                                    case -5:
+                                        message = "This voucher code can not be applied to your basket. Minimum basket value is more than current basket value.";
+                                        break;
+                                    case -6:
+                                        message = "This gift voucher does not have any balance.";
+                                        break;
+                                    default:
+                                        message = "Error applying voucher code. Please try again.";
+                                        break;
+                                }
+                                
+                                $.ajax({
+                                    type: 'GET',
+                                    url: '@Url.Action("GetVoucherDetails", "Booking")',
+                                    data: { voucherCode: voucherCode },
+                                    success:function(result){
+                                        if(result != null && result.Id > 0)
+                                            //$("#lblVoucherDescription").text(result.Description);
+                                            showErrorPopup(message);
+                                        $( "#proceedToPayment" ).prop( "disabled", false );
+                                    },
+                                    error:function(){
+                                        showErrorPopup(message);
+                                    }
+                                });
+                                $( "#proceedToPayment" ).prop( "disabled", false );
+                            }
+                            else
+                            {
+                                showErrorPopup("Invalid Voucher Code. Please enter a valid voucher code.");
+                                $( "#proceedToPayment" ).prop( "disabled", false );
+                            }
+                            return false;
+                        }
+                    },
+                    error:function(){
+                        showErrorPopup("Error applying voucher code. Please try again.");
+                        $( "#proceedToPayment" ).prop( "disabled", false );
+                    }
+                });
+            }
+            else {
+                showErrorPopup("Please enter a voucher code!");
+                return false;
+            }
+        });
+
+        $("#chooseTicketForm").submit(function() {
+            //debugger;
+            return checkSeating();
+        });
+
+        function checkSeating() {
+            //debugger;
+            var seatId = @Model.BookingModel.seatingId;
+            var numOfTickets = @Model.BookingModel.numberOfTickets;
+            if($("input[type='radio'][name='seatingTime']").length > 0)
+            {
+                seatId = $("input[type='radio'][name='seatingTime']:checked").val();
+                if(!seatId || seatId <= 0)
+                {
+                    //showErrorPopup("Please choose a seating before continuing!");
+                    $("#seatingPopup").click();
+                    return false;
+                }
+                if(numOfTickets <= 0)
+                {
+                    showErrorPopup("You have not selected any tickets! Please add tickets and proceed.");
+                    return false;
+                }
+            }
+            else
+            {
+                debugger;
+                $("#proceedToPayment" ).prop( "disabled", true );
+                $("#proceedToPayment").text("Your request is being processed. Please wait...");
+                return true;
+            }
+        }
+    });
+</script>
+}
+
+@*<div class="container mb+">
+    <ul class="breadcrumbs list-inline list-inline--delimited pt-- mb">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Chefs </a></li>
+        <li><a href="#">User Profile </a></li>
+        <li class="current"><a href="#">Adam Walden</a></li>
+    </ul>
+</div>*@
+<a href="#seating-dialog" id="seatingPopup" class="type-small color-gray open-popup" style="display:none;"> </a>
+
+<div class="container payment-forms">
+    <div class="layout layout--rev">        
+        <div class="layout__item large-and-up-1/3 payment-forms__sidebar">
+            <div class="bgr-white">
+                @*<a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.UrlFriendlyName + "/" + Model.Event.Id.ToString())">*@
+                    <img src="@Url.Content("~/Content/images/Events/")@Model.Event.ImagePath" alt="" class="full-width" style="height:195px; width:297px;">
+                @*</a>*@
+                    <div class="p-">
+                        @*<a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.UrlFriendlyName + "/" + Model.Event.Id.ToString())">*@
+                            <h2 class="h4 line-height-1-35">@Model.Event.Name Supper Club</h2>
+                        @*</a>*@
+                        @*<a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)">*@
+                            <span class='pr--'>Hosted By @Model.Event.SupperClub.Name </span>
+                        @*</a>*@
+                            <ul class="rating inline-block">
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    if (i < @Model.Event.SupperClub.AverageRank)
+                                    {
+                                        <li class="is-checked">
+
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use>
+                                            </svg>
+                                        </li>
+
+                                    }
+                                    else
+                                    {
+
+                                        <li class="">
+
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use>
+                                            </svg>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+
+                            <p class="mb--">@Model.Event.PostCode.Split(new string[] { " " }, StringSplitOptions.None)[0] - <a id="showMapLink" style="display:block;" href="#map-single-pin-wrap" class="color-gray open-popup">View on map</a></p>
+                            <hr class="hr hr--dots mb-">
+                            <div class="flag flag--small mb--">
+                                <div class="flag__img">
+
+                                    <svg role="img" class="icon color-blue icon--19x19 mr--">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-medium_calendar"></use>
+                                    </svg>
+                                </div>
+                                <div class="flag__body">
+                                    <label class="relative datepicker-wrap display-block">
+                                        @Model.Event.Start.ToString("ddd, d MMM yyyy")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="flag flag--small mb-">
+                                <div class="flag__img">
+
+                                    <svg role="img" class="icon color-blue icon--19x19 mr--">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-mediuml_clock"></use>
+                                    </svg>
+                                </div>
+                                <div class="flag__body">
+                                    @if (@Model.Event.MultiSeating)
+                                    {
+                                        var sTime = Model.Event.EventSeatings.Min(x => x.Start).ToShortTimeString();
+                                        <span id="litSeatingTime">@sTime Onwards </span>
+                                    }
+                                    else
+                                    {
+                                        <span id="litSeatingTime">@Model.Event.Start.ToShortTimeString()</span>
+                                    }
+
+                                </div>
+                            </div>
+                        <hr class="hr hr--dots">
+                        <div class="justifize">
+                            <div class="justifize__box">
+                                <span class='type-bold type-x-huge color-dark line-height-1-15'>Total £</span>
+                                <span class='type-bold type-x-huge color-dark line-height-1-15' name="totalPrice">@Html.DisplayFor(x => x.BookingModel.totalAfterDiscount)</span>
+                                
+                            </div>
+                            @if (Model.Event.Alcohol == true)
+                            {
+                                <div class="justifize__box">
+                                    <span class='type-bold h4 color-dark tooltip-wrap line-height-1-15'>
+                                        <svg role="img" class="icon icon--7x19">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-small_botle"></use>
+                                        </svg>
+                                        BYOB <div class="tooltip">Bring your own beers</div>
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                                    @*<button class="btn btn--primary btn--gray-light btn--full btn--h44 color-dark mb-">Apply / Update</button>*@
+                        <hr class="hr hr--dots mb--">
+                        <div id="sideBarVoucherDescription">
+                            <span class="btn btn--primary btn--gray-red btn--full btn--h44 color-dark mb-" id="lblSideBarVD">@Model.BookingModel.voucherDescription</span>
+                        </div>
+                    </div>
+                    
+</div>
+   
+        </div>
+        <div class="layout__item large-and-up-2/3">
+            
+        @if (ViewBag.RecentBookings != null && ViewBag.RecentBookings.Count > 0)
+        {
+            <div class="border-orange bgr-white mb- mt-">
+                <h2 class="type-semibold type-default type-uppercase color-darken line-height-1-15 m-">Your recent bookings</h2>
+                <hr class="hr hr--dots m--">
+                @foreach (var ea in ViewBag.RecentBookings)
+                {
+                     @Html.Raw("<p class='m-'>You booked <strong>" + ea.NumberOfGuests.ToString() + (ea.NumberOfGuests > 1 ? " tickets" : " ticket") + "</strong> for <strong>" + ea.Event.Name + "</strong> for " + ea.Event.Start.ToString("ddd, d MMM yyyy") + " " + ea.Event.Start.ToShortTimeString() + "</p>");
+                   
+                }
+            </div>
+        }
+
+
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "chooseTicketForm" }))
+        {
+            <div>
+                @Html.HiddenFor(x => x.BookingModel.voucherDescription)
+                @if (Model.Event.MultiSeating && Model.BookingModel.bookingSeatingModel != null && Model.BookingModel.bookingSeatingModel.Count >0)
+                {
+                <h1 class="type-light line-height-1-15 mb">Choose your seating</h1>
+                <div class="choose-menu-table-wrapper">
+                    @foreach (var seating in Model.BookingModel.bookingSeatingModel)
+                    {
+                          if (ViewBag.defaultSeatinId != null && ViewBag.defaultSeatinId != 0 && ViewBag.defaultSeatinId == seating.seatingId)
+                        {
+                               <input type="radio" checked="checked" name="seatingTime" id="@seating.seatingId" value="@seating.seatingId" style="display:inline;">@seating.start.ToShortTimeString()
+                    @*<label id="seatingtime_ @seating.seatingId"  for="@seating.seatingId" style="display:inline;font-size:16px;">@seating.start.ToShortTimeString()</label></input>*@
+
+                        }
+                        else {
+
+                    <input type="radio" name="seatingTime" id="@seating.seatingId" value="@seating.seatingId" style="display:inline;">@seating.start.ToShortTimeString()
+                    @*<label id="seatingtime_ @seating.seatingId" for="@seating.seatingId" style="display:inline;font-size:16px;">@seating.start.ToShortTimeString()</label></input>*@
+                    }
+                    }
+                </div>
+                }
+                @if (Model.Event.MultiMenuOption && Model.BookingModel.bookingMenuModel != null && Model.BookingModel.bookingMenuModel.Count > 0)
+                {
+                <h1 class="type-light line-height-1-15 mb">Choose your Menu</h1>
+                }
+                else
+                {
+                <h1 class="type-light line-height-1-15 mb">Choose your tickets</h1>
+                }
+                <div class="choose-menu-table-wrapper">
+                    <table class="choose-menu-table" id="menuSel">
+                        <thead>
+                            <tr>
+                                <th>Menu Type</th>
+                                <th>Number of Guests</th>
+                                <th>Price Per Person</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.BookingModel.bookingMenuModel == null || Model.BookingModel.bookingMenuModel.Count == 0)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="flag__body">
+                                            <span class="chooser__label opacity-7 type-semibold ml-"> @Model.BookingModel.EventName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="number-spinner">
+                                            <input name="menutickets" type="text" class="input--primary input--extrasmall text-center" onkeypress="return isNumber(event);" placeholder='0' id="txtSingleMenu" value="@Model.BookingModel.numberOfTickets" />
+                                            <a href="javascript:;" class="number-spinner__up"></a>
+                                            <a href="javascript:;" class="number-spinner__down"></a>
+                                        </div>
+                                    </td>
+                                    <td id="ticketCost">
+                                        <span class='type-extrahuge type-semibold color-dark'>
+                                            £@Html.DisplayFor(x => x.BookingModel.totalTicketCost)
+                                        </span>
+                                    </td>
+                                    <td style="display:none;"></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                for (int i = 0; i < Model.BookingModel.bookingMenuModel.Count; i++)
+                                {
+                                    <tr class="menuCountSelect">
+                                        <td class="bmmMenuTitle">
+                                            <div class="flag__body">
+                                                <span class="chooser__label opacity-7 type-semibold ml-"> @Html.DisplayFor(x => x.BookingModel.bookingMenuModel[i].menuTitle)</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="number-spinner">
+                                                <input name="menutickets" type="text" class="input--primary input--extrasmall text-center" onkeypress="return isNumber(event);" placeholder='0' id="menuOption_@Model.BookingModel.bookingMenuModel[i].menuOptionId" value="@Model.BookingModel.bookingMenuModel[i].numberOfTickets">
+                                                <a href="javascript:;" class="number-spinner__up"></a>
+                                                <a href="javascript:;" class="number-spinner__down"></a>
+                                            </div>
+                                        </td>
+                                        <td class="bmmTicketCost">
+                                            <span class='type-extrahuge type-semibold color-dark'>
+                                                £@SupperClub.Domain.CostCalculator.CostToGuest(Model.BookingModel.bookingMenuModel[i].baseTicketCost, Model.BookingModel.commission)
+                                            </span>
+                                        </td>
+                                        <td class="bmmId" style="display:none;">@Html.DisplayFor(x => x.BookingModel.bookingMenuModel[i].menuOptionId)</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div id="discountRow">
+                    <hr class="hr hr--dots">
+                    <div class="justifize__box">
+                        <span class='type-bold type-x-huge color-blue line-height-1-15'>Discount £</span>
+                        <span class='type-bold type-x-huge color-blue line-height-1-15' name="totalDiscount">@Html.DisplayFor(x => x.BookingModel.discount)</span>
+                    </div>
+                </div>
+
+                <hr class="hr hr--dots">
+                <div class="justifize">
+                    <div class="justifize__box">
+                        <span class='type-bold type-x-huge color-dark line-height-1-15'>Total £</span>
+                        <span class='type-bold type-x-huge color-dark line-height-1-15' name="totalPrice">@Html.DisplayFor(x => x.BookingModel.totalAfterDiscount)</span>
+                    </div>
+                </div>
+                <span id="lblVoucherTitle" class="voucher-info">@Model.BookingModel.voucherDescription</span>
+                @Html.HiddenFor(x => x.BookingModel.eventId)
+                @Html.HiddenFor(x => x.BookingModel.currency)
+                <hr class="hr hr--dots mb+">
+                <h2 class="h1 type-light line-height-1-15 mb">Any Special Requirements?</h2>
+                <div class="large-and-up-ph++ medium-ph+ ph-">
+                    @Html.ValidationMessageFor(x => x.BookingModel.bookingRequirements)
+                    @Html.TextAreaFor(m => m.BookingModel.bookingRequirements, new { @class = "input--primary input--textarea input--full mb+ txtMsgChef", placeholder = "Please include any special requirements you have here for the host: dietary needs, allergies, whether you would like to sit with other people who've booked separately, etc. - the host will do their best to accommodate" })
+                </div>
+                @*<h2 class="h1 type-light line-height-1-15 mb"> Do you have a Voucher Code?</h2>*@
+                <span class="large-and-up-ph++ medium-ph+ ph-">
+                    @*<input type="text" class="input--primary input--medium input--h42 mb" placeholder="Go On Tell Us!" id="txtVoucherCode">*@
+                    <input type="text" class="input--primary input--medium input--h42 mb" placeholder="Do you have a Voucher Code?" id="txtVoucherCode" style="background-color:transparent;">
+                    <button type="button" class="btn btn--primary btn--gray btn--radius" id="applyVoucherCode" style="display: inline !important; min-height: 10px; margin-top: -25px !important; margin-left: 5px !important; width: 25%;">Click to Apply</button>
+                    @*<span id="lblVoucherDescription"></span>*@
+                    @*Hack for a new chef
+                    @if(ViewBag.ShowCondition)
+                    {
+                    <div class="terms-wrapper mb-">
+                    <label class="chooser ">
+                    <div class="flag flag--flush flag--fix">
+                    <div class="flag__img">
+                    <input class="chooser__input" type="checkbox" id="chkTerms" name="chkTerms1" value="Menu A">
+                    <span class="chooser__icon">
+
+                    <svg role="img" class="icon ">
+                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                    </svg>
+                    </span>
+                    </div>
+                    <div class="flag__body">
+                    <span class="chooser__label color-gray-7 inline-block align-middle ml-"> I have already purchased tickets for the festival</span>
+                    </div>
+                    </div>
+                    </label>
+                    </div>
+                    }
+                    *@
+
+                    <button type="submit" class="btn btn--primary btn--full btn--54 mb++" id="proceedToPayment" style="display: display:inline !important; width: 80% !important; margin-left: 90px !important;">Proceed to Payment</button>
+                </span>
+            </div>
+        }
+        </div>
+    </div>
+</div>
+
+<div id="map-single-pin-wrap" class="map--single-pin-wrap mfp-hide magnific-content">
+    <div id="map-single-pin" class="map--single-pin map--popup"></div>
+    <button title="Close (Esc)" type="button" class="mfp-close">
+        <span>
+            <svg role="img" class="icon">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/content/images/icons/icons.svg#icon-X-close"></use>
+            </svg>
+        </span>
+    </button>
+</div>
+
+<div class="message-popup-wraper text-center"></div>
+<span class="messages-popup messages-popup--added">
+    <img src="../content/images/icons/warning2.png" />
+    <span id="errorMsgText"></span>
+</span>
+<span class="messages-popup messages-popup--removed">
+    <img src="../content/images/icons/voucher.png" />   
+    Successfully applied voucher to your cart.
+</span>
+
+
+
+<div id="seating-dialog" class="magnific-content max-width-820  bgr-gray mfp-hide" style="height:200px;">
+    <div class="magnific-content max-width-820 bgr-gray" style="padding-left:70px; padding-top:70px;">
+
+        Please choose a seating before continuing!
+        <button title="Close (Esc)" type="button" class="mfp-close" id="mfpClose"><span> <svg role="img" class="icon">  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/Content/images/icons.svg#icon-X-close"></use>  </svg> </span></button>
+    </div>
+</div>
+
+
+
+
+

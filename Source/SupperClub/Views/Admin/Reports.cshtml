@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Reports";
+}
+
+@section PageSpecificScripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Report').hide();
+        $('#ReportParameters').hide();
+        $('#DownloadReportbtn').hide();
+
+        $('#Report_Type').change(function () {
+            var option = $(this).val();
+            $.getJSON('@Url.Action("GetReportsList","Admin")', { reportTypeEnumId: option }, function (data) {
+                $('#Report').empty();
+                $.each(data, function (index, val) {
+                    $('#Report')
+                    .append($("<option></option>")
+                    .attr("value", val.Value)
+                    .text(val.Text));
+                });
+                if (data.length > 0) {
+                    $('#Report').show();
+                    $('#ReportParameters').show();
+                    $('#DownloadReportbtn').show();
+                    $('#Report').change();
+                }
+                else {
+                    $('#Report').hide();
+                    $('#ReportParameters').hide();
+                    $('#DownloadReportbtn').hide();
+                }
+            });
+        });
+
+        $('#Report').change(function () {
+            var option = $(this).val();
+            $.getJSON('@Url.Action("GetReportParameters","Admin")', { reportId: option }, function (data) {
+                $('#ReportParameters').val(data);
+            });
+        });
+
+        $('#DownloadReportbtn').click(function () {
+            var option = $('#Report').val();
+            var parameters = $('#ReportParameters').val();
+            window.location.href = '@Url.Action("RunReport","Admin")?reportId=' + option + '&parameters=' + parameters;
+        });
+
+    });
+
+</script>
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+        <h4 class="headline">Choose Report</h4>
+
+        <div class="field">
+            @Html.DropDownList("Report Type", (IEnumerable<SelectListItem>)ViewBag.ReportTypes, "Select", new { @class = "custom_select" })
+        </div>
+
+        <div class="field">
+            <select id="Report" class="custom_select"></select>
+        </div>
+        
+        <div class="field">
+            @Html.TextArea("ReportParameters")
+        </div>
+
+        <a id="DownloadReportbtn" href="#" onclick="" class="button small green">Download Report</a>
+	</div>
+</div>

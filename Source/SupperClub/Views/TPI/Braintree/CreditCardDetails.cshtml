@@ -1,0 +1,602 @@
+﻿@model SupperClub.Models.CreditCardDetailsBraintreeViewModel
+@{
+    ViewBag.Title = "Payment Details";
+}
+
+@section PageSpecificScripts {
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/braintree.js")" type="text/javascript"></script>
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/shortcodes.css")">
+    <script type="text/javascript">
+    function initialize()
+    {
+        @Html.Raw(string.Format("var mapCenter = new google.maps.LatLng({0}, {1});", Model.Event.Latitude.ToString("F3"), Model.Event.Longitude.ToString("F3")))
+
+        var mapOptions = {
+            zoom: 13,
+            maxZoom: 15,
+            scrollwheel: true,
+            zoomControl: true,
+            streetViewControl: false,
+            disableDefaultUI: false,
+            panControl:true,
+            center: mapCenter,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById('map-single-pin'), mapOptions);
+        google.maps.event.addDomListener(window, 'load', initialize);
+        var marker = new google.maps.Marker({
+            map: map,
+            @Html.Raw(string.Format("position : new google.maps.LatLng({0}, {1}),", Model.Event.Latitude.ToString("F3"), Model.Event.Longitude.ToString("F3")))
+            title: ''
+        });
+        var circle = new google.maps.Circle({
+            map: map,
+            @Html.Raw(string.Format("radius: {0},", SupperClub.Code.ServerMethods.GoogleMapsCircleRadius))    // metres
+            strokeWeight:1,
+            strokeColor:'#AA0000',
+            clickable: false,
+            editable: false,
+            fillColor: '#AA0000',
+            fillOpacity: 0.2,
+            strokeOpacity:0.1
+        });
+        circle.bindTo('center', marker, 'position');
+        marker.setVisible(true);
+    };
+    function isPhoneNumber(evt) {
+        //debugger;
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ( ((charCode!=40  && charCode !=41 && charCode !=43 && charCode !=45) && (charCode > 31 && charCode < 48 || charCode > 57))) {
+            return false;
+        }
+        return true;
+    }
+    function CheckPhoneNumber(phoneNumber) {
+        var regex1 = /^\(?(?:(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?\(?(?:0\)?[\s-]?\(?)?|0)(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}|\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4}|\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3})|\d{5}\)?[\s-]?\d{4,5}|8(?:00[\s-]?11[\s-]?11|45[\s-]?46[\s-]?4\d))(?:(?:[\s-]?(?:x|ext\.?\s?|\#)\d+)?)$/;
+        return regex1.test(phonenumber);
+    }
+    function CheckCv2(inputcv2) {
+        var regex2 = /\b[0-9][0-9]{2,3}\b/g;
+        return regex2.test(inputcv2);
+    }
+    function checkAndEnableBuyTickets() { debugger;
+        if ($("#chkTerms")[0].checked == true) {
+            $("#btnBuyTickets").prop("disabled", false);
+        }
+        else {
+            $("#btnBuyTickets").prop("disabled", true);
+        }
+    }
+    function showErrorPopup(errorMsg)
+    {
+        $(".message-popup-wraper .messages-popup").addClass("is-hidden");
+        $("#errorMsgText").text(errorMsg);
+        $(".messages-popup--added").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(20000).queue(function () { $(this).remove() }),
+        $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") });
+        //$("#btnBuyTickets").prop( "disabled", true );
+    }
+
+    $(document).ready(function () {
+        //debugger;
+        checkAndEnableBuyTickets();
+        var _selectVal = $('#SelectedToken').val();
+        debugger;
+        if(_selectVal != null && _selectVal.length >0)
+            $("input[type='radio'][name='"+ _selectVal + "']").attr('checked', true);
+
+        if(@Model.bookingModel.voucherId == 0)
+        {
+            $("#sideBarVoucherDescription").hide();
+        }
+        if(Number(@ViewBag.CardListLength) > 0)
+        {
+            $("#addNewPaymentMethod").hide();
+        }
+        else
+        {
+            debugger;
+            $("#newPaymentMethod").val('true');
+        }
+        $("input[name='savedToken']").change(function () {
+            debugger;
+            var selectedVal= $("input[type='radio'][name='savedToken']:checked").val();
+            $('#SelectedToken').val(selectedVal);
+            $('#UseSavedCard').val('true');
+            $("#newPaymentMethod").attr('checked', false);
+            $("#addNewPaymentMethod").hide();
+        });
+        $("#newPaymentMethod").click(function () {
+            debugger;
+            $('#UseSavedCard').val('false');
+            $("input[type='radio'][name='savedToken']").each(function()
+            {
+                this.checked = false;
+            });
+            $("#addNewPaymentMethod").show();
+            $('#SelectedToken').val("");
+        });
+
+        $("#creditCardDetails_CV2").keypress(function(e) {
+            var charCode = e.which;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        });
+
+        $("#chkTerms").change(function () {
+            ////debugger;
+            checkAndEnableBuyTickets();
+        });
+        $("[id^=deleteCard_]").on("click", function () {
+            debugger;
+            var tokenString = $(this).attr('id');
+            var _selToken = String(tokenString.split("_")[1]);
+            if(_selToken)
+            {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("DeletePaymentMethod", "Booking")',
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: { paymentToken : _selToken },
+                    success: function(result) {
+                        if(result.Success)
+                        {
+                            var _selectedtoken =  String($('#SelectedToken').val());
+                            if(_selectedtoken == _selToken)
+                            {
+                                $('#SelectedToken').val("");
+                                $('#UseSavedCard').val('false');
+                            }
+                            $("#div_"+ _selToken).hide();
+                            
+                        }
+                        else
+                        {
+                            showErrorPopup(result.Message);
+                        }
+                    },
+                    error: function(response) {
+                        showErrorPopup("Sorry, there was some error processing your request");
+                    }
+                });
+            }
+            return false;
+        });
+        $("#contactNum").on("blur", function () {
+            var phNum = $("#contactNum").val();
+            $("#ContactNumber").val(phNum);
+        });
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+        var client = new braintree.api.Client({
+            clientToken: "@ViewBag.ClientToken"
+        });
+        function submit_form() {
+            $("#btnBuyTickets").prop("disabled", true);
+            if($('#UseSavedCard').val().toLowerCase() == "true")
+            {
+                var _ptoken =  String($('#SelectedToken').val());
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetPaymentMethodNonce", "Booking")',
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: { paymentToken : _ptoken },
+                    success: function(nonce) {
+                        $("#PaymentNonce").val(nonce);
+                        $("#creditCardDetailsForm").submit();
+                    },
+                    error: function(response) {
+                        showErrorPopup("Sorry, there was some error processing your request");
+                    }
+                });
+            }
+            else //if($("#newPaymentMethod").val().toLowerCase() == "true")
+            {
+                var _cardNum = String($("#creditCardDetails_CreditCardNumber").val());
+                var _expMonth = String($("#creditCardDetails_ExpiryMonth").val());
+                var _expYear = String($("#creditCardDetails_ExpiryYear").val());
+                var _cardHolder = String($("#creditCardDetails_CardHolder").val());
+                var _cv2 = String($("#creditCardDetails_CV2").val());
+                var _address1 = $("#creditCardDetails_Address1").val();
+                var _address2 = $("#creditCardDetails_Address2").val();
+                var _city = $("#creditCardDetails_City").val();
+                var _postCode = $("#creditCardDetails_PostCode").val();
+
+                client.tokenizeCard({
+                    number: _cardNum,
+                    cardholderName: _cardHolder,
+                    expirationMonth: _expMonth, // expirationMonth
+                    expirationYear: _expYear, // expirationYear
+
+                    // optional parameters
+                    cvv: _cv2,
+                    billingAddress: {
+                        StreetAddress: _address1,
+                        ExtendedAddress: _address2,
+                        Locality: _city,
+                        PostalCode: _postCode,
+                        CountryName : "United Kingdom"
+                    }
+                }, function (error, nonce) {
+                    if (!error) {
+                        var _validity = $("#creditCardDetailsForm").valid();
+                        if(!_validity)
+                            $("#btnBuyTickets").prop("disabled", false);
+                        // Send nonce to your server
+                        $("#PaymentNonce").val(nonce);
+                        $("#creditCardDetailsForm").submit();
+                        
+                    } else {
+                        // Handle errors
+                        alert("error:" + error.message);
+                        return false;
+                    }
+                });
+
+            }
+            //else
+            //{
+            //    alert("Please choose a payment method.");
+            //    return false;
+            //}
+        }
+
+        $("#btnBuyTickets").click(function () {
+           
+            var cnr = "@Model.Event.ContactNumberRequired";
+            var phone = $("#contactNum").val();
+            $("#ContactNumber").val(phone);
+                if (cnr.toUpperCase() == "TRUE" && phone.length <= 0) {
+                    showErrorPopup("Contact number is required!");
+                    return false;
+                }
+                var cv2 =  String($("#creditCardDetails_CV2").val());
+                if (cv2.length > 0 &&  (cv2.length < 3 || !CheckCv2(cv2))) {
+                    alert("CV2 number should be a 3 or 4 digit number!");
+                    return false;
+                }
+                //if (phone.length > 0) {
+                //    if (!CheckPhoneNumber(phone)) {
+                //        showErrorPopup("Please enter a 11 digit phone number. The number entered is not in a valid format.");
+                //        return false;
+                //    }
+                //}
+                submit_form();
+            });
+
+        });
+
+
+</script>
+}
+
+<div class="container payment-forms">
+    <div class="layout layout--rev">
+        @if (Model.bookingModel.eventId != 777)
+        { 
+            <div class="layout__item large-and-up-1/3 payment-forms__sidebar">
+                <div class="bgr-white">
+                    @*<a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.UrlFriendlyName + "/" + Model.Event.Id.ToString())">*@
+                        <img src="@Url.Content("~/Content/images/Events/")@Model.Event.ImagePath" alt="" class="full-width" style="height:195px; width:297px;">
+                    @*</a>*@
+                    <div class="p-">
+                        @*<a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.UrlFriendlyName + "/" + Model.Event.Id.ToString())">*@
+                            <h2 class="h4 line-height-1-35">@Model.Event.Name Supper Club</h2>
+                        @*</a>*@
+                        @*<a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)">*@
+                            <span class='pr--'>Hosted By @Model.Event.SupperClub.Name </span>
+                        @*</a>*@
+                        <ul class="rating inline-block">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                if (i < @Model.Event.SupperClub.AverageRank)
+                                {
+                                    <li class="is-checked">
+                                        <svg role="img" class="icon ">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use>
+                                        </svg>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="">
+                                        <svg role="img" class="icon ">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use>
+                                        </svg>
+                                    </li>
+                                }
+                            }
+                        </ul>
+
+                        <p class="mb--">@Model.Event.PostCode.Split(new string[] { " " }, StringSplitOptions.None)[0] - <a id="showMapLink" style="display:block;" href="#map-single-pin-wrap" class="color-gray open-popup">View on map</a></p>
+                        <hr class="hr hr--dots mb-">
+                        <div class="flag flag--small mb--">
+                            <div class="flag__img">
+
+                                <svg role="img" class="icon color-blue icon--19x19 mr--">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-medium_calendar"></use>
+                                </svg>
+                            </div>
+                            <div class="flag__body">
+                                <label class="relative datepicker-wrap display-block">
+                                    @Model.Event.Start.ToString("ddd, d MMM yyyy")
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flag flag--small mb-">
+                            <div class="flag__img">
+
+                                <svg role="img" class="icon color-blue icon--19x19 mr--">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-mediuml_clock"></use>
+                                </svg>
+                            </div>
+                            <div class="flag__body">
+                                @if (@Model.Event.MultiSeating)
+                                {
+                                    var sTime = Model.Event.EventSeatings.Min(x => x.Start).ToShortTimeString();
+                                    <span id="litSeatingTime">@sTime Onwards </span>
+                                }
+                                else
+                                {
+                                    <span id="litSeatingTime">@Model.Event.Start.ToShortTimeString()</span>
+                                }
+
+                            </div>
+                        </div>
+                        <hr class="hr hr--dots">
+                        <div class="justifize">
+                            <div class="justifize__box">
+                                <span class='type-bold type-x-huge color-dark line-height-1-15'>Total £</span>
+                                <span class='type-bold type-x-huge color-dark line-height-1-15' name="totalPrice">@Html.DisplayFor(x => x.bookingModel.totalAfterDiscount)</span>
+                            
+                            </div>
+                            @if (Model.Event.Alcohol == true)
+                            {
+                                <div class="justifize__box">
+                                    <span class='type-bold h4 color-dark tooltip-wrap line-height-1-15'>
+                                        <svg role="img" class="icon icon--7x19">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-small_botle"></use>
+                                        </svg>
+                                        BYOB <div class="tooltip">Bring your own beers</div>
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                        @*<button class="btn btn--primary btn--gray-light btn--full btn--h44 color-dark mb-">Apply / Update</button>*@
+                        <hr class="hr hr--dots mb--">
+                        <div id="sideBarVoucherDescription">
+                            <span class="btn btn--primary btn--gray-red btn--full btn--h44 color-dark mb-" id="lblSideBarVD">@Model.bookingModel.voucherDescription</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        }
+        <div class="layout__item large-and-up-2/3">
+            @if (ViewBag.Notification != null)
+            {
+                @Html.Partial("_Notification", (SupperClub.Models.NotificationModel)ViewBag.Notification)
+            }
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "creditCardDetailsForm" }))
+                {
+                    <p style="margin-top:20px;">@Html.ValidationSummary()</p>
+                    @Html.HiddenFor(x => x.bookingModel.seatingId)                    
+                    @Html.HiddenFor(x => x.bookingModel.eventId)
+                    @Html.HiddenFor(x => x.bookingModel.numberOfTickets)
+                    @Html.HiddenFor(x => x.bookingModel.IsContactNumberRequired)
+                    @Html.HiddenFor(x => x.PaymentNonce)
+                    @Html.HiddenFor(x => x.UseSavedCard)
+                    @Html.HiddenFor(x => x.SelectedToken)
+                    <h1 class="type-light line-height-1-15 mb">Choose your payment method:</h1>
+                    if (Model.SavedCardList != null && Model.SavedCardList.Count > 0)
+                    {
+                        <div class="choose-menu-table-wrapper" style="padding-bottom:0px !important;">
+                            @foreach (var sc in Model.SavedCardList)
+                            {
+                            <div class="mb" id="div_@(sc.Token)">
+                                @if (@sc.IsDefault)
+                                {
+
+                                <input type="radio" name="savedToken" id="@sc.Token" value="@sc.Token" checked="checked" />
+                                }
+                                else
+                                {
+
+                                <input type="radio" name="savedToken" id="@sc.Token" value="@sc.Token" />
+                                }
+                                @switch (@sc.CardType.ToLower())
+                                {
+                                case "visa":
+                                <img src="/Content/images/icons/creditcards/visa.png" alt="@sc.CardType" style="display:inline;height:27px;width:48px;" />
+                                break;  // Always break each case
+                                case "american express":
+                                <img src="@Url.Content("~/Content/images/icons/creditcards/amex.png")" alt="@sc.CardType" style="display:inline;height:27px;width:48px;" />
+                                break;
+                                case "diners club":
+                                <img src="@Url.Content("~/Content/images/icons/creditcards/diners.png")" alt="@sc.CardType" style="display:inline;height:27px;width:48px;" />
+                                break;
+                                case "discover":
+                                <img src="@Url.Content("~/Content/images/icons/creditcards/discover.png")" alt="@sc.CardType" style="display:inline;height:27px;width:48px;" />
+                                break;
+                                case "jcb":
+                                <img src="@Url.Content("~/Content/images/icons/creditcards/jcb.png")" alt="@sc.CardType" style="display:inline;height:27px;width:48px;" />
+                                break;
+                                case "laser":
+                                <img src="@Url.Content("~/Content/images/icons/creditcards/laser.png")" alt="@sc.CardType" style="display:inline;height:27px;width:48px;" />
+                                break;
+                                case "maestro":
+                                <img src="/Content/images/icons/creditcards/maestro.png" alt="@sc.CardType" style="display:inline;height:27px;width:48px;" />
+                                break;
+                                case "mastercard":
+                                <img src="@Url.Content("~/Content/images/icons/creditcards/mastercard.png")" alt="@sc.CardType" style="display:inline;height:27px;width:48px;" />
+                                break;
+                                case "solo":
+                                <img src="@Url.Content("~/Content/images/icons/creditcards/solo.png")" alt="@sc.CardType" style="display:inline;height:27px;width:48px;" />
+                                break;
+                                default:
+                                <img src="@Url.Content("~/Content/images/icons/creditcards/credit.png")" alt="@sc.CardType" style="display:inline;height:27px;width:48px;" />
+                                break;
+                                }
+                                <label id="savedToken_@(sc.Token)" for="@sc.Token" style="display:inline;font-size:16px;">
+                                    ending with @sc.CardLastFour expiring in @sc.ExpirationMonth/@sc.ExpirationYear
+                                </label>
+                                <a id="deleteCard_@(sc.Token)" href="" class="color-blue" style="text-decoration:underline;">Delete</a>
+                            </div>
+                            }
+                        </div>
+                        <div class="mb">
+                            <input type="radio" id="newPaymentMethod" value="-1">
+                            <label for="newPaymentMethod" style="display:inline;font-size:16px;">
+                                Use another credit card
+                            </label>
+                            </input>
+                        </div>
+                    }
+                   
+                                    <div id="addNewPaymentMethod">
+                                        <h1 class="type-light line-height-1-15 mb">Card Details</h1>
+                                        <div class="large-and-up-2/3 medium-ph+ mb+">
+                                            @* <p class="type-semibold color-darken mb--">Card Type *</p>
+                                                <div class="large-and-up-pr++ mb-">
+                                                    <div class="select select--medium select--full inline-block">
+                                                        @Html.ValidationMessageFor(m => m.creditCardDetails.CardType)
+                                                        @Html.DropDownListFor(m => m.creditCardDetails.CardType, Model.CreditCardTypes, "Select", new { @class = "select__item pl" })
+                                                        <div class="select__icon">
+                                                            <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>*@
+                                            <p class="type-semibold color-darken mb--">Name on Card *</p>
+                                            @Html.ValidationMessageFor(m => m.creditCardDetails.CardHolder)
+                                            @Html.EditorFor(m => m.creditCardDetails.CardHolder, new { @class = "input--primary input--full input--h42 mb-" })
+
+                                            <p class="type-semibold color-darken mb--">Card Number *</p>
+                                            @Html.ValidationMessageFor(m => m.creditCardDetails.CreditCardNumber)
+                                            <div id="card-number">
+                                                @Html.EditorFor(m => m.creditCardDetails.CreditCardNumber, new { @class = "input--primary input--full input--h42 mb-" })
+                                            </div>
+                                            @*<div id="number"></div>*@
+                                            <div class=" justifize">
+                                                <div class="justifize__box">
+                                                    <p class="type-semibold color-darken mb--">Expiry Date (MM/YY) *</p>
+                                                    <p>@Html.ValidationMessageFor(m => m.creditCardDetails.ExpiryMonth)</p>
+                                                    <p>@Html.ValidationMessageFor(m => m.creditCardDetails.ExpiryYear)</p>
+                                                    <div>
+                                                        <div id="expiration-month" style="display:inline;">
+                                                            @Html.TextBoxFor(m => m.creditCardDetails.ExpiryMonth, new { @class = "input--primary input--number", style = "max-width: 50px; display: inline", placeholder = "MM" })
+                                                        </div>
+                                                        <span>/</span>
+                                                        <div id="expiration-year" style="display:inline;">
+                                                            @Html.TextBoxFor(m => m.creditCardDetails.ExpiryYear, new { @class = "input--primary input--number", style = "max-width: 50px; display: inline", placeholder = "YY" })
+                                                        </div>
+                                                    </div>
+                                                    @*<div id="expirationMonth"></div>
+                                                        <span>/</span>
+                                                        <div id="expirationYear"></div>*@
+                                                </div>
+                                                <div class="justifize__box">
+                                                    <p class="type-semibold color-darken mb--">
+                                                        CV2 Number *
+                                                        @*<span class='tooltip-wrap'>
+                                                                <span class="icon-wrap">
+                                                                    <svg role="img" class="icon icon--5x9 color-white">
+                                                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-question_mark"></use>
+                                                                    </svg>
+                                                                </span> <span class="tooltip">The 3 digit security number on the back of your card</span>
+                                                            </span>*@
+                                                    </p>
+                                                    @Html.ValidationMessageFor(m => m.creditCardDetails.CV2)
+                                                    <div id="cvv">
+                                                        @Html.TextBoxFor(m => m.creditCardDetails.CV2, new { @class = "input--primary input--number", placeholder = "xxx" })
+                                                    </div>
+                                                    @*<div id="cvv"></div>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h2 class="h1 type-light line-height-1-15 mb">Billing Address</h2>
+                                        <div class="large-and-up-2/3 medium-ph+">
+                                            <p class="type-semibold color-darken mb--">Address Line 1 *</p>
+                                            @Html.ValidationMessageFor(m => m.creditCardDetails.Address1)
+                                            @Html.TextBoxFor(m => m.creditCardDetails.Address1, new { @class = "input--primary input--full input--h42 type-semibold mb-", placeholder = "Address Line 1" })
+
+                                            <p class="type-semibold color-darken mb--">Address Line 2</p>
+                                            @Html.ValidationMessageFor(m => m.creditCardDetails.Address2)
+                                            @Html.TextBoxFor(m => m.creditCardDetails.Address2, new { @class = "input--primary input--full input--h42 type-semibold mb-", placeholder = "Address Line 2" })
+
+                                            <p class="type-semibold color-darken mb--">City *</p>
+                                            @Html.ValidationMessageFor(m => m.creditCardDetails.City)
+                                            @Html.TextBoxFor(m => m.creditCardDetails.City, new { @class = "input--primary input--full input--h42 type-semibold mb-", placeholder = "City" })
+
+                                            <p class="type-semibold color-darken mb--">Post Code *</p>
+                                            @Html.ValidationMessageFor(m => m.creditCardDetails.PostCode)
+                                            @Html.TextBoxFor(m => m.creditCardDetails.PostCode, new { @class = "input--primary input--full input--h42 type-semibold mb-", placeholder = "PostCode" })
+
+                                            <p class="type-semibold color-darken mb--">Country *</p>
+                                            @Html.ValidationMessageFor(m => m.creditCardDetails.Country)
+                                            @Html.TextBoxFor(m => m.creditCardDetails.Country, new { @class = "input--primary input--full input--h42 type-semibold mb-", placeholder = "Country" })
+
+                                            <p class="type-semibold color-darken mb--">Contact Number *</p>
+                                            @Html.ValidationMessageFor(m => m.ContactNumber)
+                                            <input type="text" class="input--primary input--full input--h42 type-semibold mb-" onkeypress="return isPhoneNumber(event);" placeholder='Contact Number' id="contactNum" value="@Model.ContactNumber" />
+                                            @Html.HiddenFor(m => m.ContactNumber)
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="terms-wrapper mb-">
+                                        <label class="chooser ">
+                                            <div class="flag flag--flush flag--fix">
+                                                <div class="flag__img">
+                                                    <input class="chooser__input" type="checkbox" id="chkTerms" name="chkTerms1" value="Menu A">
+                                                    <span class="chooser__icon">
+
+                                                        <svg role="img" class="icon ">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                                <div class="flag__body">
+                                                    <span class="chooser__label color-gray-7 inline-block align-middle ml-"> I agree to the <a class='color-gray-7 text-underline' target="_blank" href='/Home/TermsAndConditions'>Terms and Conditions</a> </span>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <button type="button" id="btnBuyTickets" class="btn btn--primary btn--full btn--h54 mb++">Buy Tickets</button>
+                }
+                            </div>
+    </div>
+</div>
+        <div id="map-single-pin-wrap" class="map--single-pin-wrap mfp-hide magnific-content">
+            <div id="map-single-pin" class="map--single-pin map--popup"></div>
+            <button title="Close (Esc)" type="button" class="mfp-close">
+                <span>
+                    <svg role="img" class="icon">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/content/images/icons/icons.svg#icon-X-close"></use>
+                    </svg>
+                </span>
+            </button>
+        </div>
+
+<div class="message-popup-wraper text-center"></div>
+<span class="messages-popup messages-popup--added">
+    <img src="../content/images/icons/warning2.png" />
+    <span id="errorMsgText"></span>
+</span>
+<span class="messages-popup messages-popup--removed">
+    <img src="../content/images/icons/voucher.png" />
+    Successfully applied voucher to your cart.
+</span>

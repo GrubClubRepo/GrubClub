@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "How to set up a Pop Up or Supperclub Dining Experience.";
+    ViewBag.Description = "Click here to find out everything you need to know to set up your first Pop Up or Supperclub Dining Experience.";
+}
+
+@section PageSpecificScripts {
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<div class="container sub-title2">
+    <h2>@ViewBag.Title</h2>
+</div>
+
+<!--  960 Container Start -->
+<div class="container">
+
+	<!-- Accordions
+	================================================== -->
+	<div class="sixteen columns">
+
+		<span class="acc-trigger"><a href="#">Preparation</a></span>
+		<div class="acc-container">
+			<div class="content">
+                <ul class="check_list">
+                    <li><strong>Think carefully:</strong> In order to be a success, a Grub Club needs to meet certain criteria.  Have a think about how you can achieve these as a small team so you’re not on your own.</li>
+                    <li><strong>Charisma:</strong> A Grub Club is an experience, not a restaurant. Hosts need to be positive, creative and dynamic in order to make their guests feel welcome.</li>
+                    <li><strong>Cooking skills:</strong> Although this is an experience, guests are looking forward to the food and expect to eat good food, prepared with dedication and attention.</li>
+                    <li><strong>Space:</strong> Make sure you have access to the right space to host an event – whether it’s in someone’s home or in a third space. Grub Club can help you find a space. <a href="@Url.Action("ContactUs", new { messageText = "I need help with..." })">Ask us for help</a></li>
+                </ul>
+            </div>
+		</div>
+				
+		<span class="acc-trigger"><a href="#">Cooking</a></span>
+		<div class="acc-container">
+			<div class="content">
+                <ul class="check_list">
+                    <li><strong>Test your cooking:</strong> Get honest feedback on your cooking and plating skills. People who attend supper clubs are usually passionate foodies and look forward to creativity.</li>
+                    <li><strong>Plan your menu:</strong> Be realistic; ensure you time the entire meal correctly for your guests as well as having crockery, equipment, etc. <a href="@Url.Action("ContactUs", new { messageText = "I need help with..." })">Ask us for help</a></li>
+                    <li><strong>Build a team:</strong> Team up with a few more people: to host, serve and clean. <a href="@Url.Action("ContactUs", new { messageText = "I need help with..."})">Ask us</a> if you need help finding people.</li>
+                </ul>
+            </div>
+		</div>
+				
+		<span class="acc-trigger"><a href="#">Administration</a></span>
+		<div class="acc-container">
+			<div class="content">
+                <ul class="check_list">
+                    <li><strong>Define your identity:</strong> Find a name and identity for your Grub Club to start building your “brand”. For example, you could be about welcoming people to the neighbourhood, discussing films, discovering countries around the world, etc.</li>
+                    <li><strong>Price your meal:</strong> Price your meal correctly so you cover all your costs, including prep time. The more expensive you are, the higher the guests’ expectations so make sure you find the right balance.</li>
+                    <li><strong>Choose the frequency:</strong> How often can you realistically do this? This can be flexible but it’s helpful for your guests to know when the next couple of events are, so they can choose when to attend.</li>
+                    <li><strong>Get covered! Don’t take risks:</strong> having a <a href="http://www.food-hygienecertificate.co.uk/level-2-courses.asp" target="_blank">food hygiene certificate</a>, a <a href="http://www.caithnessandco.com/" target="_blank">public liability insurance</a> (speak to the incredibly helpful Geoff from Caithness & Co +44 208 335 9920) and <a href="http://www.food.gov.uk/business-industry/caterers/startingup/#.UEdrzLJlR54" target="_blank">registering your premises with the council</a> will minimise any potential hassle further down the line. <a href="@Url.Action("ContactUs", new { messageText = "I need help with..." })">Ask us for help</a></li>
+                </ul>
+            </div>
+		</div>
+
+		<span class="acc-trigger"><a href="#">Communication</a></span>
+		<div class="acc-container">
+			<div class="content">
+                <ul class="check_list">
+                    <li><strong>About you:</strong> Tell people about yourself on the site. This is a social and foodie experience and not a restaurant. Guests like knowing whose event they are going to.</li>
+                    <li><strong>Questions before the night:</strong> Be prepared for questions from guests: dietary requirements, food allergies, alcohol consumption. Be honest if you can’t accommodate; you’re not a professional business so can’t always please everyone.</li>
+                    <li><strong>Protect your personal details:</strong> Don’t reveal your personal information in public. Grub Club will do this for you once guests have processed your payment. You don’t want strangers turning up on your door without confirmation!</li>
+                </ul>
+            </div>
+		</div>
+
+		<span class="acc-trigger"><a href="#">Hosting</a></span>
+		<div class="acc-container">
+			<div class="content">
+                <ul class="check_list">
+                    <li><strong>Be social:</strong> The social element of a Grub Club is what makes the experience special. Make sure you introduce yourself to guests and make them feel welcome. Introducing them to other guests helps create a good atmosphere for the rest of the evening.</li>
+                    <li><strong>Prepare your space:</strong> Make sure the space you host in is clean, uncluttered and welcoming, so guests can feel comfortable. Don’t forget you may be asked about toilets, potential smoking spaces and places to put coats or bags.</li>
+                    <li><strong>Questions on the night:</strong> Be prepared to answer questions during the evening. Guests are curious to know you. Equally, they may be happy to help you during dinner with filling up water jugs or clearing plates. It’s all about sharing!</li>
+                </ul>
+            </div>
+		</div>
+
+	</div>
+
+</div>
+<!-- End 960 Container -->

@@ -1,0 +1,32 @@
+﻿@model SupperClub.Models.PressReleaseModel
+@{
+    ViewBag.Title = "Find and Book Pop Up Restaurants | Eat Out with Grub Club";
+    ViewBag.Description = "Four easy steps to attend the latest Pop Up Restaurants and Supperclubs. Learn what a Grub Club is";
+}
+
+    @*<div class="container mb+">
+        <ul class="breadcrumbs list-inline list-inline--delimited pt-- mb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Chefs </a></li>
+            <li><a href="#">User Profile </a></li>
+            <li class="current"><a href="#">Adam Walden</a></li>
+        </ul>
+
+    </div>*@
+
+    <div class="container">
+
+        <div class="layout">
+            <div class="layout__item large-and-up-3/4">
+                @if(Model.PressReleases != null && Model.PressReleases.Count > 0)
+                {
+                    foreach (SupperClub.Domain.PressRelease pr in Model.PressReleases)
+                    {
+                        Html.RenderPartial("_PressRelease", pr);
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+

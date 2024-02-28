@@ -1,0 +1,217 @@
+﻿@model SupperClub.Domain.Event
+
+@{
+    ViewBag.Title = "Guest List";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Set selected seatingTime 
+        $("input[name='seatingTime']").change(function () {
+            var selectedVal = $("input[type='radio'][name='seatingTime']:checked").val();
+            if (selectedVal != 10000) {
+                var rows = $('table.standard-table tr');
+                var SelSeat = rows.filter('.Class' + selectedVal).show();
+                var SelSeatTotal = rows.filter('.TotalClass' + selectedVal).show();
+                rows.not(SelSeat).not(SelSeatTotal).not('thead tr').hide();
+            }
+            else {
+
+                $('table.standard-table tr').show();  
+                $('tr[class^="TotalClass"]').hide();             
+                $("#grandTotal").show();
+            }
+        });
+        var isMulti = "@Model.MultiSeating";
+        if (isMulti.toUpperCase() == "TRUE") {
+            $("#grandTotal").hide();
+            var selectedVal = $("input[type='radio'][name='seatingTime']:checked").val();
+            var rows = $('table.standard-table tr');
+            var SelSeat = rows.filter('.Class' + selectedVal).show();
+            var SelSeatTotal = rows.filter('.TotalClass' + selectedVal).show();
+            rows.not(SelSeat).not(SelSeatTotal).not('thead tr').hide();
+        }
+    });
+</script>
+<!--  Page Title -->
+<div class="pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <!-- 960 Container Start -->
+    <div class="container">
+        <div class="sixteen columns">
+
+            <div class="container sub-title2">
+                <h2>@ViewBag.Title</h2>
+            </div>
+            @if (Model.MultiSeating)
+            {
+                <h6 style="display:inline;font-size:medium;float:left;">Choose the seating:   </h6>             
+                foreach (SupperClub.Domain.EventSeating evs in Model.EventSeatings.OrderBy(x => x.Start))
+                {
+                    if (@evs.Id == Model.DefaultSeatingId)
+                    {
+                        <input type="radio" name="seatingTime" id="@evs.Id" value="@evs.Id" style="display:inline;float:left;" checked="checked"><label for="@evs.Id" style="display:inline;float:left;font-size:15px;">@evs.Start.ToShortTimeString()    </label></input>                                
+                    }
+                    else
+                    {
+                        <input type="radio" name="seatingTime" id="@evs.Id" value="@evs.Id" style="display:inline;float:left;"><label for="@evs.Id" style="display:inline;float:left;font-size:15px;">@evs.Start.ToShortTimeString()    </label></input>                                
+                    }
+                }
+                <input type="radio" name="seatingTime" id="all" value="10000" style="display:inline;float:left;"><label for="all" style="display:inline;float:left;font-size:15px;">All</label></input>                                
+            }
+             <br />
+            <table class="standard-table" style="margin-bottom:0px;margin-top:20px;">
+            <thead>
+                <tr>
+                    <th>
+                        Booking Ref#
+                    </th>
+                    <th>
+                        Full Name
+                    </th>
+                    <th>Email</th>                    
+                    @if (Model.MultiMenuOption)
+                    {
+                        <th>
+                            Menu Option
+                        </th>
+                    }
+                    <th>
+                        Total Seats
+                    </th>
+                    <th>
+                        Special Requirements
+                    </th>
+                    
+                </tr>
+             </thead>
+             <tbody>
+             @if (Model.MultiSeating)
+             {
+                 var grandTotalGuest = 0;
+                 foreach (SupperClub.Domain.EventSeating est in Model.EventSeatings)
+                 {
+                     var classname = "Class" + @est.Id;
+                     var totalclassname = "TotalClass" + @est.Id;
+                     var totalGuestCnt = 0;
+                    
+                     foreach (SupperClub.Domain.EventAttendee eb in est.EventAttendees)
+                     {
+                         totalGuestCnt += @eb.NumberOfGuests;
+                         var bref = (from t in @eb.User.Tickets
+                                     join tb in @eb.User.TicketBaskets
+                                     on t.BasketId equals tb.Id
+                                     where t.EventId == eb.EventId && t.UserId == eb.UserId && t.SeatingId == eb.SeatingId && t.MenuOptionId == eb.MenuOptionId
+                                     select new { bookingReference = tb.BookingReference, bookingRequirements = tb.BookingRequirements }).FirstOrDefault();
+                         
+                          
+                        <tr id="@eb.UserId" class="@classname">
+                        <td>                             
+                            @if (@bref != null)
+                            {@bref.bookingReference.ToString("00000000")}
+                            
+                        </td>
+                        <td>
+                            @eb.User.FirstName @eb.User.LastName 
+                        </td>
+                        <td>
+                            @eb.User.Email
+                        </td>
+                        @if (Model.MultiMenuOption)
+                        {
+                            <td>
+                                @eb.EventMenuOption.Title
+                            </td>
+                        }
+                        <td>
+                            @eb.NumberOfGuests
+                        </td>
+                        <td>
+                            @if (@bref != null)
+                            {@bref.bookingRequirements}                           
+                        </td>
+                    </tr>
+                     }
+                     <tr class="@totalclassname">
+                        <td style="font-weight:bold;">Total Guests</td>
+                        <td></td>
+                        <td></td>
+                        @if (Model.MultiMenuOption) {<td></td>}
+                        <td style="font-weight:bold;">@totalGuestCnt</td>
+                     </tr> 
+                     grandTotalGuest += totalGuestCnt;
+                 }
+                 <tr id="grandTotal">
+                        <td style="font-weight:bold;">Total Guests</td>
+                        <td></td>
+                        <td></td>
+                        @if (Model.MultiMenuOption)
+                        {<td></td>}
+                        <td style="font-weight:bold;">@grandTotalGuest</td>
+                     </tr> 
+             }
+             else
+             {
+                 var totalGuestCnt = 0;
+                 
+                 foreach (SupperClub.Domain.EventAttendee ea in Model.EventAttendees)
+                 {
+                     var bref = (from t in @ea.User.Tickets
+                                 join tb in @ea.User.TicketBaskets
+                                 on t.BasketId equals tb.Id
+                                 where t.EventId == ea.EventId && t.UserId == ea.UserId && t.MenuOptionId == ea.MenuOptionId
+                                 select new { bookingReference = tb.BookingReference, bookingRequirements = tb.BookingRequirements }).FirstOrDefault();
+                         
+                     totalGuestCnt += @ea.NumberOfGuests;
+                    <tr id="@ea.UserId">
+                        <td>
+                            @if (@bref != null)
+                            {@bref.bookingReference.ToString("00000000")}
+                        </td>
+                        <td>
+                            @ea.User.FirstName @ea.User.LastName 
+                        </td>
+                        <td>
+                            @ea.User.Email
+                        </td>
+                        @if (Model.MultiMenuOption)
+                        {
+                            <td>
+                                @ea.EventMenuOption.Title
+                            </td>
+                        }
+                        <td>
+                            @ea.NumberOfGuests
+                        </td>
+                        <td>
+                            @if (@bref != null)
+                            {@bref.bookingRequirements} 
+                        </td>
+                    </tr>
+                 }
+                 <tr>
+                <td style="font-weight:bold;">Total Guests</td>
+                <td></td><td></td>
+                @if (Model.MultiMenuOption) {<td></td>}
+                <td style="font-weight:bold;">@totalGuestCnt</td></tr> 
+             }
+            </tbody></table>
+            <br />
+            <a href="@Url.Action("DetailsByIdWithName", new { eventId = Model.Id, eventSeoFriendlyName = Model.UrlFriendlyName })" class="button medium yellow" style="float:right">Go back to Event</a>
+        </div>
+    </div>
+    <!-- 960 Container End -->
+}

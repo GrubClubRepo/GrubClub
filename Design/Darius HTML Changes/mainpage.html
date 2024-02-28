@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="csstransforms no-csstransforms3d csstransitions js" lang="en"><!--<![endif]--><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <!-- Basic Page Needs
+     ================================================== -->
+    <meta charset="utf-8">
+    <title>Main</title>
+
+    <!-- Mobile Specific
+     ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+     ================================================== -->
+    <link rel="stylesheet" type="text/css" href="files/style.css">
+    <link rel="stylesheet" type="text/css" href="files/supperclubcustom.css">
+    <link rel="stylesheet" type="text/css" href="files/css.css">
+
+    <!-- Java Script
+     ================================================== -->
+    <script src="files/ga.js" async="" type="text/javascript"></script><script src="files/jquery-1.js" type="text/javascript"></script>
+    <script src="files/jquery-ui-1.js" type="text/javascript"></script>
+
+    <!-- Template HTML Scripts
+     ================================================== -->
+    <script src="files/flexslider.js" type="text/javascript"></script>
+    <script src="files/jquery_003.js" type="text/javascript"></script>
+    <script src="files/custom.js" type="text/javascript"></script>
+    <script src="files/ender.js" type="text/javascript"></script>
+    <script src="files/selectnav.js" type="text/javascript"></script>
+    <script src="files/imagebox_002.js" type="text/javascript"></script>
+    <script src="files/carousel.js" type="text/javascript"></script>
+    <script src="files/twitter.js" type="text/javascript"></script>
+    <script src="files/tooltip.js" type="text/javascript"></script>
+    <script src="files/popover.js" type="text/javascript"></script>
+    <script src="files/effects.js" type="text/javascript"></script>
+    <!-- Page Specific Java Script -->
+    
+    <link rel="stylesheet" type="text/css" href="files/jquery-ui-1.css">
+    <style>
+        .fadein { position:relative; height:220px; width:500px; }
+        .active { position:absolute; left:0; top:0; }
+    </style>
+
+    <script src="files/jquery_004.js" type="text/javascript"></script>
+    <script src="files/jquery.js" type="text/javascript"></script>
+    
+    <script src="files/jquery_002.js" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+    var refreshIntervalId = 0;
+    $(document).ready(function () {
+        $('.date').datepicker({ 
+            dateFormat: "dd/mm/yy", 
+            minDate: new Date(2012, 12 - 1, 9) 
+        });
+        
+        $('#btnSearch').click(function () {
+            if($("#SearchForm").validate().form())
+                {
+                    $("#SearchForm").submit();
+                }
+        });
+
+        
+        
+    });
+
+    function Subscribe() {
+        var email = $('#SubscribeEmailAddress').val();
+        if(email != '' && email != null){
+            $.ajax({
+                type: "POST",
+                url: "Home/Subscribe",
+                data: { emailAddress: email },
+                cache: false,
+                dataType: 'json text',
+                traditional: true,
+                success: function (result) {
+                    if(result == "true")
+                    {
+                        $('#SubscribeEmailAddress').hide();
+                        $('#btnSubscribe').hide();
+                        $('#txtSubscribeError').hide();
+
+                        $('#hdrSubscribe').text('Welcome to the Club!');
+                        $('#txtSubscribe').text("We'll let you know about any new events and any other news!");
+                    }
+                    else
+                    {
+                        $('#txtSubscribeError').text("Looks like there is a problem with your email address, please try again!");
+                        $('#txtSubscribeError').show();
+                    }
+                },
+                error: function () {
+                    alert("Could not save email address.");
+                }
+            });
+        }
+    }
+    $(function () {
+        $('.fadein .active:gt(0)').hide();
+        refreshIntervalId = setInterval(function () { $('.fadein :first').fadeOut().next('.active').fadeIn().end().appendTo('.fadein'); }, 3000);
+    });
+
+    function LatestEventSliderStop()
+    {
+        clearInterval(refreshIntervalId);
+    };
+    function LatestEventsSlider()
+    {
+        refreshIntervalId = setInterval(function () { $('.fadein :first').fadeOut().next('.active').fadeIn().end().appendTo('.fadein'); }, 3000);
+
+    };
+    </script>
+
+
+</head>
+
+<body>
+
+<!--
+<div style="width:100%; height:1205px; position:absolute; background: url(x1.png) no-repeat 50% 0; z-index:10; opacity:0.4;"></div>
+-->
+
+
+<!-- Header -->
+<div id="header">
+
+	<!-- 960 Container Start -->
+	<div class="container ie-dropdown-fix">
+	
+		<!-- Logo -->
+		<div class="four columns">
+			<a href="http://www.grubclub.com/"><img src="files/logo.png" alt=""></a>
+		</div>
+		
+		<!-- Main Navigation Start -->
+		<div class="twelve columns">
+			<div id="navigation">
+				<ul id="nav">
+					
+                    <li class="toplevel"><a class="current" href="http://www.grubclub.com/Search">Find a Grub Club</a>
+                        <ul>
+                            <li><a href="http://www.grubclub.com/Search">Find a Grub Club</a></li>
+                            <li><a href="http://www.grubclub.com/Home/HowItWorksGuests">How It Works For Guests</a></li>
+                            <li><a href="http://www.grubclub.com/Home/FAQsGuest">FAQs for Guests</a></li>
+                        </ul>
+                    </li>
+                    <li class="toplevel"><a  href="http://www.grubclub.com/Search">What is a Grub Club?</a>
+                    </li>
+    				<li class="toplevel"><a href="http://www.grubclub.com/Account/LogOn?ReturnUrl=%2fHost%2fRegisterSupperClub">Host a Grub Club</a>
+                        <ul>
+                            <li><a href="http://www.grubclub.com/Account/LogOn?ReturnUrl=%2fHost%2fRegisterSupperClub">Host a Grub Club</a></li>
+                            <li><a href="http://www.grubclub.com/Home/HowItWorksHosts">How It Works For Hosts</a></li>
+                            <li><a href="http://www.grubclub.com/Home/FAQsHost">FAQs for Hosts</a></li>
+                            <li><a href="http://www.grubclub.com/Home/HowToHost">How To Host a Grub Club</a></li>
+                        </ul>
+                    </li>
+                    <li class="toplevel"><a href="http://www.grubclub.com/Account/LogOn">Log On</a>
+                        <ul>
+                            <li><a href="http://www.grubclub.com/Account/LogOn">Log On</a></li>
+                        </ul>
+                    </li>
+				</ul>
+			</div>
+		</div>
+		<!-- Main Navigation End -->
+		
+	</div>
+	<!-- 960 Container End -->
+
+</div>
+<!-- End Header -->
+
+
+<!-- Slider -->
+<div id="slider">
+    <!-- Flexslider Start-->
+    <!-- darius: changed background color --> <div class="flexslider" style="background: #F2F3EB;">
+        <ul class="slides" style="position:relative;">
+  
+			
+			<!-- Slide -->
+			<li style="width: 100%; float: left; margin-right: -100%; position: relative; display: list-item;" class="custom-slide flex-active-slide">
+				<div class="container" style="background: url(files/Carousel_image.1.jpg) no-repeat;width:100%;height:100%; repeat: no-repeat; background-position:top center; background-color:#703A29;"><!-- darius: changed background color -->
+					<div class="sixteen columns" >
+						<div class="slider_description">
+							<h1>We Help Chefs Set Up Food Businesse</h1>
+                            <h2>We Find them Space and Connect them with Curious Foodies like you</h2> <!-- darius: deleted the style for h2 -->
+							
+						</div>
+					</div>
+                    
+				</div>
+			</li>
+            
+            <!-- Slide -->
+			<li style="width: 100%; float: left; margin-right: -100%; position: relative; display: list-item;" class="custom-slide flex-active-slide">
+				<div class="container" style="background: url(files/Carousel_image.2.jpg) no-repeat;width:100%;height:100%; repeat: no-repeat; background-position:top center; background-color:#703A29;"><!-- darius: changed background color -->
+					<div class="sixteen columns">
+						<div class="slider_description">
+							<h1>Discover and Book</h1>
+                            <h2>Home-Cooked Meals by Creative Chefs across London</h2> <!-- darius: delete the style for h2 -->
+							
+						</div>
+					</div>
+                    
+				</div>
+			</li>
+					
+			<!-- Slide -->
+			<li style="width: 100%; float: left; margin-right: -100%; position: relative;" class="custom-slide">
+				<div class="container" style="background: url(files/Carousel_image.3.jpg) no-repeat;width:100%;height:100%; repeat: no-repeat; background-position:top center; background-color:#703A29;"><!-- darius: changed background color -->
+					<div class="sixteen columns">
+						<div class="slider_description">
+							<h1>Or Jump Right in!</h1>
+                            <h2>Why don't you Start your own Food Project? Oh is that a Grub Club?!</h2> <!-- darius: deleted a style for h2 -->
+							
+						</div>
+					</div>
+                    
+				</div>
+			</li>
+        </ul>
+    <ul class="flex-direction-nav"><li><a class="flex-prev" href="#">Previous</a></li><li><a class="flex-next" href="#">Next</a></li></ul></div>
+    <!-- Flexslider End-->
+</div>
+<!-- End Slider -->
+
+<!--Search bar Start -->
+<div class="container search-bar">
+  		<!--Search fields Start -->
+<form novalidate="novalidate" action="/Search/SearchResult" class="container search-fields-container" id="SearchForm" method="post" name="SearchForm">             <ul class="container">
+               <li class="three columns">
+                    <span class="input-icon-container">
+                        <img id="imgSearch" src="files/i-calender.png" alt="calender-icon" onclick="$('#HomeSearch_StartDate').focus(); return false;" height="34" width="34">
+                    </span>
+                    <input class="date search-input hasDatepicker" id="HomeSearch_StartDate" name="HomeSearch.StartDate" placeholder="When?" value="09/12/12" type="search">
+                </li>
+                <li class="three columns">
+                    <span class="input-icon-container">
+                        <img src="files/i-map.png" alt="map-icon" onclick="$('#HomeSearch_Location').focus(); return false;" height="34" width="34">
+                    </span>
+                    <input class="search-input" id="HomeSearch_Location" name="HomeSearch.Location" placeholder="Where?" value="London" type="search">
+                </li>
+                <li class="three columns">
+                    <span class="input-icon-container">
+                        <img src="files/i-ppl.png" alt="people-icon" onclick="$('#HomeSearch_Guests').focus(); return false;" height="34" width="34">
+                    </span>
+                    <input class="search-input" data-val="true" data-val-number="The field Guests must be a number." data-val-range="Please provide a valid number of guests" data-val-range-min="1" data-val-required="The Guests field is required." id="HomeSearch_Guests" name="HomeSearch.Guests" placeholder="How many?" value="2" type="search">
+                </li>
+              
+                <li class="three columns">
+                    <span class="input-icon-container">
+                        <img src="files/i-keyword.png" alt="keyword-icon" onclick="$('#HomeSearch_Keyword').focus(); return false;" height="34" width="34">
+                    </span>
+                    <input class="search-input" id="HomeSearch_Keyword" name="HomeSearch.Keyword" placeholder="Key Word" type="search">
+                </li>
+               <li class="three columns search-button-container">
+                    <span class="search-button button" onclick="$('#SearchForm').submit()">
+                        <!-- darius: changed copy in a button / moved 'i' beside 'Find it' --><i class="icon-search icon-white"></i>Find it
+                    </span>
+                </li>
+                
+                <li><input id="btnsubmitForm" style="visibility:hidden; padding:0px" type="submit"></li>
+            </ul>
+</form>		<!-- Search fields End -->   
+</div>
+<!--- End of search bar --->
+
+<!--- Pattern design row --->
+<div class="container pattern-design" style=""></div>
+
+<!--- Sub title column --->
+<div class="container sub-title">
+    <div class="container">
+        
+        <div class="eight columns">
+            <h2>Well Hello There!</h2>
+            <p>Thank you for stopping by today, we are thrilled to have you here.</p>
+            <p>Have a look around and see what some of London’s most passionate and incredibly talented Chefs are doing with food.</p>
+        </div>
+        
+        <div class="eight columns">
+            <h2 id="hdrSubscribe">Subscribe</h2>
+            <p id="txtSubscribe">Want to find out about new events?</p>
+            <p id="txtSubscribeError" style="color: Red; display: none"></p>
+            <input class="search-input" id="SubscribeEmailAddress" name="SubscribeEmailAddress" placeholder="Your email address" style="margin-left: 0px; margin-right: 5px; max-width: 100%; width: 217px" type="search">
+            <!-- darius: removed style, added class 'orange' -->
+            <span id="btnSubscribe" class="orange button" onclick="Subscribe(); return false;">
+                <!-- darius: changed 'ADD' to 'Add'-->Add
+            </span>
+        </div>
+        
+    </div>
+</div>
+<!--- End of Sub title column --->
+
+<!-- 960 Container Start -->
+<div class="container" style="min-height: 300px">
+    
+    
+    <div class="eight columns">
+        <!-- darius: removed style for h2--><h2>Recently Added Events</h2>
+        <div class="fadein" id="eventSlider" onmouseover="LatestEventSliderStop();" onmouseout="LatestEventsSlider();">
+        
+            
+            <div style="display: block;" class="active">
+                    <div class="four columns recently-added-events-img-box">
+                        <a href="http://www.grubclub.com/Event/Details?eventid=29">
+                            <img src="images/big3.jpg" alt="">
+                        </a>
+                            <p>
+                            <span>DATE: </span>20/12/2012<br>   
+                            <span>TIME: </span>12:35 - 17:35<br>
+                            <span>SPACES: </span>20
+                            </p> 
+                    </div> 
+                    <div class="four columns" style="width:200px">
+                        <h5><a href="">Taste of stuff from sea</a></h5>
+                        <p>Pop Up Barbados will help keep your new year resolution by serving a delicious and healthy Caribbean meal that will tantalise your taste buds. Jerked Lamb Chops anyone? Or how about some Cod & Pumpkin Fritters? We keep our dishes original and you can be sure that we...
+                        </p>
+                    </div>
+                </div>
+                
+                
+                <div style="display: none; " class="active">
+                    <div class="four columns recently-added-events-img-box">
+                        <a href="http://www.grubclub.com/Event/Details?eventid=16">
+                            <img src="images/food2.jpg" alt="">
+                        </a>
+                            <p>
+                            <span>DATE: </span>19/12/2012<br>   
+                            <span>TIME: </span>10:30 - 15:30<br>
+                            <span>SPACES: </span>10
+                            </p> 
+                    </div> 
+                    <div class="four columns" style="width:200px">
+                        <h5><a href="http://www.grubclub.com/Event/Details?eventid=16">Future date</a></h5>
+                        <p>See what some of London's most passionate people.</p>
+                    </div>
+                </div>
+                
+                
+            
+            </div>
+    </div>
+
+    <!-- Do you want to be involved in the Club -->
+    <!-- darius: added class 'get-involved' --><div class="eight columns get-involved">
+        <!-- darius: removed style for h2 --><h2>Do you want to be involved in the Club?</h2>
+
+        <div class="four columns recently-added-events-img-box" style="">
+                        
+            <a href="http://www.grubclub.com/Home/ContactUs?messageText=I%20want%20to%20be%20involved%21">
+                <img src="images/test2.jpg" alt="">
+            </a>
+
+            <p>
+                <span>Finding food connections...</span>
+            </p> 
+        </div> 
+             
+	    <!-- darius: changed 'width' in style --><div class="four columns" style="width:190px">
+            <h5><a href="http://www.grubclub.com/Home/ContactUs?messageText=I%20want%20to%20be%20involved%21">Get Involved!</a></h5>
+            <p style="margin-bottom: 0px">Do you:</p>
+            <ul class="arrow_list">
+                <li>Have space to rent?</li>
+                <li>Want to help out with cooking?</li>
+                <li>Have produce you'd like to sell?</li>
+                <li>Want to discuss any other type of involvement?</li>
+            </ul>
+            <p><a href="http://www.grubclub.com/Home/ContactUs?messageText=I%20want%20to%20be%20involved%21">Send us a message!</a></p>
+        </div>
+    </div>
+
+    <div class="clearfix">
+    </div>
+</div>
+<!-- 960 Container End -->
+
+<!-- Footer Start -->
+<div id="footer">
+
+	<!-- 960 Container -->
+	<div class="container">
+		
+		<!-- About -->
+		<div class="one-third column">
+			<h5>About Us</h5>
+			<p>This is a story of two food obsessed people who realised they 
+simply wanted to share what they loved doing every day: get people 
+together to share laughter around a dinner table... <a href="http://www.grubclub.com/Home/AboutUs">read more</a></p>
+            <p>We are just starting out so any <a href="http://www.grubclub.com/Home/ContactUs?messageText=I%27ve%20got%20some%20feedback%20and%20it%27s%20about%20">feedback</a> is welcome!</p>
+		</div>
+		
+		<!-- Useful Links -->
+		<div class="one-third column">
+			<h5>Useful Links</h5>
+			<ul class="links-list">
+                <li><a href="http://www.grubclub.com/Home/NotesFromASupperClub">Notes From A Supper Club</a></li>
+                <li><a href="http://www.grubclub.com/Home/NotesFromASupperClub">How to cook good</a></li>
+			</ul>
+		</div>
+		
+		<!-- Twitter -->
+		<div class="one-third column">
+			<h5>Latest Tweets</h5>
+			<ul id="twitter"><li><span>No wonder some nations have perfected the art of cheese making. Traces of cheese making found from 7,000 years ago <a href="http://t.co/leT2VbmV">http://t.co/leT2VbmV</a></span> <br><b><a href="http://twitter.com/grub_club/statuses/277708868463771649">about 12 hours ago</a></b></li><li><span>Nic Marks, creator of the Happy Planet Index, on valuing happiness rather than just economics - video <a href="http://t.co/K4PjLVJP">http://t.co/K4PjLVJP</a> via @<a href="http://twitter.com/guardian">guardian</a></span> <br><b><a href="http://twitter.com/grub_club/statuses/277457691687911424">1 day ago</a></b></li></ul>
+				
+				<!--
+                <script type="text/javascript">
+				    jQuery(document).ready(function ($) {
+				        $.getJSON('http://api.twitter.com/1/statuses/user_timeline/Grub_Club.json?count=2&callback=?', function (tweets) {
+				            $("#twitter").html(tz_format_twitter(tweets));
+				        });
+				    });
+				</script>
+                -->
+                
+			<div class="clearfix"></div>
+		</div>
+
+	</div>
+	<!-- 960 Container End -->
+	
+</div>
+<!-- Footer End -->
+
+<!--  Footer Copyright-->
+<div id="footer-bottom">
+
+	<!-- 960 Container -->
+	<div class="container">
+				
+		<div class="eight columns">
+			<div id="copyright">© Copyright 2012 by <a href="http://www.grubclub.com/Home/ContactUs">GrubClub</a>. All Rights Reserved. <a href="http://www.grubclub.com/Home/TermsAndConditions">Terms and Conditions</a></div>
+		</div>
+		
+        
+
+		<div class="eight columns">
+			<ul class="social-links">
+				
+                <li>
+                    <a href="#" onclick="window.open('http://www.twitter.com/Grub_Club');" rel="tooltip" title="Twitter">
+                        <img src="files/twitter.png" alt="Facebook"></a>
+                </li>
+                <li>
+                    <a href="#" onclick="window.open('http://www.facebook.com/GrubClub1');" rel="tooltip" title="Facebook">
+                        <img src="files/facebook.png" alt="Facebook"></a>
+                </li>
+                <li>
+                    <a href="http://www.grubclub.com/Home/ContactUs" rel="tooltip" title="Contact">
+                        <img src="files/mail.png" alt="Contact"></a>
+                </li>
+				<!--<li class="digg"><a href="#">Digg</a></li>
+				<li class="vimeo"><a href="#">Vimeo</a></li>
+				<li class="youtube"><a href="#">YouTube</a></li>
+				<li class="skype"><a href="#">Skype</a></li>-->
+			</ul>
+		</div>
+
+	</div>
+	<!-- End 960 Container -->
+	
+</div>
+<!--  Footer Copyright End -->
+
+    
+
+<!-- Back To Top Button -->
+<div id="backtotop"><a href="#"></a></div>
+
+<!-- Imagebox Build -->
+<script src="files/imagebox.js" type="text/javascript"></script><div id="ib-overlay"></div>
+
+<!-- Menu Highlighter -->
+<script type="text/javascript">
+    var loc = window.location.pathname;
+    var selectedMenuLink = $('li>a[href$="' + loc + '"]');
+    var link = selectedMenuLink[0];
+    if (link != null) {
+        $(".toplevel>a").removeClass("current");
+        if ($(link).parent().hasClass('toplevel')) {
+            $(link).addClass('current');
+        }
+        else {
+            // Assign the nearest top level menu item
+            var topLink = $(link).closest('.toplevel').children(':first-child a');
+            $(topLink).addClass("current");
+        }
+    }
+</script>
+
+
+
+<div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+</div>
+
+</body>
+</html>

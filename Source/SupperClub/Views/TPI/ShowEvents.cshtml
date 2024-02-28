@@ -1,0 +1,203 @@
+﻿@model SupperClub.Models.TPIModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en" style="padding-top:0px !important;padding-left:0px;background-color:#fff !important;overflow:auto !important;">
+<!--<![endif]-->
+<head>
+
+    <!-- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Look out for all the yummy offerings your favourite chef is dishing out</title>
+    <meta name="description" content="">
+
+    
+    <!-- CSS
+     ================================================== -->
+    <!-- Prefetch DNS for external assets (Twitter widgets etc). -->
+    <link rel="dns-prefetch" href="//ajax.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//themes.googleusercontent.com">
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/screen.css")">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700,900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/jquery-ui-1.10.3.min.css")" />
+
+     <!-- Scripts
+     ================================================== -->
+    <script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/bower_components/modernizr/modernizr.js")"></script>
+    <script src="@Url.Content("~/bower_components/jquery/dist/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.10.4.min.js")" type="text/javascript"></script>
+
+    <script src="@Url.Content("~/bower_components/chosen_v1.3.0/chosen.jquery.min.js")"></script>
+    <script src="@Url.Content("~/bower_components/svg4everybody/svg4everybody.min.js")"></script>
+    <script src="@Url.Content("~/bower_components/owl-carousel2/dist/owl.carousel.min.js")"></script>
+   <script src="@Url.Content("~/bower_components/nouislider/distribute/jquery.nouislider.all.min.js")"></script>
+
+     <!-- legacy.js is datepicker support for ie8 -->
+    <script src="@Url.Content("~/bower_components/pickadate/lib/compressed/legacy.js")"></script>
+    <script src="@Url.Content("~/bower_components/pickadate/lib/compressed/picker.js")"></script>
+    <script src="@Url.Content("~/bower_components/pickadate/lib/compressed/picker.date.js")"></script>
+
+    <script src="@Url.Content("~/bower_components/nanoscroller/bin/javascripts/jquery.nanoscroller.min.js")"></script>
+    <script src="@Url.Content("~/bower_components/magnific-popup/dist/jquery.magnific-popup.min.js")"></script>
+    <script src="@Url.Content("~/bower_components/jquery.countdown/dist/jquery.countdown.js")"></script>
+    <script src="@Url.Content("~/Scripts/init.min.js")"></script>
+    <style>
+         .tblTpiList tr:hover{
+              cursor: pointer;
+              background-color: #ccc;
+            }
+    </style>
+
+</head>
+<body>
+    <script>
+        $(document).ready(function () {
+            $(".eventRow").click(function () {
+                debugger;
+                var rowParams = $(this).attr("id");
+                var params = rowParams.split("_");
+                var eventId = params[0];
+                var availableSeats = parseInt(params[1]);
+                var multiSeating = params[2];
+                var seatId = 0;
+                if (availableSeats <= 0)
+                    return false;
+                else {
+                    if (multiSeating.toLowerCase() == 'true') {
+                        if ($("input[type='radio'][name='seatingTime_" + eventId + "']").length > 0) {
+                            seatId = $("input[type='radio'][name='seatingTime_" + eventId + "']:checked").val();
+                            if (!seatId || seatId <= 0) {
+                                alert("Please choose a seating before continuing!");
+                                return false;
+                            }
+                        }
+                    }
+                    document.location.href = "@(SupperClub.Code.ServerMethods.ServerUrl)tpi/chooseTickets?eid=" + eventId + "&stId=" + seatId;
+                }
+            });
+        });
+        function rowEventSelect(eventId, availableSeats, multiSeating)
+        {
+            debugger;
+            var seatId = 0;
+            if (availableSeats <= 0)
+                return false;
+            else {
+                if(multiSeating)
+                {
+                    if($("input[type='radio'][name='seatingTime_" + eventId + "']").length > 0)
+                    {
+                        seatId = $("input[type='radio'][name='seatingTime_" + eventId + "']:checked").val();
+                        if(!seatId || seatId <= 0)
+                        {
+                            alert("Please choose a seating before continuing!");
+                            return false;
+                        }
+                    }
+                }
+                $("#gc_div").empty();
+                $("#gc_div").html("<iframe src='@(SupperClub.Code.ServerMethods.ServerUrl)tpi/chooseTickets?eid=" + eventId +"&stId=" + seatId + "></iframe>");
+            }
+        }
+</script>
+    <!-- 960 Container Start -->
+    <div>
+        <div class="sixteen columns">
+            @if (Model.EventList != null && Model.EventList.Count > 0)
+            {            
+                <div>
+                    <table class="tblTpiList" style="text-align:left">
+                        <thead>
+                            <tr>
+                                <th style="width:15%;">
+                                    Date
+                                </th>
+                                <th style ="width:40%">
+                                    Event
+                                </th>
+                                <th style="width:10%">Ticket Price</th>
+                                <th style="width:20%">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (SupperClub.Domain.Event e in Model.EventList)
+                            {
+
+                                <tr id="@(e.Id)_@(e.TPIAvailableSeats)_@(e.MultiSeating)" class="eventRow">
+                                    <td style="width:15%;">
+                                        @e.Start.ToString("d MMM yyyy")
+                                    </td>
+                                    <td style="width:40%">
+                                        @e.Name
+                                    </td>
+                                    <td style="width:10%">
+                                        £ @e.CostToGuest
+                                    </td>
+                                    <td style="width:20%">
+                                        @if (e.MultiSeating)
+                                        {
+                                            foreach (SupperClub.Domain.EventSeating evs in e.EventSeatings.OrderBy(x => x.Start))
+                                            {
+                                                if (@evs.AvailableSeats > 0)
+                                                {
+                                                    <input type="radio" name="seatingTime_@(e.Id)" id="@evs.Id" value="@evs.Id"><label for="@evs.Id">@evs.Start.ToShortTimeString()</label></input>
+                                                    <br />
+                                                }
+                                                else
+                                                {
+                                                    <input type="radio" name="seatingTime_@(e.Id)" id="@evs.Id" value="@evs.Id" disabled="disabled">
+                                                    <label for="@evs.Id" style="text-decoration:line-through;">@evs.Start.ToShortTimeString()</label>
+                                                    <label style="font-weight:bold;color:red;">Soldout</label>
+                                                    @*<img src="@(SupperClub.Code.ServerMethods.ServerUrl)content/images/soldout-icon.png" style="height:15px;width:19px;" />*@
+                                        <br />
+                                            </input>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (@e.TPIAvailableSeats <= 0)
+                                            {
+                                                <label style="text-decoration:line-through;">
+                                                    @e.Start.ToShortTimeString()
+                                                </label>
+                                            <label style="font-weight:bold;color:red;">Soldout</label>
+                                            @*<img src="@(SupperClub.Code.ServerMethods.ServerUrl)content/images/soldout.png" style="height:19px;width:25px;" />*@
+                                            }
+                                            else
+                                            {
+                                                @e.Start.ToShortTimeString()
+                                            }
+                                        }
+</td>
+                                </tr>
+                            }
+
+
+                        </tbody>
+                    </table>
+            </div>
+            }
+            else
+            {
+                <div class="border-orange bgr-white p mb">
+                    <img src="@Url.Content("~/Content/images/")no_event_3.jpg">
+                </div>
+            }
+        </div>
+    </div>
+    <!-- 960 Container End -->
+    
+</body>
+
+</html>

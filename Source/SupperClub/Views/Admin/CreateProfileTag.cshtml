@@ -1,0 +1,94 @@
+﻿@model SupperClub.Domain.ProfileTag
+
+@{
+    ViewBag.Title = "Create Tag";
+}
+
+
+@section PageSpecificScripts {
+    <script type="text/javascript">
+         $(document).ready(function () {
+             $("#CreateTagForm").submit(function () {
+                $("#CreateTagForm").validate();
+             });
+
+             $("input[type='radio'][name='TagType']").change(function () {
+                
+
+                     $("#TargetUser").val($(this).val())
+               
+
+             });
+             
+             $("input[type='radio'][name='TagPrivate']").change(function () {
+                 if ($(this).val() == 1) {
+                     $("#Private").attr('checked', true);
+                     $("#Private").val(true);
+
+                 }
+                 else {
+                     $("#Private").removeAttr('checked');
+                     $("#Private").val(false);
+                 }
+
+
+
+
+             });
+         });
+    </script>
+}
+
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+
+<div class="container" id="MainContainer" >
+    <div class="sixteen columns">
+        <h4 class="headline">Create new tag here</h4>
+        @using (Html.BeginForm("CreateProfileTag", "Admin", FormMethod.Post, new { id = "CreateTagForm", enctype = "multipart/form-data" }))
+        {
+            
+             
+           <div class="field">
+                <label>Tag name</label>
+                @Html.ValidationMessageFor(m => m.Name)
+                @Html.EditorFor(m => m.Name)
+            </div>
+           <div class="field">
+                <label>Tag Visibility</label>
+                @Html.ValidationMessageFor(m => m.Private)
+               <div style="display:none;">
+                   @Html.EditorFor(m => m.Private)
+               </div>
+
+               <input type="radio" name="TagPrivate" value="1">Private
+
+               <input type="radio" name="TagPrivate" value="0">Public
+
+
+            </div>
+              <div class="field">
+                <label>Target User<label>
+                @Html.ValidationMessageFor(m => m.TargetUser)
+                @Html.HiddenFor(m => m.TargetUser)
+                  
+
+                      <input type="radio" name="TagType" value="1">Admin
+
+                      <input type="radio" name="TagType" value="2">Host
+
+                  
+
+            </div>
+          
+
+            <input type="submit" value="Create Tag" class="button small green" />
+        }
+    </div>
+</div>

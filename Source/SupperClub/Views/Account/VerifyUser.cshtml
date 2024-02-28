@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Verify account";
+}
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<!-- 960 Container Start -->
+<div class="container" style="min-height: 320px;">
+        @if (ViewBag.Notification != null || TempData["Notification"] != null)
+        {
+            SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+            TempData["Notification"] = null;
+            @Html.Partial("_Notification", nModel);
+        }
+        @if(ViewBag.Success != null)
+        {
+            <p>Your account has been verified successfully. Please login <a href="@Url.Action("LogOn","Account")">here</a> to get started.</p>               
+        }
+</div>
+<!-- 960 Container End -->

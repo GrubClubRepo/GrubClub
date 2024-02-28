@@ -1,0 +1,50 @@
+﻿@model SupperClub.Domain.Review
+<!-- 960 Container Start -->
+<div class="flag flag--top flag--flush flag--responsive mb">
+    <div class="flag__img ph">
+        <img src="../content/images/placeholder-img2.jpg" alt="">
+    </div>    
+    <div class="flag__body">
+        <h3 class="h6 type-semibold">
+            @if (Model.UserId == null || Model.Anonymous)
+            {
+                <span itemprop="author">Guest</span>
+            }
+            else
+            {
+                <span itemprop="author">@(string.IsNullOrEmpty(Model.User.FirstName) ? "Guest" : Model.User.FirstName)</span>
+            } <meta itemprop="datePublished" content="@Html.Raw(Model.DateCreated.ToString("yyyy-MM-ddThh:mm"))"><time>@Model.DateCreated.ToString("ddd, d MMM yyyy")</time>
+        </h3>
+        @if (Model.Title!=null)
+        { 
+            <h3 class="h6 type-semibold"><span itemprop="name">@Model.Title</span></h3>
+        }
+        @if(Model.Rating != null)
+        { 
+        <ul class="rating ">
+            @for (int i = 0; i < (int)Model.Rating; i++)
+            {
+                <li class="is-checked">
+
+                    <svg role="img" class="icon ">
+                        <use xlink:href="../content/images/icons/icons.svg#icon-star"></use>
+                    </svg>
+
+                </li>
+            }
+            @for (int i = 0; i < 5 - (int)Model.Rating; i++)
+            {
+                <li class="">
+                    <svg role="img" class="icon ">
+                        <use xlink:href="../content/images/icons/icons.svg#icon-star"></use>
+                    </svg>
+                </li>
+            }
+        </ul>
+        }
+
+        <p class="type-light">
+            <span itemprop="description">@Html.DisplayWithBreaks(Model.PublicReview == null ? "":Model.PublicReview)</span>
+        </p>
+    </div>
+</div>

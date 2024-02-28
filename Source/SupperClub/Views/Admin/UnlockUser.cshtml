@@ -1,0 +1,42 @@
+﻿@model SupperClub.Models.ForgotPasswordModel
+
+@{
+    ViewBag.Title = "Unlock User Account";
+}
+
+@section PageSpecificScripts {
+    <script src="@Url.Content("~/Scripts/old/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/old/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<!-- 960 Container Start -->
+<div class="container" style="min-height: 320px;">
+    @using (Html.BeginForm())
+    {
+    <div class="eight columns">
+        <p>Enter the user's email address below to unlock their account</p>
+        @if (ViewBag.Notification != null)
+        {
+            @Html.Partial("_Notification", (SupperClub.Models.NotificationModel)ViewBag.Notification);
+        }
+        @if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+        {
+            <div class="field">
+                @Html.LabelFor(m => m.EmailAddress)
+                @Html.ValidationMessageFor(m => m.EmailAddress)
+                @Html.TextBoxFor(m => m.EmailAddress)
+            </div>
+        <input type="submit" value="Unlock Account" class="button medium yellow" style="" />
+        }
+    </div>
+    }
+</div>
+<!-- 960 Container End -->

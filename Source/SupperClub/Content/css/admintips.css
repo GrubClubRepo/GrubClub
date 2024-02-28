@@ -1,0 +1,38 @@
+﻿h1 {
+    text-align: center;
+}
+.lobster {
+    font-family: 'Lobster 1.3', cursive;
+    font-size: x-large;
+}
+p.text-danger {
+    font-weight: bold;
+    font-size: larger;
+    text-align: center;
+}
+p.text-success {
+    text-align: center;
+}
+th {
+    font-weight: bold;
+}
+ul, ol {
+    margin-bottom: 10px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+.main * ul li {
+    list-style-type: circle;
+}
+
+.panel {
+    background: #eee;
+    padding: 15px;
+}
+
+.main img {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}

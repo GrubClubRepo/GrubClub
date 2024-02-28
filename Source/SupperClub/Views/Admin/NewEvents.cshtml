@@ -1,0 +1,99 @@
+﻿@model SupperClub.Models.NewEventsModel
+
+@{
+    ViewBag.Title = "Newly Created Events";
+}
+
+@section PageSpecificScripts {
+<script type="text/javascript">
+    function ApproveEvent(eventId, rowId) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("UpdateEventStatus", "Admin")',
+            contentType: "application/json",
+            dataType: "json",
+            data: { eventId: eventId, newStatus: 1 },
+            success: function (eventStatus) {
+                if (eventStatus.NumberOfTicketsAdded <= 0) {
+                    alert("There was a problem activating this event, please try again");
+                }
+                else {
+                    alert(eventStatus.Message);
+                    $("#row_" + rowId).hide();
+                }
+            },
+            error: function (response) {
+                alert("Sorry, there was some error processing your request");
+            }
+        });        
+    }
+    function RejectEvent(eventId, rowId) {
+        $.ajax({
+                type: "GET",
+                url: '@Url.Action("UpdateEventStatus", "Admin")',
+                contentType: "application/json",
+                dataType: "json",
+                data: { eventId: eventId, newStatus: 4 },
+                success: function (eventStatus) {
+                    if (eventStatus.NumberOfTicketsAdded <= 0) {
+                        alert("There was a problem rejecting this event, please try again");
+                    }
+                    else {
+                        alert(eventStatus.Message);
+                        $("#row_" + rowId).hide();
+                    }
+                },
+                    error: function (response) {
+                        alert("Sorry, there was some error processing your request");
+                    }
+        });
+    }
+</script>
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <div class="container">
+        <div class="twenty columns">
+            <h4 class="headline">Newly Created Events</h4>
+                <table class="standard-table">
+				    <tr>					    
+					    <th>Event Name</th>
+                        <th>GrubClub</th>
+                        <th>Owner Email</th>					    
+                        <th>Event Date</th>
+                        <th>Ticket Price</th>
+					    <th colspan="2">Action</th>                        
+				    </tr>
+
+                    @for(int i = 0 ; i <= Model.NewEvents.Count - 1 ; i++)
+                    {
+                        SupperClub.Domain.Event e = Model.NewEvents[i];
+  				        <tr id="@("row_" + i.ToString())">					        
+					        <td><a href="@Url.Action("DetailsByIdWithName", "Event", new { eventId = e.Id, eventSeoFriendlyName = e.UrlFriendlyName })">@e.Name</a></td>
+                            <td>@e.SupperClub.Name</td>
+                            <td>@e.SupperClub.User.Email</td>
+					        <td>@e.Start.ToString("ddd, d MMM yyyy") <br /> @e.Start.ToString("h:mm tt") - @e.End.ToString("h:mm tt")</td>
+                            <td>£@e.CostToGuest</td>
+					        <td><a href="#" onclick="ApproveEvent(@e.Id, @i);">Approve</a> </td> 
+                            <td><a href="#" onclick="RejectEvent(@e.Id, @i);">Reject</a></td>
+				        </tr>
+                    }
+                </table>
+        </div>
+    </div>
+}

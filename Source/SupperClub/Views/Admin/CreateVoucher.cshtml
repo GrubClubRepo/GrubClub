@@ -1,0 +1,282 @@
+﻿@model SupperClub.Domain.Voucher
+
+@{
+    ViewBag.Title = "Create Voucher";
+}
+@section PageSpecificScripts {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/datepicker/jquery-ui-1.8.23.custom.css")" />
+       
+    
+     <script type="text/javascript">
+             $(document).ready(function () {
+             var vCode = "@ViewBag.VoucherCode";
+             if(vCode != null && vCode.length > 0)
+             {
+                 $("#voucherCode").text(vCode);
+                 $("#voucherCode").show();
+                 $("#voucherCodeMessage").show();
+             }
+             else
+             {
+                 $("#voucherCode").hide();
+                 $("#voucherCodeMessage").hide();
+             }
+             $('#voucherDescription').val($('#Description').val());
+             var vType = 0;
+             var selected = $("input[type='radio'][name='VoucherType']:checked");
+             if (selected.length > 0)
+             {
+                 vType = selected.val();
+                 $('#TypeId').val(vType);
+             }
+             $('#StartDate').datepicker({
+                 dateFormat: "dd/mm/yy",
+                 minDate: new Date(@DateTime.Now.Year, @DateTime.Now.Month - 1 , @DateTime.Now.Day)
+             });
+             $('#ExpiryDate').datepicker({
+                 dateFormat: "dd/mm/yy",
+                 minDate: new Date(@DateTime.Now.Year, @DateTime.Now.Month - 1 , @DateTime.Now.Day+1)
+             });
+             $('#voucherDecription').attr('maxlength', '64');
+             $('#chkUnlimited').change(function () {
+                 if ($(this).is(":checked")) {
+                     $('#divUsageCap').hide();
+                     $('#UsageCap').val("0");
+                 }
+                 else {
+                     $('#divUsageCap').show();
+                     $('#UsageCap').val("");
+                 }
+             });
+             $("input[type='radio'][name='VoucherType']").change(function () {
+                 var selected = $("input[type='radio'][name='VoucherType']:checked");
+                 if (selected.length > 0) {
+                     vType = selected.val();
+                     $('#TypeId').val(vType);
+                     if(vType == 5)
+                     {
+                         $("#chkUnlimited").attr('checked',true);
+                         $("#UsageCap").val(0);
+                         $("#UniqueUserRedeemLimit").val(0);
+                     }
+                     else
+                     {
+                         $("#chkUnlimited").attr('checked',false);
+                         $("#UsageCap").val(1);
+                         $("#UniqueUserRedeemLimit").val(1);
+                     }
+                     if (vType > 0)
+                     {
+                         if (vType == 1)
+                             vDescription = $("#OffValue").val() + "% Off";
+                         if (vType == 2)
+                             vDescription = "£" + $("#OffValue").val() + " Off";
+                         if (vType == 5)
+                             vDescription = "Gift Voucher £" + $("#OffValue").val();
+                         $('#voucherDescription').val(vDescription);
+                         $('#Description').val(vDescription);
+                     }
+                 }
+             });
+             $("#OffValue").focusout(function () {
+                 var vDescription = "";
+                 if (vType > 0)
+                 {
+                     if (vType == 1)
+                         vDescription = $("#OffValue").val() + "% Off";
+                     if (vType == 2)
+                         vDescription = "£" + $("#OffValue").val() + " Off";
+                     if (vType == 5)
+                         vDescription = "Gift Voucher £" + $("#OffValue").val();
+                     $('#voucherDescription').val(vDescription);
+                     $('#Description').val(vDescription);
+                 }
+             });  
+                 
+             $("input[type='radio'][name='VoucherOwner']").change(function()
+             {                 
+                 if($(this).val()== "1")
+                 {
+                     $("#divHostName").show();
+                     $("#giftVoucher").hide();
+                 }
+                 else
+                 {
+                     $("#divHostName").hide();
+                     $("#giftVoucher").show();
+                 }
+                 $('#OwnerId').val($(this).val());
+             });
+
+
+             $('#CreateVoucherForm').submit(function (){
+                 $('#Description').val($('#voucherDescription').val());
+                 var _vCode = $('#Code').val();
+                 $.ajax({
+                     type: "GET",
+                     url: '@Url.Action("IsExistingVoucherCode", "Admin")',
+                     contentType: "application/json",
+                     dataType: "json",
+                     data: { code: _vCode },
+                     success: function(result) {
+                         if (result.IsExisting == true){
+                             event.preventDefault();
+                             alert("A voucher code with same name already exists!");
+                         }
+                     },
+                     error: function(result) {
+                         showErrorPopup("Sorry, there was some error processing your request");
+                     }
+                 });
+             });
+         });
+         </script>
+}
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+<div class="container">
+	<div class="sixteen columns">
+        <p id="voucherCodeMessage">Your voucher code is <span id="voucherCode" style="font-weight:bold;color:chocolate;"></span></p>
+        <h4 class="headline">Create your voucher here</h4>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "CreateVoucherForm", enctype = "multipart/form-data" }))
+        {
+            @Html.HiddenFor(m => m.Active)
+            @Html.HiddenFor(m => m.IsGlobal)
+            @Html.HiddenFor(m => m.TypeId)            
+            @Html.HiddenFor(m => m.OwnerId)
+            @Html.HiddenFor(m => m.NumberOfTimesUsed)            
+            @Html.HiddenFor(m => m.Description)
+              <div class="field">
+                <label> Voucher Owner</label> 
+                <label class="radio" >
+                    @if(Model.OwnerId == (int)SupperClub.Domain.VoucherOwner.Admin)
+                    {
+                        <input type="radio" name="VoucherOwner" id="vAdmin" value="2" checked="checked" style="width:20px;" />
+                    }
+                    else
+                    {
+                        <input type="radio" name="VoucherOwner" id="vAdmin" value="2" style="width:20px;" />
+                    }
+                    Admin
+                </label>
+                <label class="radio" >
+                    @if (Model.OwnerId == (int)SupperClub.Domain.VoucherOwner.Host)
+                    {
+                          <input type="radio" name="VoucherOwner" id="vHost" value="1" checked="checked" style="width:20px;" />
+                    }
+                    else
+                    {
+                        <input type="radio" name="VoucherOwner" id="vHost" value="1" style="width:20px;" />
+                    }
+                    Host
+                </label>
+            </div>
+            <div class="field" id="divHostName" style="display:none;">
+
+                <label> Host Name</label>
+                @Html.EditorFor(m => m.HostName)
+                
+
+            </div>
+
+            <div class="field">
+                @Html.LabelFor(m => m.TypeId)
+                <label class="radio" for="type0">
+                    @if(Model.TypeId == (int)SupperClub.Domain.VoucherType.ValueOff)
+                    {
+                        <input type="radio" name="VoucherType" id="valueOff" value="2" checked="checked" style="width:20px;" />
+                    }
+                    else
+                    {
+                        <input type="radio" name="VoucherType" id="valueOff" value="2" style="width:20px;" />
+                    }
+                    £ money off
+                </label>
+                <label class="radio" for="type1">
+                    @if (Model.TypeId == (int)SupperClub.Domain.VoucherType.PercentageOff)
+                    {
+                        <input type="radio" name="VoucherType" id="percentOff" value="1" checked="checked" style="width:20px;" />
+                    }
+                    else 
+                    {
+                        <input type="radio" name="VoucherType" id="percentOff" value="1" style="width:20px;" />
+                    }
+                    % off
+                </label>
+                <label class="radio" for="type1">
+                    @if (Model.TypeId == (int)SupperClub.Domain.VoucherType.GiftVoucher)
+                    {
+                        <input type="radio" name="VoucherType" id="giftVoucher" value="5" checked="checked" style="width:20px;" />
+                    }
+                    else
+                    {
+                        <input type="radio" name="VoucherType" id="giftVoucher" value="5" style="width:20px;" />
+                    }
+                    Gift Voucher
+                </label>
+
+            </div>
+            <div class="field">
+                @Html.LabelFor(m => m.OffValue)
+                @Html.ValidationMessageFor(m => m.OffValue)
+                @Html.EditorFor(m => m.OffValue)
+            </div>
+            <div class="field">
+                <label>Voucher Description</label>
+                <input type="text" id="voucherDescription" />
+            </div>
+            <div class="field">
+                @Html.LabelFor(m => m.Code)
+                @Html.ValidationMessageFor(m => m.Code)
+                @Html.EditorFor(m => m.Code)
+            </div>
+            <div class="field">
+                @Html.LabelFor(m => m.MinBookingAmount)
+                @Html.ValidationMessageFor(m => m.MinBookingAmount)
+                @Html.EditorFor(m => m.MinBookingAmount)
+            </div>
+            <div class="field">
+                @Html.LabelFor(m => m.UsageCap)
+                <div id="divUsageCap">                    
+                    @Html.ValidationMessageFor(m => m.UsageCap)
+                    @Html.EditorFor(m => m.UsageCap)
+                </div>
+                <label class="radio" for="chkUnlimited">
+                    <input type="checkbox" id="chkUnlimited" value="" style="width:15px;" />
+                   Unlimited
+                </label>
+            </div>
+            <div class="field">
+                @Html.LabelFor(m => m.UniqueUserRedeemLimit)
+                @Html.ValidationMessageFor(m => m.UniqueUserRedeemLimit)
+                @Html.EditorFor(m => m.UniqueUserRedeemLimit)
+            </div>
+            <div class="field">
+                @Html.LabelFor(m => m.StartDate)
+                @Html.ValidationMessageFor(m => m.StartDate)
+                @Html.EditorFor(m => m.StartDate)
+            </div>
+            <div class="field">
+                @Html.LabelFor(m => m.ExpiryDate)
+                @Html.ValidationMessageFor(m => m.ExpiryDate)
+                @Html.EditorFor(m => m.ExpiryDate)
+            </div>
+            <input type="submit" value="Create Voucher" class="button small green" />
+            
+          
+        }
+	</div>
+     
+</div>

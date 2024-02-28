@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Refer a Friend today to get £5 Off your next Supper Club";
+    ViewBag.Description = "Supper Clubs are best spent with friends! If you refer your buddy to Grub Club we’ll not only give them £5 Off their first booking, but give you £5 Off too!";
+}
+
+
+@*<div class="container mb+">
+    <ul class="breadcrumbs list-inline list-inline--delimited pt-- mb">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Chefs </a></li>
+        <li><a href="#">User Profile </a></li>
+        <li class="current"><a href="#">Adam Walden</a></li>
+    </ul>
+
+</div>*@
+
+<div class="container">
+
+    <h1 class="type-light mb">Information</h1>
+    <div class="layout">
+        @Html.Partial("_LeftNavigation")
+        <div class="layout__item large-and-up-3/4">
+            <h2 class="h3 mb pb-">Refer A Friend</h2>
+
+
+            <article class='mb'>
+                
+                <!--- Begin Mention Me referrer placeholder div --->
+                <div id="mmWrapper"></div>
+                <!--- End Mention Me referrer placeholder div --->
+            </article>
+
+           
+        </div>
+    </div>
+
+</div>
+
+<!--- Begin Mention Me referrer integration --->
+<script type="text/javascript" src="https://tag.mention-me.com/api/v2/referreroffer/mm11fc0d93?implementation=embed&situation=landingpage"></script>
+<!--- End Mention Me referrer integration --->
+

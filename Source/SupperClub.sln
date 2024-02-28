@@ -1,0 +1,82 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupperClub.WebUI", "SupperClub\SupperClub.WebUI.csproj", "{660D5189-79FE-48CD-9C35-AA8EC392713D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupperClub.Data", "SupperClub.Data\SupperClub.Data.csproj", "{7B8FFF59-8740-4AFC-A0BE-E22DF703F068}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupperClub.Domain", "SupperClub.Domain\SupperClub.Domain.csproj", "{27939E1A-B0DD-42E2-8A0B-CC16D555B283}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupperClub.Data.EntityFramework.CodeGenTemp", "SupperClub.Data.EntityFramework.CodeGenTemp\SupperClub.Data.EntityFramework.CodeGenTemp.csproj", "{937F6903-A490-4B93-9AD1-E90AE5E11374}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{168FEE08-948C-40E0-B6C1-BE75D178374E}"
+	ProjectSection(SolutionItems) = preProject
+		Database\_execute_script.bat = Database\_execute_script.bat
+		Database\_update.bat = Database\_update.bat
+		Database\update_devserver_db.bat = Database\update_devserver_db.bat
+		Database\update_liveserver_db.bat = Database\update_liveserver_db.bat
+		Database\update_local_db.bat = Database\update_local_db.bat
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InitialDB", "InitialDB", "{AD752F84-B06B-4C25-8A60-D09809434F0E}"
+	ProjectSection(SolutionItems) = preProject
+		Database\InitialDB\SupperClubData.sql = Database\InitialDB\SupperClubData.sql
+		Database\InitialDB\SupperClubSchema.sql = Database\InitialDB\SupperClubSchema.sql
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SagePayMvc", "SagePayMvc\SagePayMvc.csproj", "{9A130697-C90F-4CDA-96B3-DC5C76D40114}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayPalMvc", "PayPalMvc\PayPalMvc.csproj", "{9C870B1F-9794-4738-9BA3-1ED045C62636}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupperClub.Logger", "SupperClub.Logger\SupperClub.Logger.csproj", "{A58B1694-67CE-4AA0-8240-252AE1416453}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{237D97AC-CEE9-46BF-A89D-D371A79B5704}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{660D5189-79FE-48CD-9C35-AA8EC392713D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{660D5189-79FE-48CD-9C35-AA8EC392713D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{660D5189-79FE-48CD-9C35-AA8EC392713D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{660D5189-79FE-48CD-9C35-AA8EC392713D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B8FFF59-8740-4AFC-A0BE-E22DF703F068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B8FFF59-8740-4AFC-A0BE-E22DF703F068}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B8FFF59-8740-4AFC-A0BE-E22DF703F068}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B8FFF59-8740-4AFC-A0BE-E22DF703F068}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27939E1A-B0DD-42E2-8A0B-CC16D555B283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27939E1A-B0DD-42E2-8A0B-CC16D555B283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27939E1A-B0DD-42E2-8A0B-CC16D555B283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27939E1A-B0DD-42E2-8A0B-CC16D555B283}.Release|Any CPU.Build.0 = Release|Any CPU
+		{937F6903-A490-4B93-9AD1-E90AE5E11374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{937F6903-A490-4B93-9AD1-E90AE5E11374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{937F6903-A490-4B93-9AD1-E90AE5E11374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{937F6903-A490-4B93-9AD1-E90AE5E11374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A130697-C90F-4CDA-96B3-DC5C76D40114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A130697-C90F-4CDA-96B3-DC5C76D40114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A130697-C90F-4CDA-96B3-DC5C76D40114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A130697-C90F-4CDA-96B3-DC5C76D40114}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C870B1F-9794-4738-9BA3-1ED045C62636}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C870B1F-9794-4738-9BA3-1ED045C62636}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C870B1F-9794-4738-9BA3-1ED045C62636}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C870B1F-9794-4738-9BA3-1ED045C62636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A58B1694-67CE-4AA0-8240-252AE1416453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A58B1694-67CE-4AA0-8240-252AE1416453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A58B1694-67CE-4AA0-8240-252AE1416453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A58B1694-67CE-4AA0-8240-252AE1416453}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AD752F84-B06B-4C25-8A60-D09809434F0E} = {168FEE08-948C-40E0-B6C1-BE75D178374E}
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+EndGlobal

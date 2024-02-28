@@ -1,0 +1,126 @@
+﻿@model SupperClub.Models.UploadImageModel
+@{
+    ViewBag.Title = "Upload Image";
+}
+@section Styles
+{
+    <link href="@Url.Content("~/Content/imgareaselect/imgareaselect-animated.css")" rel="stylesheet" />
+}
+@section Scripts
+{
+    @*http://www.codeproject.com/Articles/379980/Fancy-ASP-NET-MVC-Image-Uploader*@
+    <script src="@Url.Content("~/Scripts/jquery.imgareaselect.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Get the checkboxes and disable them
+            var boxes = $('input[type=checkbox]').attr('disabled', true);
+            $('#btnUpload').hide();
+
+            //Get the preview image and set the onload event handler
+            var ias = {};
+            var preview = $('#preview').load(function () {
+                setPreview();
+                ias.setOptions({
+                    x1: 0,
+                    y1: 0,
+                    x2: $(this).width(),
+                    y2: $(this).height(),
+                    show: true
+                });
+            });
+
+            //Set the 4 coordinates for the cropping
+            var setPreview = function (x, y, w, h) {
+                $('#X').val(x || 0);
+                $('#Y').val(y || 0);
+                $('#Width').val(w || preview[0].naturalWidth);
+                $('#Height').val(h || preview[0].naturalHeight);
+            };
+
+            //Initialize the image area select plugin
+            ias = preview.imgAreaSelect({
+                handles: true,
+                instance: true,
+                parent: 'body',
+                onSelectEnd: function (s, e) {
+                    var scale = preview[0].naturalWidth / preview.width();
+                    var _f = Math.floor;
+                    setPreview(_f(scale * e.x1), _f(scale * e.y1), _f(scale * e.width), _f(scale * e.height));
+                }
+            });
+
+            //Check one of the checkboxes
+            var setBox = function (filter) {
+                $('#btnUpload').attr('disabled', false);
+                boxes.attr('checked', false).filter(filter).attr({ 'checked': true, 'disabled': false });
+            };
+
+            //Initial state of X, Y, Width and Height is 0 0 1 1
+            setPreview(0, 0, 1, 1);
+
+            //What happens if the File changes?
+            $('#File').change(function (evt) {
+                if (evt.target.files === undefined) // For IE9 and down
+                    return filePreview();
+                
+                var f = evt.target.files[0];
+                var reader = new FileReader();
+
+                if (!f.type.match('image.*')) {
+                    alert("The selected file does not appear to be an image.");
+                    return;
+                }
+
+                //setBox('#IsFile');
+                $('#btnUpload').show().attr('disabled', true).val('Wait...');
+                reader.onload = function (e) {
+                        preview.attr('src', e.target.result);
+                        $('#btnUpload').attr('disabled', false).val('Upload');
+                    };
+                reader.readAsDataURL(f);
+                
+            });
+
+            var filePreview = function () {
+	            window.callback = function () { };
+	            $('body').append('<iframe id="preview-iframe" onload="callback();" name="preview-iframe" style="display:none" />');
+	            var action = $('form').attr('target', 'preview-iframe').attr('action');
+	            $('form').attr('action', '/Image/PreviewImage');
+	            window.callback = function () {
+		            setBox('#IsFile');
+		            var result = $('#preview-iframe').contents().find('img').attr('src');
+		            preview.attr('src', result);
+		            $('#btnUpload').show().attr('disabled', false).val('Upload');
+		            $('#preview-iframe').remove();
+	            };
+	            $('form').submit().attr('action', action).attr('target', '');
+            };
+            
+            $('form').submit(function () {
+                $('#btnUpload').attr('disabled', true).val('Wait...');
+            });
+        });
+    </script>
+}
+
+@using (Html.BeginForm("UploadImage", "Image", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.X)
+    @Html.HiddenFor(model => model.Y)
+    @Html.HiddenFor(model => model.Width)
+    @Html.HiddenFor(model => model.Height)
+        
+    <div id="upload-choices">          
+            <div class="field">
+                <p>Choose your image, then Upload it before Updating/Creating</p>
+                @Html.FileFor(model => model.File)
+                <input type="submit" value="Upload" id="btnUpload" class="button medium green" style="display: inline; width: 100px; float: right;"/>
+                <br />
+                @Html.ValidationSummary()
+            </div>
+            <br />
+            <div class="field">
+                <img alt="Field for image cutting" id="preview" style="max-width: 480px; max-height: 480px;" src="@Url.Content("~/Content/empty.png")" />
+            </div>
+    </div>
+}

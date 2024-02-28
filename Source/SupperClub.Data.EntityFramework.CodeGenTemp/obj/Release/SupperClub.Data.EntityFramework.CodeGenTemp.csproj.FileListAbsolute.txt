@@ -1,0 +1,8 @@
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Release\SupperClub.Data.EntityFramework.CodeGenTemp.dll.config
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Release\SupperClub.Data.EntityFramework.CodeGenTemp.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Release\SupperClub.Data.EntityFramework.CodeGenTemp.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Release\Facebook.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\bin\Release\Facebook.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Release\SupperClub.Data.EntityFramework.CodeGenTemp.csprojResolveAssemblyReference.cache
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Release\SupperClub.Data.EntityFramework.CodeGenTemp.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data.EntityFramework.CodeGenTemp\obj\Release\SupperClub.Data.EntityFramework.CodeGenTemp.pdb

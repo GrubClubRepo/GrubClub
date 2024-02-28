@@ -1,0 +1,237 @@
+﻿@{
+    
+}
+<head>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/newstyle.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/datepicker/jquery-ui-1.8.23.custom.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/bootstrap.min.css")" />
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.js"></script>
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#divrefer").show();
+        //  $("#divThankyou").hide();
+
+        $('#modalBtn').click(function () {
+
+            if ($('#referralvoucherform').valid()) {
+
+                <a href="~/Views/Home/ReferralVoucher.cshtml">~/Views/Home/ReferralVoucher.cshtml</a>
+                var email = $('#yourEmail').val();
+                var friendEmail = $('#friendEmail').val();
+                var friendName = $('#friendName').val();
+                //  var lstfriends = ReadValues();
+
+                $.ajax({
+                    type: 'POST',
+                    // this url needs to be changed accordingly to the right URL - whatever the controller/routing expects
+                    url: '@Url.Action("ReferralVoucher", "home")',
+                    data: { email: email, friendemail: friendEmail, friendName: friendName },
+                    //  data: { email: email, friends:lstfriends  },
+                    cache: false,
+                    dataType: 'json text',
+                    traditional: true,
+                    success: function (result) {
+
+                        if (result == true) {
+
+
+                            //  $('#divrefer').hide();
+                            //  $('#divThankyou').show();
+                        }
+
+                        else {
+                            if (result != "true") {
+                                alert(result);
+
+                                return false;
+                            }
+
+                            else
+                                window.location = '@Url.Action("ThankYou", "Home")';
+
+                        }
+                    },
+                    error: function (result) {
+
+                        alert('Sorry, there was an error submitting your request. Please check for errors and try again!');
+                    }
+                });
+            }
+
+        });
+    });
+
+    function addControl() {
+        var tbl = document.getElementById("myContent");
+
+        var totalRows = tbl.rows.length;
+        var row = tbl.insertRow(totalRows);
+        var firstCell = row.insertCell(0);
+        var secondCell = row.insertCell(1);
+        firstCell.innerHTML = "<input type=text name='txtName'/>";
+        secondCell.innerHTML = "<input type=text name='txtEmail'/>";
+    }
+    function  ReadValues() {
+        var names = document.getElementsByName("txtName");
+        var ages = document.getElementsByName("txtEmail");
+        var data = "";
+        for (var i = 0; i < names.length; i++) {
+            data = data + names[i].value + "~" + ages[i].value + ":";
+        }
+        //  alert(data);
+        return data;
+    }
+
+
+
+
+    </script>
+
+
+    @*<script src="../Scripts/home/bootstrap.min.js"></script>*@
+
+   <style type="text/css">
+       table.my-table td
+       {
+           margin:10px 10px 10px 10px;
+           }
+
+   </style>
+</head>
+<div style="height:100%; width:100%;">
+<form role="form" class="form-horizontal" id="referralvoucherform">
+    <div align="center" style="color: white;margin: 10px 10px 10px 10px;height:450px; width:97%;background-size:cover; background-repeat: no-repeat;background-image:url(@Url.Content("~/Content/images/JF_Toast_Roast-2210-2.jpg"));  ">
+        @*<table border="1" >
+            <tr>
+                <td style="height:80px; padding-bottom:10px;" align="center" colspan="3"><b> Send Referrl Voucher</b></td></tr>
+            <tr>    <td style="vertical-align:middle; width:100px;" ><label for="yourEmail">Your Email</label></td>
+                <td style="vertical-align:middle; width:250px;"><input type="text" class="form-control required" name="yourEmail" id="yourEmail" placeholder="Enter your email id here"></td>
+                <td style="vertical-align:top;">  <input type="button" value="AddControl" onclick="addControl()" /> </td>
+
+            </tr>
+
+        </table>*@
+
+
+
+
+        @*<div id="mycontrols" style="margin-top:20px;">
+            <table id="myContent">
+                <thead>
+                <th width="200px;" style="text-align:center;">Name</th>
+                <th width="250px;" align="left">Email</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type=text name="txtName" /></td>
+                        <td><input type=text name="txtEmail" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>*@
+
+        
+        <div style="margin:10px 10px 10px 10px;" id="divrefer" >
+
+            <p>
+                <table>
+                    <tr>
+                        <td colspan="2" align="center" height="40px;" >
+                            <h3 style="color:white !important; font-size:20px;">  Be a hero and give your mate 10% off their first Grub Club. </h3> 
+                            <h3 style="color: white !important; font-size: 20px;">And when they book we'll give you 10% off too. Schweeeeeeeet!</h3><br />
+                        </td>
+                    </tr>
+                    </table>
+                <table>
+                    <tr>
+                        @*<td style="vertical-align: top; width: 150px;">
+                            <label for="yourEmail">Your Email</label>
+                        </td>*@
+                        <td style="vertical-align:middle;">
+
+                            <input type="text" style="width: 250px;" class=" form-control required" name="yourEmail" id="yourEmail" placeholder="What's Your Email?">
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        @*<td style="vertical-align: top;">
+
+                            <label for="friendName">Name of your friend</label>
+                        </td>*@
+
+                        <td style="vertical-align:middle;">
+                            <input type="text" class="form-control required" name="friendName" id="friendName" placeholder="What's your Friend's Name?">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        @*<td style="vertical-align: top;">
+
+                            <label for="friendEmail">Email id of you friend</label>
+                        </td>*@
+
+                        <td style="vertical-align:middle;">
+                            <input type="text" class="form-control required" name="friendEmail" id="friendEmail" placeholder="Whats your Friend's Email?">
+
+                        </td>
+                    </tr>
+
+                    <tr style="height: 45px; vertical-align:bottom;">
+                        @*<td>&nbsp;</td>*@
+                        <td align="center">
+                        
+                        <button type="button" style="margin-top:25px;" class="btn btn-lg btn-primary" id="modalBtn">Send Invite</button></td>
+                    </tr>
+
+                </table>
+            
+
+            </p>
+
+
+
+
+        </div>
+        @*<button type="submit" id="modalBtn">Send Invite</button>*@
+
+    </div>
+</form>
+    </div>
+
+    
+<script type="text/javascript">
+    validator = $("#referralvoucherform").validate({
+        rules: {
+            yourEmail: {
+                required: true,
+                email: true
+            }
+            ,
+            friendEmail: {
+                required: true,
+                email: true
+            }
+            , friendName: {
+                required:true,
+            }
+
+        }
+
+
+    });
+
+   // $('#txtName').keypress(function (e) {
+    $('#friendName').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            return true;
+        }
+
+        e.preventDefault();
+        return false;
+    });
+
+</script>

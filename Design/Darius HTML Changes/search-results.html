@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)http://grubclub.com/Event/Details?eventid=32 -->
+<html lang="en" class="csstransforms no-csstransforms3d csstransitions js"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Basic Page Needs
+     ================================================== -->
+    <meta charset="utf-8">
+    <title>Search res</title>
+    
+    <!-- Mobile Specific
+     ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+     ================================================== -->
+    <link rel="stylesheet" type="text/css" href="files/style.css">
+    <link rel="stylesheet" type="text/css" href="files/supperclubcustom.css">
+    <link rel="stylesheet" type="text/css" href="files/css">
+
+    <!-- Java Script
+     ================================================== -->
+    <script type="text/javascript" async="" src="files/ga.js"></script><script src="files/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="files/jquery-ui-1.8.22.min.js" type="text/javascript"></script>
+
+    <!-- Template HTML Scripts
+     ================================================== -->
+    <script src="files/flexslider.js" type="text/javascript"></script>
+    <script src="files/jquery.isotope.min.js" type="text/javascript"></script>
+    <script src="files/custom.js" type="text/javascript"></script>
+    <script src="files/ender.min.js" type="text/javascript"></script>
+    <script src="files/selectnav.js" type="text/javascript"></script>
+    <script src="files/imagebox.min.js" type="text/javascript"></script>
+    <script src="files/carousel.js" type="text/javascript"></script>
+    <script src="files/twitter.js" type="text/javascript"></script>
+    <script src="files/tooltip.js" type="text/javascript"></script>
+    <script src="files/popover.js" type="text/javascript"></script>
+    <script src="files/effects.js" type="text/javascript"></script>
+    <!-- Page Specific Java Script -->
+    
+    <link rel="stylesheet" type="text/css" href="files/jquery-ui-1.8.23.custom.css">
+    <style>
+        #map_canvas img {max-width: none;}
+    </style>
+    
+    <script src="files/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="files/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+        
+    <script src="files/jquery.validate.custom.js" type="text/javascript"></script>
+
+    <script src="files/jquery.tmpl.js" type="text/javascript"></script>
+    <script type="text/javascript" src="files/js"></script><script src="files/main.js" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        function resizeMap(m) {
+            google.maps.event.trigger(m, 'resize');
+        };
+
+        var map;
+        var results;
+        var centrePointLat;
+        var centrePointLng;
+
+        var arrMarkers = [];
+        var infoWindow = null;
+
+        $(document).ready(function () {
+                $('.date').datepicker({ 
+                dateFormat: "dd/mm/yy", 
+                minDate: new Date(2012, 12 - 1, 10) 
+            });
+
+
+            $('.hideCuisines').hide();
+            $("#moreCuisine").click(function () {
+                $(".hideCuisines").show("slow");
+                $("#moreCuisine").hide();
+            });
+
+            $("#lessCuisine").click(function () {
+                $(".hideCuisines").hide("slow");
+                $("#moreCuisine").show();
+            });
+
+
+            $('.hideDiets').hide();
+            $("#moreDiet").click(function () {
+                $(".hideDiets").show("slow");
+                $("#moreDiet").hide();
+            });
+
+            $("#lessDiet").click(function () {
+                $(".hideDiets").hide("slow");
+                $("#moreDiet").show();
+            });
+
+            $(".tab-content").hide();
+            $("ul.tabs-nav li:first").addClass("active").show();
+            $(".tab-content:first").show();
+            // tab logic
+
+            $("ul.tabs-nav li").click(function () {
+                $("ul.tabs-nav li").removeClass("active");
+                $(this).addClass("active");
+                $(".tab-content").hide();
+                var activeTab = $(this).find("a").attr("href");
+                $(activeTab).fadeIn();
+                if (activeTab == '#tab2') {
+                    $(window).resize(function () {
+                        //$("#tab2").css({'display':'block'});
+                        //$("#map_canvas").css({'width':'630px', 'height':'400px'});
+                        //initialize();
+                        //alert('Changed!');
+                    });
+                }
+                return false;
+            });
+
+            function doMarker(inlatlng) {
+                var marker = new google.maps.Marker({ map: map, position: inlatlng, clickable: true });
+                return marker;
+            };
+
+            // initialize Map
+            function initialize(results, centrePointLat, centrePointLng) {
+                
+                var centreLatlng = new google.maps.LatLng(centrePointLat, centrePointLng);
+
+                var mapOptions = {
+                    zoom: 10,
+                    maxZoom: 15,
+                    scrollwheel: false,
+                    zoomControl: true,
+                    streetViewControl: false,
+                    disableDefaultUI: false,
+                    panControl:false,
+                    center: centreLatlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                }
+
+                map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+
+                var bounds = new google.maps.LatLngBounds();
+                //alert(results);
+                for (var i = 0; i < results.length; i++) {
+                    var latlng = new google.maps.LatLng(results[i].lat, results[i].lng);
+                    var name = results[i].EventName;
+                    var teaser = results[i].EventDescription;
+                    var thumbsrc = results[i].EventImage;
+                    var link = '/Event/Details' + '?eventId=' + results[i].EventId;
+                    //var desc = '<div id="myInfoWindow" style="width: 300px;"><h3><a href="' + link + '">' + name + '</a></h3><img src="/content/images/events/' + thumbsrc + '" title="' + name + '" style="max-width:200px" /><p>' + teaser + '</p></div>';
+                    var desc = '<div id="myInfoWindow" style=""><h3><a href="' + link + '">' + name + '</a></h3><p>' + teaser + '</p></div>';
+
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map
+                    });
+                    marker.Content = desc;
+                    arrMarkers[i] = marker;
+                    
+                    google.maps.event.addListener(marker, 'click', function () {
+                            map.panTo(this.getPosition());
+                            if(infoWindow != null) {
+                                infoWindow.close();
+                            }
+                            infoWindow = new google.maps.InfoWindow({
+                                maxWidth: 300,
+                                content: this.Content,
+                                disableAutoPan: false
+                            });
+                            infoWindow.open(map, this);
+                        });
+
+                    bounds.extend(latlng);
+                }
+
+                if (results.length > 0) {
+                     map.fitBounds(bounds);
+
+                     }
+            };
+
+            // Function added to help reset map and container boundaries
+            $("#showMap").click(function () {
+                $("#tab2").css({ 'display': 'block' });
+                $("#map_canvas").css({ 'width': '100%', 'height': '400px' });
+                initialize(results, centrePointLat, centrePointLng);
+                //alert('showMap Clicked!');
+            });
+
+            var searchFilter = {
+                Location: $("#SearchCriteria_Location").val(),
+                Guests: $("#SearchCriteria_Guests").val(),
+                StartDate: $("#SearchCriteria_StartDate").val(),
+                Distance: $("#SearchCriteria_Distance").val(),
+                FoodKeyword: $("#SearchCriteria_Keyword").val(),
+                Charity: $('#SearchCriteria_Charity').is(':checked') ? true : null,
+                Alcohol: $('#SearchCriteria_Alcohol').is(':checked') ? true : null,
+                PriceRangeOptions: [],
+                DietOptions: [],
+                CuisineOptions: []
+            };
+
+           
+
+            // applying filter to search 
+
+            $('#SearchCriteriaForm').submit(function () {
+                var PriceRangeVals = [];
+                var DietVals = [];
+                var CuisineVals = [];
+                $('input[name="PriceRangeOptions"]:checked').each(function () {
+                    //alert($(this).val());
+                    PriceRangeVals.push($(this).val());
+                });
+                $('input[name="DietOptions"]:checked').each(function () {
+                    //alert($(this).val());
+                    DietVals.push($(this).val());
+                });
+                $('input[name="CuisineOptions"]:checked').each(function () {
+                    //alert($(this).val());
+                    CuisineVals.push($(this).val());
+                });
+                var searchModel = {
+                    Location: $("#SearchCriteria_Location").val(),
+                    Guests: $("#SearchCriteria_Guests").val(),
+                    StartDate: $("#SearchCriteria_StartDate").val(),
+                    Distance: $("#SearchCriteria_Distance").val(),
+                    FoodKeyword: $("#SearchCriteria_Keyword").val(),
+                    Charity: $('#SearchCriteria_Charity').is(':checked') ? true : null,
+                    Alcohol: $('#SearchCriteria_Alcohol').is(':checked') ? true : null,
+                    PriceRangeOptions: PriceRangeVals,
+                    DietOptions: DietVals,
+                    CuisineOptions: CuisineVals
+
+                };
+
+                $.ajax({
+                    url: this.action,
+                    type: this.method,
+                    data: searchModel,
+                    dataType: "json",
+                    traditional: true,
+                    success: function (result) {
+                        $("#tab1").empty(); 		 // Remove current set 
+                        //$("#totalResult").text(" ("+result.SearchResults.length+")");
+                        if(result.SearchResults.length > 0) {
+                            $("#eventsTemplate").tmpl(result.SearchResults).appendTo("#tab1");
+                            }
+                        else {
+                            $("#tab1").append("<p>No results to display</p>");
+                        }
+                        results = result.SearchResults;
+                        centrePointLat = result.SearchLocation.Latitude;
+                        centrePointLng = result.SearchLocation.Longitude;
+                        initialize(result.SearchResults, result.SearchLocation.Latitude, result.SearchLocation.Longitude);
+                    },
+                    error: function () {
+                        alert("There was a problem with Search.");
+                    }
+                });
+                return false;
+            });
+
+            $(function () {
+                $('input[type="checkbox"]').bind('click', function () {
+                    var PriceRangeVals = [];
+                    var DietVals = [];
+                    var CuisineVals = [];
+                    $('input[name="PriceRangeOptions"]:checked').each(function () {
+                        //alert($(this).val());
+                        PriceRangeVals.push($(this).val());
+                    });
+                    $('input[name="DietOptions"]:checked').each(function () {
+                        //alert($(this).val());
+                        DietVals.push($(this).val());
+                    });
+                    $('input[name="CuisineOptions"]:checked').each(function () {
+                        //alert($(this).val());
+                        CuisineVals.push($(this).val());
+                    });
+
+                    var searchModel = {
+                        Location: $("#SearchCriteria_Location").val(),
+                        Guests: $("#SearchCriteria_Guests").val(),
+                        StartDate: $("#SearchCriteria_StartDate").val(),
+                        Distance: $("#SearchCriteria_Distance").val(),
+                        FoodKeyword: $("#SearchCriteria_Keyword").val(),
+                        Charity: $('#SearchCriteria_Charity').is(':checked') ? true : null,
+                        Alcohol: $('#SearchCriteria_Alcohol').is(':checked') ? true : null,
+                        PriceRangeOptions: PriceRangeVals,
+                        DietOptions: DietVals,
+                        CuisineOptions: CuisineVals
+                    };
+
+                    //alert(PriceRangeVals.length);
+                    
+                    $.ajax({
+                        url: '/Search/SearchResultJson',
+                        type: 'POST',
+                        data: searchModel,
+                        dataType: "json",
+                        traditional: true,
+                        success: function (result) {
+                            $("#tab1").empty(); 
+                            //$("#totalResult").text(" ("+result.SearchResults.length+") ");		 // Remove current set 
+                            if(result.SearchResults.length > 0) {
+                                $("#eventsTemplate").tmpl(result.SearchResults).appendTo("#tab1");
+                                }
+                            else {
+                                $("#tab1").append("<p>No results to display</p>");
+                            }
+                            results = result.SearchResults;
+                            centrePointLat = result.SearchLocation.Latitude;
+                            centrePointLng = result.SearchLocation.Longitude;
+                            initialize(result.SearchResults, result.SearchLocation.Latitude, result.SearchLocation.Longitude);
+
+                        },
+                        error: function () {
+                            alert("There was a problem with Search.");
+                        }
+                    });
+
+                });
+            });
+
+        });
+    </script>
+
+
+<script type="text/javascript" charset="UTF-8" src="files/{common,map,util,marker}.js"></script><script type="text/javascript" charset="UTF-8" src="files/{onion}.js"></script><script type="text/javascript" charset="UTF-8" src="files/{controls}.js"></script><script type="text/javascript" charset="UTF-8" src="files/{stats}.js"></script></head>
+
+<body>
+<!-- Header -->
+<div id="header">
+
+	<!-- 960 Container Start -->
+	<div class="container ie-dropdown-fix">
+	
+		<!-- Logo -->
+		<div class="four columns">
+			<a href="http://grubclub.com/"><img src="files/logo.png" alt=""></a>
+		</div>
+		
+		<!-- Main Navigation Start -->
+		<div class="twelve columns">
+			<div id="navigation">
+				<ul id="nav">
+					<li class="toplevel"><a class="current" href="http://grubclub.com/Search">Find a Grub Club</a>
+                        <ul style="display: none; ">
+                            <li><a href="http://grubclub.com/Search">Find a Grub Club</a></li>
+                            <li><a href="http://grubclub.com/Home/HowItWorksGuests">How It Works For Guests</a></li>
+                            <li><a href="http://grubclub.com/Home/FAQsGuest">FAQs for Guests</a></li>
+                        </ul>
+                    </li>
+    				<li class="toplevel"><a href="http://grubclub.com/Account/LogOn?ReturnUrl=%2fHost%2fRegisterSupperClub">Host a Grub Club</a>
+                        <ul>
+                            <li><a href="http://grubclub.com/Account/LogOn?ReturnUrl=%2fHost%2fRegisterSupperClub">Host a Grub Club</a></li>
+                            <li><a href="http://grubclub.com/Home/HowItWorksHosts">How It Works For Hosts</a></li>
+                            <li><a href="http://grubclub.com/Home/FAQsHost">FAQs for Hosts</a></li>
+                            <li><a href="http://grubclub.com/Home/HowToHost">How To Host a Grub Club</a></li>
+                        </ul>
+                    </li>
+                    <li class="toplevel"><a href="http://grubclub.com/Account/LogOn">Log On</a>
+                        <ul>
+                            <li><a href="http://grubclub.com/Account/LogOn">Log On</a></li>
+                        </ul>
+                    </li>
+				</ul>
+			</div>
+		</div>
+		<!-- Main Navigation End -->
+		
+	</div>
+	<!-- 960 Container End -->
+
+</div>
+<!-- End Header -->
+
+
+
+<div class="container pattern-design2">
+    
+    <!-- darius: hide breadcrumbs -->
+    <!--
+    <div class="container">
+        <p>Search / Search Results</p>
+    </div>	
+    -->
+</div>
+
+<form action="http://grubclub.com/Search/SearchResultJson" id="SearchCriteriaForm" method="post" name="SearchCriteriaForm" novalidate="novalidate">    
+
+<div class="container search-bar">
+        <ul class="container search-fields-container">
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="files/i-calender.png" width="34" height="34" alt="calender-icon" onclick="$(&#39;#SearchCriteria_StartDate&#39;).focus(); return false;">
+                </span>
+                <input class="date search-input hasDatepicker" id="SearchCriteria_StartDate" name="SearchCriteria.StartDate" placeholder="When?" type="search" value="10/12/12">
+            </li>
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="files/i-map.png" width="34" height="34" alt="map-icon" onclick="$(&#39;#SearchCriteria_Location&#39;).focus(); return false;">
+                </span>
+                <input class="search-input" id="SearchCriteria_Location" name="SearchCriteria.Location" placeholder="Where?" type="search" value="London">
+            </li>
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="files/i-ppl.png" width="34" height="34" alt="people-icon" onclick="$(&#39;#SearchCriteria_Guests&#39;).focus(); return false;">
+                </span>
+                <input class="search-input" data-val="true" data-val-number="The field Guests must be a number." data-val-range="Please provide a valid number of guests" data-val-range-min="1" data-val-required="The Guests field is required." id="SearchCriteria_Guests" name="SearchCriteria.Guests" placeholder="How many?" type="search" value="2">
+            </li>
+              
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="files/i-keyword.png" width="34" height="34" alt="keyword-icon" onclick="$(&#39;#SearchCriteria_Keyword&#39;).focus(); return false;">
+                </span>
+                <input class="search-input" id="SearchCriteria_Keyword" name="SearchCriteria.Keyword" placeholder="Key Word" type="search" value="">
+            </li>
+            <li class="three columns search-button-container">
+                <span class="search-button button" onclick="$(&#39;#SearchCriteriaForm&#39;).submit()">
+                    <!-- darius: changed copy in a button / moved 'i' beside 'Find it' --><i class="icon-search icon-white"></i>Find it
+                </span>
+            </li>
+            
+            <li><input type="submit" id="btnsubmitForm" style="visibility:hidden; padding:0px"></li>
+        </ul>
+    </div>
+    
+    
+    
+    
+    <div class="container sub-title3"> 
+        <h2 >Check out these great offerings</h2>
+    </div>
+    
+    
+    
+    
+    
+    <div id="SearchResult" class="container" style="min-height: 150px;padding-top:2.5em;">
+      <ul>
+        <li></li>
+      </ul>
+      
+       <!-- darius: added div and script with 'Show search filters' for mobiles -->
+        <div class="search-display search-show">
+        	Show search filters
+        </div>
+        <div class="search-display search-hide results-hide">
+        	Hide search filters
+        </div>
+        <script language="javascript" type="text/javascript">   
+			$(document).ready(function () {   
+				$(".search-show").click(function () {
+					$('.search-show').switchClass( "none", "results-hide", 0 );
+					$('.search-hide').switchClass( "results-hide", "none", 0 );
+					$('.filter-results').switchClass( "none", "results-show", 0 );
+				});
+				$(".search-hide").click(function () {
+					$('.search-hide').switchClass( "none", "results-hide", 0 );
+					$('.search-show').switchClass( "results-hide", "none", 0 );
+					$('.filter-results').switchClass( "results-show", "none", 0 );
+				});
+			});
+		</script>
+      
+      
+        <div id="displayFilter" class="three columns filter-results">
+            <h5>
+                Filter Results by:</h5>
+            <fieldset>
+                <h6>Price</h6>
+                    <div class="editor field check-box-field">
+                        <input type="checkbox" id="1" class="styled check-box" name="PriceRangeOptions" value="1">
+                        <label for="PriceRangeOptions1">££ (£25 and under)</label>
+                    </div>
+                    <div class="editor field check-box-field">
+                        <input type="checkbox" id="2" class="styled check-box" name="PriceRangeOptions" value="2">
+                        <label for="PriceRangeOptions2">£££ (£26 to £40)</label>
+                    </div>
+                    <div class="editor field check-box-field">
+                        <input type="checkbox" id="3" class="styled check-box" name="PriceRangeOptions" value="3">
+                        <label for="PriceRangeOptions3">££££ (£41 and over)</label>
+                    </div>
+            </fieldset>
+            <fieldset>
+                <h6>Cuisine</h6>
+                    <div class="editor field check-box-field">
+                        <input type="checkbox" id="1" class="styled check-box" name="CuisineOptions" value="1">
+                        <label for="PriceRangeOptions1">English</label>
+                    </div>
+                    <div class="editor field check-box-field ">
+                        <input type="checkbox" id="3" class="styled check-box" name="CuisineOptions" value="3">
+                        <label for="PriceRangeOptions3">Japanese</label>
+                    </div>
+                    <div class="editor field check-box-field ">
+                        <input type="checkbox" id="4" class="styled check-box" name="CuisineOptions" value="4">
+                        <label for="PriceRangeOptions4">Italian</label>
+                    </div>
+                    <a href="http://grubclub.com/Search/SearchResult#" id="moreCuisine">More</a>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="5" class="styled check-box" name="CuisineOptions" value="5">
+                        <label for="PriceRangeOptions5">Thai</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="10" class="styled check-box" name="CuisineOptions" value="10">
+                        <label for="PriceRangeOptions10">Chinese</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="14" class="styled check-box" name="CuisineOptions" value="14">
+                        <label for="PriceRangeOptions14">Malaysian</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="27" class="styled check-box" name="CuisineOptions" value="27">
+                        <label for="PriceRangeOptions27">Indonesian</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="33" class="styled check-box" name="CuisineOptions" value="33">
+                        <label for="PriceRangeOptions33">Hungarian</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="34" class="styled check-box" name="CuisineOptions" value="34">
+                        <label for="PriceRangeOptions34">Traditional English</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="35" class="styled check-box" name="CuisineOptions" value="35">
+                        <label for="PriceRangeOptions35">Continental</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="36" class="styled check-box" name="CuisineOptions" value="36">
+                        <label for="PriceRangeOptions36">Latin</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="37" class="styled check-box" name="CuisineOptions" value="37">
+                        <label for="PriceRangeOptions37">Spanish</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="38" class="styled check-box" name="CuisineOptions" value="38">
+                        <label for="PriceRangeOptions38">Fruit</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="39" class="styled check-box" name="CuisineOptions" value="39">
+                        <label for="PriceRangeOptions39">trial</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="40" class="styled check-box" name="CuisineOptions" value="40">
+                        <label for="PriceRangeOptions40">British</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="41" class="styled check-box" name="CuisineOptions" value="41">
+                        <label for="PriceRangeOptions41">Piratesque</label>
+                    </div>
+                    <div class="editor field check-box-field hideCuisines" style="display: none; ">
+                        <input type="checkbox" id="42" class="styled check-box" name="CuisineOptions" value="42">
+                        <label for="PriceRangeOptions42">Jamaican</label>
+                    </div>
+                    <a href="http://grubclub.com/Search/SearchResult#" id="lessCuisine" class="hideCuisines" style="display: none; ">less</a>
+            </fieldset>
+            <fieldset>
+                <h6>Diet</h6>
+                    <div class="editor field check-box-field ">
+                        <input type="checkbox" id="1" class="styled check-box" name="DietOptions" value="1">
+                        <label for="DietOptions1">Vegetarian</label>
+                    </div>
+                    <div class="editor field check-box-field ">
+                        <input type="checkbox" id="2" class="styled check-box" name="DietOptions" value="2">
+                        <label for="DietOptions2">Vegan</label>
+                    </div>
+            </fieldset>
+            <fieldset>
+                <h6>Misc</h6>
+                <div class="editor field check-box-field">
+                    
+<input class="check-box" id="SearchCriteria_Charity" name="SearchCriteria.Charity" type="checkbox" value="true"><input name="SearchCriteria.Charity" type="hidden" value="false">
+                    <label for="SearchCriteria_Charity">Charity</label>
+                    <span class="field-validation-valid" data-valmsg-for="SearchCriteria.Charity" data-valmsg-replace="true"></span>
+                </div>
+                <div class="editor field check-box-field">
+                    
+<input class="check-box" id="SearchCriteria_Alcohol" name="SearchCriteria.Alcohol" type="checkbox" value="true"><input name="SearchCriteria.Alcohol" type="hidden" value="false">
+                    <label for="SearchCriteria_Alcohol">Alcohol</label>
+                    <span class="field-validation-valid" data-valmsg-for="SearchCriteria.Alcohol" data-valmsg-replace="true"></span>
+                </div>
+            </fieldset>
+        </div>
+        
+        <div id="displayEvents" class="twelve columns">
+            <ul class="tabs-nav">
+                <li class="active"><a href="http://grubclub.com/Search/SearchResult#tab1">Results<span id="totalResult"></span></a></li>
+                <li><a href="http://grubclub.com/Search/SearchResult#tab2" id="showMap">Map</a></li>
+            </ul>
+            <div class="tabs-container" >
+                <div id="tab1" class="tab-content" style="display: block; " >
+                
+                
+                <div class="container results-column">
+                    <div class="two columns" >
+                    	
+                        <!-- darius: added 'sold out' label -->
+                        <div class="soldout-label"></div>
+                        <a href="http://grubclub.com/Event/Details?eventId=16">
+                        <img src="images/big.jpg" alt="" class="EventsImage">
+                        </a>
+                    </div>
+                    <!-- darius: changed 'eight columns' to 'six columns' -->
+                    <div class="six columns" style="float:left;margin-left:0;margin-right:0;">
+                        <!-- darius: changed 'h3' to 'h4' -->
+                        <h4>
+                        	<a href="http://grubclub.com/Event/Details?eventId=16">Novella diner</a>
+                        </h4>
+                        <p class="Summary">Specifically trying to test out the booking process and payment and confirmation process</p>
+                        <span class="timings"><span>19/12/2012</span><span>10:30 - 15:30</span>                     <span>0 / 10</span></span>
+                    </div>
+                    <!-- darius: changed class 'two' to 'three' -->
+                    <div class="three columns rating-box" style="margin-left:0; ">
+                         <!-- darius: added 'sold out' label -->
+                        <span class="price" style="">
+                            <span>£25.75</span>
+                        </span>
+                        <span class="sold-out-copy">
+                            Sold out
+                        </span>
+                    </div>
+                </div>
+                
+                
+                <div class="container results-column">
+                    <div class="two columns" >
+                    
+                    	<!-- darius: added 'sold out' label -->
+                        <div class="soldout-label"></div>
+                        <a href="http://grubclub.com/Event/Details?eventId=16">
+                        <img src="images/big.jpg" alt="" class="EventImage">
+                        </a>
+                    </div>
+                    <!-- darius: changed 'eight columns' to 'six columns' -->
+                    <div class="six columns" style="float:left;margin-left:0;margin-right:0;">
+                        <!-- darius: changed 'h3' to 'h4' -->
+                        <h4>
+                        	<a href="http://grubclub.com/Event/Details?eventId=16">Novella diner</a>
+                        </h4>
+                        <p class="Summary">Specifically trying to test out the booking process and payment and confirmation process</p>
+                        <span class="timings"><span>19/12/2012</span><span>10:30 - 15:30</span>                     <span>0 / 10</span></span>
+                    </div>
+                    <!-- darius: changed class 'two' to 'three' -->
+                    <div class="three columns rating-box" style="margin-left:0; ">
+                        <span class="price" style="">
+                            <span>£25.75</span>
+                        </span>
+                        <a href="http://grubclub.com/Event/BookEvent?eventId=16" class="button medium green">Book Now</a>
+                    </div>
+                </div>
+                
+                
+                <div class="container results-column">
+                    <div class="two columns" >
+                        <a href="http://grubclub.com/Event/Details?eventId=16">
+                        <img src="images/big3.jpg" alt="" class="EventImage">
+                        </a>
+                    </div>
+                    <!-- darius: changed 'eight columns' to 'six columns' -->
+                    <div class="six columns" style="float:left;margin-left:0;margin-right:0;">
+                        <!-- darius: changed 'h3' to 'h4' -->
+                        <h4>
+                        	<a href="http://grubclub.com/Event/Details?eventId=16">Novella diner</a>
+                        </h4>
+                        <p class="Summary">Trying get to test out the booking and payment and  booking process and payment and confirmation process</p>
+                        <span class="timings"><span>19/12/2012</span><span>10:30 - 15:30</span>                     <span>0 / 10</span></span>
+                    </div>
+                    <!-- darius: changed class 'two' to 'three' -->
+                    <div class="three columns rating-box" style="margin-left:0; ">
+                        <span class="price" style="">
+                            <span>£25.75</span>
+                        </span>
+                        <a href="http://grubclub.com/Event/BookEvent?eventId=16" class="button medium green">Book Now</a>
+                    </div>
+                </div>
+                
+                
+                
+                  <div class="container results-column">
+                    <div class="two columns" >
+                        <a href="http://grubclub.com/Event/Details?eventId=16">
+                        <img src="images/test1.jpg" alt="" class="EventImage">
+                        </a>
+                    </div>
+                    <!-- darius: changed 'eight columns' to 'six columns' -->
+                    <div class="six columns" style="float:left;margin-left:0;margin-right:0;">
+                        <!-- darius: changed 'h3' to 'h4' -->
+                        <h4>
+                        	<a href="http://grubclub.com/Event/Details?eventId=16">Novella diner</a>
+                        </h4>
+                        <p class="Summary">Trying get to test out the booking and payment and  booking process and payment and confirmation process</p>
+                        <span class="timings"><span>19/12/2012</span><span>10:30 - 15:30</span>                     <span>0 / 10</span></span>
+                    </div>
+                    <!-- darius: changed class 'two' to 'three' -->
+                    <div class="three columns rating-box" style="margin-left:0; ">
+                        <span class="price" style="">
+                            <span>£25.75</span>
+                        </span>
+                        <a href="http://grubclub.com/Event/BookEvent?eventId=16" class="button medium green">Book Now</a>
+                    </div>
+                </div>
+                
+                
+                
+                
+                
+                
+                </div></div>
+                
+                <div id="tab2" class="tab-content" style="display: none; ">
+                    <div id="map_canvas" style="width: 630px; height: 400px; position: relative; background-color: rgb(229, 227, 223); overflow-x: hidden; overflow-y: hidden; "><div style="position: absolute; left: 0px; top: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; height: 100%; z-index: 0; "><div style="position: absolute; left: 0px; top: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; height: 100%; z-index: 0; "><div style="position: absolute; left: 0px; top: 0px; z-index: 1; cursor: url(http://maps.gstatic.com/mapfiles/openhand_8_8.cur), default; -webkit-transform-origin-x: 0px; -webkit-transform-origin-y: 0px; -webkit-transform: matrix(1, 0, 0, 1, 0, 0); "><div style="position: absolute; left: 0px; top: 0px; z-index: 200; "><div style="position: absolute; left: 0px; top: 0px; z-index: 101; "></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 201; "><div style="position: absolute; left: 0px; top: 0px; z-index: 102; "><div style="position: absolute; left: 0px; top: 0px; z-index: 0; "><div style="position: absolute; left: 0px; top: 0px; z-index: 1; "><div style="width: 256px; height: 256px; overflow-x: hidden; overflow-y: hidden; position: absolute; left: -255px; top: -169px; "><canvas style="position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; " height="256" width="256"></canvas></div><div style="width: 256px; height: 256px; overflow-x: hidden; overflow-y: hidden; position: absolute; left: 1px; top: -169px; "><canvas style="position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; " height="256" width="256"></canvas></div></div></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 103; "><div style="position: absolute; left: 0px; top: 0px; z-index: -1; "><div style="position: absolute; left: 0px; top: 0px; z-index: 1; "><div style="width: 256px; height: 256px; overflow-x: hidden; overflow-y: hidden; position: absolute; left: -255px; top: -169px; "><canvas style="position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; " height="256" width="256"></canvas></div><div style="width: 256px; height: 256px; overflow-x: hidden; overflow-y: hidden; position: absolute; left: 1px; top: -169px; "><canvas style="position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; " height="256" width="256"></canvas></div></div></div></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 202; "><div style="position: absolute; left: 0px; top: 0px; z-index: 104; "></div><div style="position: absolute; left: 0px; top: 0px; z-index: 105; "></div><div style="position: absolute; left: 0px; top: 0px; z-index: 106; "></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 100; "><div style="position: absolute; left: 0px; top: 0px; z-index: 0; "><div style="position: absolute; left: 0px; top: 0px; z-index: 1; "><div style="width: 256px; height: 256px; position: absolute; left: -255px; top: -169px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 1px; top: -169px; "></div></div></div></div><div style="position: absolute; z-index: 0; left: 0px; top: 0px; "><div style="overflow-x: hidden; overflow-y: hidden; "></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 0; "><div style="position: absolute; left: 0px; top: 0px; z-index: 1; "><div style="position: absolute; left: -255px; top: -169px; -webkit-transition-property: opacity; -webkit-transition-duration: 200ms; -webkit-transition-timing-function: ease-out; -webkit-transition-delay: initial; opacity: 1; width: 256px; height: 256px; "><img style="-webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; width: 256px; height: 256px; " src="files/vt" draggable="false"></div><div style="position: absolute; left: 1px; top: -169px; -webkit-transition-property: opacity; -webkit-transition-duration: 200ms; -webkit-transition-timing-function: ease-out; -webkit-transition-delay: initial; opacity: 1; width: 256px; height: 256px; "><img style="-webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; width: 256px; height: 256px; " src="files/vt(1)" draggable="false"></div></div></div></div></div><div style="margin-top: 2px; margin-bottom: 2px; margin-left: 2px; margin-right: 5px; z-index: 1000000; position: absolute; left: 0px; bottom: 0px; "><a style="position: static; overflow-x: visible; overflow-y: visible; float: none; display: inline; " target="_blank" href="http://maps.google.com/maps?ll=51.50773,-0.108949&z=3&t=m&hl=en-US" title="Click to see this area on Google Maps"><div style="width: 62px; height: 24px; cursor: pointer; "><img style="position: absolute; left: 0px; top: 0px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; width: 62px; height: 24px; " src="files/google_white.png" draggable="false"></div></a></div><div class="gmnoprint" style="position: absolute; z-index: 1000001; right: 0px; bottom: 0px; "><div style="height: 19px; -webkit-user-select: none; line-height: 19px; padding-right: 2px; padding-left: 50px; background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0px, rgba(255, 255, 255, 0.496094) 50px); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; font-family: Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; background-position: initial initial; background-repeat: initial initial; "><a style="color: rgb(68, 68, 68); text-decoration: underline; cursor: pointer; display: none; ">Map Data</a><span style="display: none; "></span><span style="display: none; "> - </span><a style="color: rgb(68, 68, 68); text-decoration: underline; cursor: pointer; " href="http://www.google.com/intl/en-US_US/help/terms_maps.html" target="_blank">Terms of Use</a></div></div><div style="background-color: white; padding-top: 15px; padding-right: 21px; padding-bottom: 15px; padding-left: 21px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgb(171, 171, 171); border-right-color: rgb(171, 171, 171); border-bottom-color: rgb(171, 171, 171); border-left-color: rgb(171, 171, 171); font-family: Arial, sans-serif; color: rgb(34, 34, 34); -webkit-box-shadow: rgba(0, 0, 0, 0.199219) 0px 4px 16px; box-shadow: rgba(0, 0, 0, 0.199219) 0px 4px 16px; z-index: 10000002; display: none; width: 0px; height: 0px; position: absolute; left: 5px; top: 5px; "><div style="padding-top: 0px; padding-right: 0px; padding-bottom: 10px; padding-left: 0px; font-size: 16px; ">Map Data</div><div style="font-size: 13px; "></div><div style="width: 10px; height: 10px; overflow-x: hidden; overflow-y: hidden; position: absolute; opacity: 0.7; right: 12px; top: 12px; z-index: 10000; cursor: pointer; "><img style="position: absolute; left: -18px; top: -44px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; width: 68px; height: 67px; " src="files/imgs8.png" draggable="false"></div></div><div class="gmnoscreen" style="position: absolute; right: 0px; bottom: 0px; "><div style="font-family: Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); direction: ltr; text-align: right; background-color: rgb(245, 245, 245); "></div></div><div style="display: none; font-size: 10px; height: 17px; background-color: rgb(245, 245, 245); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgb(220, 220, 220); border-right-color: rgb(220, 220, 220); border-bottom-color: rgb(220, 220, 220); border-left-color: rgb(220, 220, 220); line-height: 19px; position: absolute; right: 0px; bottom: 0px; " class="gmnoprint"><a target="_new" title="Report errors in the road map or imagery to Google" style="font-family: Arial, sans-serif; font-size: 85%; font-weight: bold; padding-top: 1px; padding-right: 3px; padding-bottom: 1px; padding-left: 3px; color: rgb(68, 68, 68); text-decoration: none; position: relative; bottom: 1px; " href="http://maps.google.com/maps?ll=51.50773,-0.108949&z=3&t=m&hl=en-US&skstate=action:mps_dialog$apiref:1">Report a map error</a></div><div class="gmnoprint" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; -webkit-user-select: none; position: absolute; left: 0px; top: 0px; " controlwidth="22" controlheight="44"><div class="gmnoprint" style="position: absolute; opacity: 0.6; display: none; " controlwidth="0" controlheight="0"><img src="files/rotate2.png" draggable="false" style="-webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; cursor: pointer; width: 22px; height: 22px; " title="Rotate map 90 degrees"></div><div class="gmnoprint" controlwidth="22" controlheight="39" style="position: absolute; left: 0px; top: 5px; "><img style="-webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; width: 22px; height: 39px; " src="files/szc4.png" draggable="false"><div style="position: absolute; left: 0px; top: 0px; width: 22px; height: 17px; cursor: pointer; " title="Zoom in"></div><div style="position: absolute; left: 0px; top: 18px; width: 22px; height: 17px; cursor: pointer; " title="Zoom out"></div></div></div><div class="gmnoprint" style="margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; z-index: 0; position: absolute; cursor: pointer; text-align: left; width: 85px; right: 0px; top: 0px; "><div style="direction: ltr; overflow-x: hidden; overflow-y: hidden; text-align: left; position: relative; font-family: Arial, sans-serif; -webkit-user-select: none; font-size: 13px; padding-top: 1px; padding-right: 6px; padding-bottom: 1px; padding-left: 6px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgb(113, 123, 135); border-right-color: rgb(113, 123, 135); border-bottom-color: rgb(113, 123, 135); border-left-color: rgb(113, 123, 135); -webkit-box-shadow: rgba(0, 0, 0, 0.398438) 0px 2px 4px; box-shadow: rgba(0, 0, 0, 0.398438) 0px 2px 4px; color: rgb(0, 0, 0); background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(255, 255, 255); font-weight: bold; background-position: initial initial; background-repeat: initial initial; " title="Change map style">Map<img src="files/arrow-down.png" draggable="false" style="-webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; position: absolute; right: 6px; top: 50%; margin-top: -2px; width: 7px; height: 4px; "></div><div style="background-color: white; z-index: -1; padding-top: 2px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-right-color: rgb(113, 123, 135); border-bottom-color: rgb(113, 123, 135); border-left-color: rgb(113, 123, 135); border-top-width: 0px; border-top-style: initial; border-top-color: initial; -webkit-box-shadow: rgba(0, 0, 0, 0.398438) 0px 2px 4px; box-shadow: rgba(0, 0, 0, 0.398438) 0px 2px 4px; position: relative; text-align: left; display: none; "><div style="font-family: Arial, sans-serif; -webkit-user-select: none; font-size: 13px; padding-top: 2px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px; background-color: rgb(255, 255, 255); color: black; font-weight: bold; " title="Show street map">Map</div><div style="font-family: Arial, sans-serif; -webkit-user-select: none; font-size: 13px; padding-top: 2px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px; background-color: rgb(255, 255, 255); color: black; " title="Show satellite imagery">Satellite</div><div style="margin-top: 1px; margin-right: 0px; margin-bottom: 1px; margin-left: 0px; border-top-width: 1px; border-top-style: solid; border-top-color: rgb(235, 235, 235); "></div><div style="font-family: Arial, sans-serif; -webkit-user-select: none; font-size: 11px; padding-top: 1px; padding-bottom: 3px; padding-left: 5px; direction: ltr; text-align: left; background-color: rgb(255, 255, 255); white-space: nowrap; padding-right: 8px; color: rgb(0, 0, 0); " title="Show street map with terrain"><span role="checkbox" style="box-sizing: border-box; position: relative; line-height: 0; font-size: 0px; margin-top: 0px; margin-right: 5px; margin-bottom: 0px; margin-left: 0px; display: inline-block; background-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-color: initial; border-top-left-radius: 1px 1px; border-top-right-radius: 1px 1px; border-bottom-right-radius: 1px 1px; border-bottom-left-radius: 1px 1px; width: 13px; height: 13px; vertical-align: middle; -webkit-box-shadow: none; box-shadow: none; border-top-color: rgb(198, 198, 198); border-right-color: rgb(198, 198, 198); border-bottom-color: rgb(198, 198, 198); border-left-color: rgb(198, 198, 198); "><div style="position: absolute; left: 1px; top: -2px; width: 13px; height: 11px; overflow-x: hidden; overflow-y: hidden; display: none; "><img style="position: absolute; left: -52px; top: -44px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; width: 68px; height: 67px; " src="files/imgs8.png" draggable="false"></div></span><label style="vertical-align: middle; cursor: pointer; ">Terrain</label></div><div style="margin-top: 1px; margin-right: 0px; margin-bottom: 1px; margin-left: 0px; border-top-width: 1px; border-top-style: solid; border-top-color: rgb(235, 235, 235); display: none; "></div><div style="font-family: Arial, sans-serif; -webkit-user-select: none; font-size: 11px; padding-top: 1px; padding-bottom: 3px; padding-left: 5px; direction: ltr; text-align: left; background-color: rgb(255, 255, 255); white-space: nowrap; padding-right: 8px; display: none; color: rgb(184, 184, 184); " title="Zoom in to show 45 degree view"><span role="checkbox" style="box-sizing: border-box; position: relative; line-height: 0; font-size: 0px; margin-top: 0px; margin-right: 5px; margin-bottom: 0px; margin-left: 0px; display: inline-block; background-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-color: initial; border-top-left-radius: 1px 1px; border-top-right-radius: 1px 1px; border-bottom-right-radius: 1px 1px; border-bottom-left-radius: 1px 1px; width: 13px; height: 13px; vertical-align: middle; -webkit-box-shadow: none; box-shadow: none; border-top-color: rgb(241, 241, 241); border-right-color: rgb(241, 241, 241); border-bottom-color: rgb(241, 241, 241); border-left-color: rgb(241, 241, 241); "><div style="position: absolute; left: 1px; top: -2px; width: 13px; height: 11px; overflow-x: hidden; overflow-y: hidden; display: none; "><img style="position: absolute; left: -52px; top: -44px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; width: 68px; height: 67px; " src="files/imgs8.png" draggable="false"></div></span><label style="vertical-align: middle; cursor: pointer; ">45°</label></div><div style="font-family: Arial, sans-serif; -webkit-user-select: none; font-size: 11px; padding-top: 1px; padding-bottom: 3px; padding-left: 5px; direction: ltr; text-align: left; background-color: rgb(255, 255, 255); white-space: nowrap; padding-right: 8px; color: rgb(0, 0, 0); display: none; " title="Show imagery with street names"><span role="checkbox" style="box-sizing: border-box; position: relative; line-height: 0; font-size: 0px; margin-top: 0px; margin-right: 5px; margin-bottom: 0px; margin-left: 0px; display: inline-block; background-color: rgb(255, 255, 255); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-color: initial; border-top-left-radius: 1px 1px; border-top-right-radius: 1px 1px; border-bottom-right-radius: 1px 1px; border-bottom-left-radius: 1px 1px; width: 13px; height: 13px; vertical-align: middle; -webkit-box-shadow: none; box-shadow: none; border-top-color: rgb(198, 198, 198); border-right-color: rgb(198, 198, 198); border-bottom-color: rgb(198, 198, 198); border-left-color: rgb(198, 198, 198); "><div style="position: absolute; left: 1px; top: -2px; width: 13px; height: 11px; overflow-x: hidden; overflow-y: hidden; "><img style="position: absolute; left: -52px; top: -44px; -webkit-user-select: none; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; -webkit-user-drag: none; width: 68px; height: 67px; " src="files/imgs8.png" draggable="false"></div></span><label style="vertical-align: middle; cursor: pointer; ">Labels</label></div></div></div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script id="eventsTemplate" type="text/x-jquery-tmpl">
+        <div class="container results-column">
+            <div class="two columns">
+                <a href="/Event/Details?eventId=${EventId}">
+                    <img src="/Content/images/Events/${EventImage}" alt="" class="EventImage" />
+                </a>
+            </div>
+            <div class="eight columns" style="float:left;margin-left:0;margin-right:0;">
+                <h5>
+                    <a href="/Event/Details?eventId=${EventId}">${EventName}
+                    </a>
+                </h5>
+                <p class="Summary">
+                ${EventDescription}
+                </p>
+                <span class="timings">
+                    <span>${EventDate}</span>
+                    <span>${EventStart} - ${EventEnd}</span>
+                    <span>${GuestsAttending} / ${TotalSeats}</span>
+                </span>
+            </div>
+            <div class="two columns rating-box" style="margin-left:0;">
+                <!--<span class="title">
+					<span>RATING</span> (5 votes) 
+				</span><br/>-->
+				<span class="price" style="">
+					<span>${Cost}</span>
+				</span>
+                <a href="/Event/BookEvent?eventId=${EventId}" class="button medium green">Book Now</a>
+            </div>
+        </div>
+</script>
+
+
+<!-- Footer Start -->
+<div id="footer">
+
+	<!-- 960 Container -->
+	<div class="container">
+		
+		<!-- About -->
+		<div class="one-third column">
+			<h5>About Us</h5>
+			<p>This is a story of two food obsessed people who realised they simply wanted to share what they loved doing every day: get people together to share laughter around a dinner table... <a href="http://grubclub.com/Home/AboutUs">read more</a></p>
+            <p>We are just starting out so any <a href="http://grubclub.com/Home/ContactUs?messageText=I've%20got%20some%20feedback%20and%20it's%20about%20">feedback</a> is welcome!</p>
+		</div>
+		
+		<!-- Useful Links -->
+		<div class="one-third column">
+			<h5>Useful Links</h5>
+			<ul class="links-list">
+                <li><a href="http://grubclub.com/Home/NotesFromASupperClub">Notes From A Supper Club</a></li>
+			</ul>
+		</div>
+		
+		<!-- Latest From Blog
+		<div class="four columns">
+			<h5>Latest From The Blog</h5>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_01.png" alt="" /></a>
+				<p><a href="#">Maecenas metus lore nulla, facili, pretium lipsum sit.</a></p>
+				<span>28 June 2012</span>
+			</div>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_02.png" alt="" /></a>
+				<p><a href="#">Aean metus lore nulla, facili, pretium lipsum dolor.</a></p>
+				<span>26 June 2012</span>
+			</div>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_03.png" alt="" /></a>
+				<p><a href="#">Metus lore lipsum nullam, facili, pretiumea lipsum.</a></p>
+				<span>22 June 2012</span>
+			</div>
+		</div> -->
+		
+		<!-- Twitter -->
+		<div class="one-third column">
+			<h5>Latest Tweets</h5>
+			<ul id="twitter"><li><span>The calm before the snowstorm. Looking forward to a great day with action for hunger <a href="http://t.co/leT2VbmV">http://t.co/leT2VbmV</a></span> <br><b><a href="http://twitter.com/grub_club/statuses/277708868463771649">1 day ago</a></b></li><li><span>Nic Marks, creator of the Happy Planet Index, on valuing happiness rather than just economics - video <a href="http://t.co/K4PjLVJP">http://t.co/K4PjLVJP</a> via @<a href="http://twitter.com/guardian">guardian</a></span> <br><b><a href="http://twitter.com/grub_club/statuses/277457691687911424">1 day ago</a></b></li></ul>
+				<script type="text/javascript">
+				    jQuery(document).ready(function ($) {
+				        $.getJSON('http://api.twitter.com/1/statuses/user_timeline/Grub_Club.json?count=2&callback=?', function (tweets) {
+				            $("#twitter").html(tz_format_twitter(tweets));
+				        });
+				    });
+				</script>
+			<div class="clearfix"></div>
+		</div>
+
+	</div>
+	<!-- 960 Container End -->
+	
+</div>
+<!-- Footer End -->
+
+<!--  Footer Copyright-->
+<div id="footer-bottom">
+
+	<!-- 960 Container -->
+	<div class="container">
+				
+		<div class="eight columns">
+			<div id="copyright">© Copyright 2012 by <a href="http://grubclub.com/Home/ContactUs">GrubClub</a>. All Rights Reserved. <a href="http://grubclub.com/Home/TermsAndConditions">Terms and Conditions</a></div>
+		</div>
+		
+        
+
+		<div class="eight columns">
+			<ul class="social-links">
+				
+                <li>
+                    <a href="http://grubclub.com/Search/SearchResult#" onclick="window.open(&#39;http://www.twitter.com/Grub_Club&#39;);" rel="tooltip" title="Twitter">
+                        <img src="files/twitter.png" alt="Facebook"></a>
+                </li>
+                <li>
+                    <a href="http://grubclub.com/Search/SearchResult#" onclick="window.open(&#39;http://www.facebook.com/GrubClub1&#39;);" rel="tooltip" title="Facebook">
+                        <img src="files/facebook.png" alt="Facebook"></a>
+                </li>
+                <li>
+                    <a href="http://grubclub.com/Home/ContactUs" rel="tooltip" title="Contact">
+                        <img src="files/mail.png" alt="Contact"></a>
+                </li>
+				<!--<li class="digg"><a href="#">Digg</a></li>
+				<li class="vimeo"><a href="#">Vimeo</a></li>
+				<li class="youtube"><a href="#">YouTube</a></li>
+				<li class="skype"><a href="#">Skype</a></li>-->
+			</ul>
+		</div>
+
+	</div>
+	<!-- End 960 Container -->
+	
+</div>
+<!--  Footer Copyright End -->
+
+    <!-- Google Analytics -->    
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36514914-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+<!-- Back To Top Button -->
+<div id="backtotop"><a href="http://grubclub.com/Search/SearchResult#"></a></div>
+
+<!-- Imagebox Build -->
+<script src="files/imagebox.build.js" type="text/javascript"></script><div id="ib-overlay"></div>
+
+<!-- Menu Highlighter -->
+<script type="text/javascript">
+    var loc = window.location.pathname;
+    var selectedMenuLink = $('li>a[href$="' + loc + '"]');
+    var link = selectedMenuLink[0];
+    if (link != null) {
+        $(".toplevel>a").removeClass("current");
+        if ($(link).parent().hasClass('toplevel')) {
+            $(link).addClass('current');
+        }
+        else {
+            // Assign the nearest top level menu item
+            var topLink = $(link).closest('.toplevel').children(':first-child a');
+            $(topLink).addClass("current");
+        }
+    }
+</script>
+
+
+
+<div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div></body></html>

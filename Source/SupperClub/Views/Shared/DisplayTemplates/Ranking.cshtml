@@ -1,0 +1,48 @@
+﻿@model SupperClub.Models.RankingModel
+
+@*Consider implementing a smart ranking system for search ordering
+    http://leedumond.com/blog/the-wisdom-of-crowds-implementing-a-smart-ranking-algorithm/*@
+    
+<div id="stars" style="display:inline">
+    <!-- If there is no ranking we don't want to show star's,
+    unless the user is an event guest and we want them to be able to supply a ranking from a 0 star (null) state -->
+    @if (Model.Ranking != null || Model.CurrentUserIsGuest)
+    {
+        int r = 0;
+        if(Model.Ranking != null)
+        {
+            r = (int)Model.Ranking;
+        }
+        for (int i = 0; i < r; i++)
+        {
+        <img id="star@(i+1)" 
+            @if (Model.CurrentUserIsGuest)
+             {
+                 @:onclick="RankEvent(@(i + 1));" style="display:inline-block; cursor: hand; cursor: pointer;"
+             }
+             else
+             {
+                 @:style="display:inline-block;"
+             }
+             src="@Url.Content("~/Content/images/yellow_star.png")" alt=""/>
+        }
+        for (int i = 0; i < (5 - r); i++)
+        {
+        <img id="star@(r+i+1)"
+            @if (Model.CurrentUserIsGuest)
+             {
+                 @:onclick="RankEvent(@(r + i + 1));" style="display:inline-block; cursor: hand; cursor: pointer;"
+             }
+             else
+             {
+                @:style="display:inline-block;"
+             }
+             src="@Url.Content("~/Content/images/grey_star.png")" alt="" style="display:inline-block;"/>
+        }
+    }
+
+    @if (!Model.CurrentUserIsGuest)
+    {
+    @*<div>@Model.NumberGuestRanks ratings, @ViewBag.Model.NumberOfReviews reviews </div>*@
+    }
+</div>

@@ -1,0 +1,33 @@
+﻿@model SupperClub.Models.ThreeDSecureModel
+@{
+    ViewBag.Title = "3DSecure";
+}
+
+@section PageSpecificScripts {
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+    }
+
+
+<!-- Page Title End -->
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+<!-- 960 Container Start -->
+<div class="container">
+   
+    <div class="sixteen columns">
+      <!-- iFrame for 3D Secure -->
+       <iframe id="3dSecure" width="100%" height="800" src="@Url.Content(string.Format("~/Booking/ThreeDSecureIframe?ACSURL={0}&MD={1}&PAReq={2}", @Model.ACSURL, @Model.MD, @Model.PAReq.Replace("+", "%2B").Replace(" ","%2B")))"></iframe>
+                
+    </div>
+    
+</div>
+<!-- 960 Container End -->
+}

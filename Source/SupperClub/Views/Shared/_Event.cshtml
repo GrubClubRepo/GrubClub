@@ -1,0 +1,217 @@
+﻿@model SupperClub.Domain.Event
+<!-- 960 Container Start -->
+<div class="container results-column events-results">
+    <div class="four columns" >
+        @if (Model.TotalNumberOfAvailableSeats == 0)
+        {
+            <div class="soldout-label-test"></div>
+        }
+        <a href="@Url.Action("DetailsByIdWithName", "Event", new { eventId = Model.Id, eventSeoFriendlyName = Model.UrlFriendlyName })">
+            <img src="@Url.Content(SupperClub.Code.ServerMethods.EventImagePath + Model.ImagePath)" alt="@Model.Name | GrubClub" class="EventImage">
+        </a>
+    </div>
+    <div class="ten columns" style="float:left;margin-left:0;margin-right:0;">
+        <h4>
+            <a href="@Url.Action("DetailsByIdWithName", "Event", new { eventId = Model.Id, eventSeoFriendlyName = Model.UrlFriendlyName })">@Model.Name</a>
+        </h4>
+        <p class="Summary">            
+        @if (Model.EventDescription.Length > 270)
+        {
+            if(@Model.EventDescription.Substring(0, 270).IndexOf("<strong>") == -1 || (System.Text.RegularExpressions.Regex.Matches(@Model.EventDescription.Substring(0, 270), "<strong>").Count == System.Text.RegularExpressions.Regex.Matches(@Model.EventDescription.Substring(0, 270), "</strong>").Count))
+            {
+                @Html.Raw(@Model.EventDescription.Substring(0, 270) + "...")
+            }
+            else
+            {
+                @Html.Raw(@Model.EventDescription.Substring(0, 270) + "</strong>...")      
+            }  
+        }
+        else
+        {
+            @Html.Raw(@Model.EventDescription)            
+        } 
+        </p>
+        
+                @if (!Model.MultiSeating || (Model.SupperClub.UserId != SupperClub.Code.UserMethods.UserId && Model.MultiSeating))
+                {
+                    if (Model.MultiSeating)
+                    {
+                        var seatings = (from ea in Model.EventAttendees
+                                        where ea.UserId == SupperClub.Code.UserMethods.UserId
+                                        select new
+                                        {
+                                            seatingId = ea.SeatingId
+                                        }).Distinct();
+                        
+                        foreach (var esa in seatings)
+                        {
+                            var seatingTime = (from s in Model.EventSeatings
+                                               where s.Id == esa.seatingId
+                                               select new { start = s.Start, end = s.End, guests = s.Guests, rs = s.ReservedSeats, ag = s.TotalNumberOfAttendeeGuests }).First();
+                            <span class="timings">
+                            <span>
+                                @Model.Start.ToString("ddd, d MMM yyyy")
+                            </span>  
+                            <span>
+                            @seatingTime.start.ToShortTimeString()
+                            @Html.Raw(" - ")
+                            @seatingTime.end.ToShortTimeString()
+                            </span>
+                            <span>
+                            @(seatingTime.ag + seatingTime.rs)  
+                            @Html.Raw(" / ")
+                            @seatingTime.guests.ToString() 
+                            </span>
+                            @if (Model.TotalNumberOfAvailableSeats == 0)
+                            {
+                            <p style="color:#CB0019;font-family:'Lobster', Cursive;font-size:17px;display:inline;margin-right:38px;margin-left:38px;">    SoldOut    </p>
+                            }
+                            @if(Model.MultiMenuOption)
+                            {
+                                var menuDetail = (from s in Model.EventAttendees
+                                                  join emo in Model.EventMenuOptions on s.MenuOptionId equals emo.Id
+                                                  where s.UserId == SupperClub.Code.UserMethods.UserId && s.SeatingId == esa.seatingId
+                                                   select new { menuid = s.MenuOptionId, menuTitle= emo.Title, ng = s.NumberOfGuests }).ToList();
+                                if(menuDetail.Count > 0)
+                                {
+                                    <table class="standard-table" style="margin-bottom:0px;">
+                                    <thead>
+                                    <tr>    
+									    <th>Menu Option</th>
+                                        <th>No. of Tickets</th>
+									</tr> 
+                                    </thead>
+                                    <tbody>
+                                    @foreach(var md in menuDetail)
+                                    {
+                                        <tr>    
+									        <td>@md.menuTitle</td>
+                                            <td>@md.ng</td>
+									    </tr>                                        
+                                    }
+                                    </tbody>  
+                                    </table>
+                                }
+                            }
+                            </span>
+                    <br/>
+                        }
+                      }
+                    else
+                    {
+                        <span class="timings">
+                        <span>
+                            @Model.Start.ToString("ddd, d MMM yyyy")
+                        </span>  
+                        <span>
+                        @Model.Start.ToShortTimeString()
+                        @Html.Raw(" - ")
+                        @Model.End.ToShortTimeString()   
+                        </span>
+                        <span>
+                        @(Model.ReservedSeats + Model.TotalNumberOfAttendeeGuests)   
+                        @Html.Raw(" / ")
+                        @Model.Guests.ToString() 
+                        </span>
+                        @if (Model.TotalNumberOfAvailableSeats == 0)
+                            {
+                            <p style="color:#CB0019;font-family:'Lobster', Cursive;font-size:17px;display:inline;margin-right:38px;margin-left:38px;">    SoldOut    </p>
+                            }
+                        @if(Model.MultiMenuOption)
+                        {
+                            var menuDetail = (from s in Model.EventAttendees
+                                                join emo in Model.EventMenuOptions on s.MenuOptionId equals emo.Id
+                                                where s.UserId == SupperClub.Code.UserMethods.UserId 
+                                                select new { menuid = s.MenuOptionId, menuTitle= emo.Title, ng = s.NumberOfGuests }).ToList();
+                            if(menuDetail.Count > 0)
+                            {
+                                <table class="standard-table" style="margin-bottom:0px;">
+                                <thead>
+                                <tr>    
+									<th>Menu Option</th>
+                                    <th>No. of Tickets</th>
+								</tr> 
+                                </thead>  
+                                <tbody>
+                                @foreach(var md in menuDetail)
+                                {
+                                    <tr>    
+									    <td>@md.menuTitle</td>
+                                        <td>@md.ng</td>
+									</tr>                                        
+                                }
+                                </tbody> 
+                                </table>
+                            }
+                        }
+                        </span>
+                    }
+                }
+                else
+                {
+                    <span class="timings">
+                    <span>
+                    @Model.Start.ToString("ddd, d MMM yyyy")
+                    </span>  
+                    <span>
+                    @Model.MinSeatingTime.ToShortTimeString()
+                    @Html.Raw(" Onwards ") 
+                    </span>      
+                    <span>                
+                    @(Model.TotalEventReservedSeats + Model.TotalNumberOfAttendeeGuests)   
+                    @Html.Raw(" / ")
+                    @Model.TotalEventGuests.ToString()    
+                    </span>      
+                    </span>       
+                }
+
+    </div>
+    <div class="three columns rating-box" style="margin-left:0; ">
+        @if (Model.SupperClub.UserId == SupperClub.Code.UserMethods.UserId)
+        {
+            if (Model.Status == (int)SupperClub.Domain.EventStatus.Cancelled)
+            {
+                @:Cancelled
+            }
+            else if (Model.Start < DateTime.Now)
+            {
+                @Html.Raw("You Hosted")
+            }
+            else
+            {
+                @Html.Raw("You're Hosting")
+                
+            }
+            @:<a href="@Url.Action("DetailsByIdWithName", "Event", new { eventId = Model.Id, eventSeoFriendlyName = Model.UrlFriendlyName })" class="button medium yellow" style="font-style:normal">View</a>
+            if(Model.Start > DateTime.Now)
+            { 
+            @:<a href="@Url.Action("Details", "Event", new { eventId = Model.Id, edit = true })" class="button medium yellow" style="font-style:normal">Edit</a>
+            }
+        }
+        else if (Model.NumberOfAttendeeGuests(SupperClub.Code.UserMethods.UserId) > 0)
+        {
+            if (Model.Status == (int)SupperClub.Domain.EventStatus.Cancelled)
+            {
+                @:Cancelled
+            }
+            else if (Model.Start < DateTime.Now)
+            {
+                @Html.Raw("You Attended")
+            }
+            else
+            {
+                @Html.Raw("You're Attending")
+            }
+        }
+    </div>
+</div>
+
+@*
+<!-- Event Border -->
+<div class="container">
+    <div class="fourteen columns" style="border-bottom: 1px solid #E7E7E7;">
+        <p>
+        </p>
+    </div>
+</div>
+*@

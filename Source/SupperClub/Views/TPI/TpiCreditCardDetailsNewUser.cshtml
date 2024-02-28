@@ -1,0 +1,261 @@
+﻿@model SupperClub.Models.LoginRegisterModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en" style="padding-top:0px !important;">
+<!--<![endif]-->
+<head>
+
+    <!-- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Look out for all the yummy offerings your favourite chef is dishing out</title>
+    <meta name="description" content="">
+
+
+    <!-- CSS
+     ================================================== -->
+    <!-- Prefetch DNS for external assets (Twitter widgets etc). -->
+    <link rel="dns-prefetch" href="//ajax.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//themes.googleusercontent.com">
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/screen.css")" />
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,700,900' rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/jquery-ui-1.10.3.min.css")" />
+
+    <!-- Scripts
+    ================================================== -->
+    <script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/bower_components/modernizr/modernizr.js")"></script>
+    <script src="@Url.Content("~/bower_components/jquery/dist/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.10.4.min.js")" type="text/javascript"></script>
+
+    <script src="@Url.Content("~/bower_components/chosen_v1.3.0/chosen.jquery.min.js")"></script>
+    <script src="@Url.Content("~/bower_components/svg4everybody/svg4everybody.min.js")"></script>
+    <script src="@Url.Content("~/bower_components/owl-carousel2/dist/owl.carousel.min.js")"></script>
+    <script src="@Url.Content("~/bower_components/nouislider/distribute/jquery.nouislider.all.min.js")"></script>
+
+    <!-- legacy.js is datepicker support for ie8 -->
+    <script src="@Url.Content("~/bower_components/pickadate/lib/compressed/legacy.js")"></script>
+    <script src="@Url.Content("~/bower_components/pickadate/lib/compressed/picker.js")"></script>
+    <script src="@Url.Content("~/bower_components/pickadate/lib/compressed/picker.date.js")"></script>
+
+    <script src="@Url.Content("~/bower_components/nanoscroller/bin/javascripts/jquery.nanoscroller.min.js")"></script>
+    <script src="@Url.Content("~/bower_components/magnific-popup/dist/jquery.magnific-popup.min.js")"></script>
+    <script src="@Url.Content("~/bower_components/jquery.countdown/dist/jquery.countdown.js")"></script>
+    <script src="@Url.Content("~/Scripts/init.min.js")"></script>
+    <style>
+        a.disabled {
+            background-color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+        $(function () {
+            $("#divForgotPwd").hide();
+
+            $('#btnForgotPwd').click(function () {
+                $("#divForgotPwd").show();
+                $('#btnForgotPwd').hide();
+                $('#txtfpEmail').val('');
+                $("#lblfpStatus").empty();
+                return false;
+            });
+            $("#btnRegister").click(function (e) {
+                e.preventDefault();
+                try {
+                    ga('create', 'UA-36514914-1', 'auto', { 'alwaysSendReferrer': true });
+                    ga('send', 'event', { eventCategory: 'Customers', eventAction: 'Signups', eventLabel: 'Register Pop Up', eventValue: 1 });
+                }
+                catch (err) {
+                    debugger;
+                }
+                $("#RegisterForm").submit();
+            });
+            $('#btnResetPwd').click(function () {
+                $("#lblfpStatus").empty();
+                var emailAddress = $('#txtfpEmail').val();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("NewForgotPassword", "Account")',
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify({ email: emailAddress }),
+                    success: function (response) {
+                        if (!response.success) {
+                            $("#lblfpStatus").css("color", "red");
+                        }
+                        else {
+                            $("#lblfpStatus").css("color", "green");
+                        }
+                        $("#lblfpStatus").text(response.message);
+                    },
+                    error: function (response) {
+                        $("#lblfpStatus").css("color", "red");
+                        $("#lblfpStatus").text(response.message);
+                    }
+                });
+            });
+        });
+    </script>
+    <header class="header-main">
+        <div class="container">
+            <div class="justifize justifize--middle">
+                <div class="justifize__box">
+                    <div class="tableize tableize--full tableize--middle">
+                        <div class="tableize__cell">
+                            <div>
+                                <a class="site-logo " href="/">
+
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="134px" height="36px" viewBox="0 0 134 36" enable-background="new 0 0 134 36" xml:space="preserve">
+                                    <path d="M79.872,28.815c2.885,0,6.993-1.365,9.461-4.733c0.061,3.04,1.797,4.357,4.016,4.357
+        c1.509,0,4.053-0.479,6.114-3.366c0.384,2.34,1.973,3.366,3.936,3.366c1.581,0,3.688-0.489,5.57-3.573
+        c0.264,2.369,1.581,3.573,3.728,3.573c1.523,0,3.903-0.492,5.882-3.454c0.49,2.177,2.211,3.454,5.109,3.454
+        c7.979,0,10.313-8.313,10.313-12.715c0-4.777-1.807-6.432-4.441-6.432c-0.752,0-1.544,0.113-3.087,1.053l1.807-8.464l-5.57,0.752
+        l-4.027,18.847h-0.001c-0.563,1.918-1.58,3.31-3.049,3.31c-1.053,0-1.542-0.339-1.542-1.392c0-0.376,0.037-0.789,0.15-1.204
+        l2.709-12.789h-5.419l-2.561,12.075c-0.564,1.918-1.543,3.31-3.012,3.31c-0.864,0-1.128-0.677-1.128-1.542
+        c0-0.338,0.038-0.678,0.112-1.054l2.71-12.789h-5.419L99.672,21.48h-0.001c-0.564,1.918-1.919,3.31-3.388,3.31
+        c-1.053,0-1.543-0.339-1.543-1.392c0-0.376,0.038-0.789,0.15-1.204L99.22,1.881l-5.57,0.752L89.621,21.48
+        c-0.009,0.043-0.012,0.078-0.021,0.121c-1.764,2.269-4.302,3.603-7.206,3.603c-3.651,0-4.517-2.407-4.517-5.868
+        c0-7.674,3.651-17.567,7.829-17.567c1.693,0,2.296,1.091,2.296,2.294c0,1.467-0.828,3.009-1.732,3.46
+        c0.717,0.865,1.544,0.978,2.146,0.978c1.921,0,2.636-1.467,2.636-3.46C91.052,1.43,88.267,0,84.766,0
+        c-9.861, 0-13.137,12.752-13.137,19.561C71.629,26.332,74.303,28.815,79.872,28.815z M123.913,22.194l2.07-9.554
+        c0.413-0.527,1.693-0.677,2.22-0.677c1.355,0,1.996,1.768,1.996,3.611c0,3.95-1.958,9.216-4.404,9.216
+        c-1.317,0-1.995-0.563-1.995-1.73C123.8,22.796,123.838,22.495,123.913,22.194z M25.031,28.212l3.011-14.294
+        c0.941-0.865,1.581-1.43,2.749-1.43c1.091,0,0.075,2.483,2.183,2.483c1.807,0,2.71-1.429,2.71-2.746
+        c0-1.467-0.903-2.821-2.598-2.821c-1.807,0-3.237,1.166-4.554,2.332l0.489-2.332h-5.42l-3.99,18.808H25.031z M14.98,12.452
+        l-1.619,7.147c-0.79,1.053-1.807,1.391-3.199,1.391c-3.124,0-4.366-2.896-4.366-6.206c0-6.019,4.216-13.015,8.356-13.015
+        c2.409,0,2.597,2.069,2.597,2.67c0,0.94-0.753,2.784-1.657,3.084c0.716,0.79,1.995,0.978,2.598,0.978c1.92,0,2.635-1.467,2.635-3.46
+        c0-3.611-3.5-5.041-7.001-5.041C4.931,0,0,7.298,0,14.483c0,5.229,1.919,9.63,8.092,9.63c0.301,0,2.409-0.15,4.592-1.354
+        l-1.505,6.733c-0.903,3.913-2.033,4.627-3.764,4.627c-1.619,0-2.372-1.241-2.372-2.558c0-1.393,0.866-2.858,2.635-2.858
+        c0.753,0,1.317,0.188,2.258,0.978c0.151-0.564,0.226-1.053,0.226-1.505c0-2.407-2.183-2.521-3.688-2.521
+        c-2.974,0-4.592,2.596-4.592,5.154c0,2.558,1.656,5.19,5.232,5.19c6.173,0,8.431-3.611,9.636-9.366l3.086-14.145L14.98,12.452z
+         M34.892,23.925c0,3.159,1.77,4.514,4.028,4.514c1.581,0,3.689-0.489,5.571-3.573c0.263,2.369,1.581,3.573,3.726,3.573
+        c1.524,0,3.904-0.492,5.883-3.455c0.49,2.178,2.21,3.455,5.108,3.455c7.98,0,10.314-8.313,10.314-12.715
+        c0-4.777-1.808-6.432-4.441-6.432c-0.754,0-1.544,0.113-3.087,1.053l1.807-8.464l-5.571,0.752L54.202,21.48h0
+        c-0.564,1.918-1.581,3.31-3.048,3.31c-1.054,0-1.543-0.339-1.543-1.392c0-0.376,0.038-0.789,0.15-1.204l2.711-12.789h-5.42
+        l-2.56,12.075c-0.565,1.918-1.543,3.31-3.012,3.31c-0.866,0-1.129-0.677-1.129-1.542c0-0.338,0.038-0.678,0.113-1.054l2.71-12.789
+        h-5.42L35.194,21.48C35.006,22.42,34.892,23.248,34.892,23.925z M59.435,22.194l2.07-9.554c0.414-0.527,1.693-0.677,2.221-0.677
+        c1.355,0,1.994,1.768,1.994,3.611c0,3.95-1.957,9.216-4.404,9.216c-1.316,0-1.995-0.563-1.995-1.73
+        C59.321,22.796,59.359,22.495,59.435,22.194z M18,35h113v-2H18.441L18,35z"></path>
+    </svg>
+
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>             
+            </div>
+        </div>
+    </header>
+        <div class="container mt++ ml++">
+            <div class="layout" style="width:80%;">
+                <div class="layout__item large-and-up-1/2">
+                    <div class="ph-">
+                        <h1 class="type-light h2 mb-">Login</h1>
+                        <p class="mb type-small semibold color-dark">Please log in to account to continue</p>
+                        @using (Html.BeginForm("newlogin", "account", new { returnUrl = Model.RedirectURL }, FormMethod.Post, new { id = "loginForm" }))
+                        {
+                            <div class="pt-">
+                                <div>
+                                    <label>Your Email Address</label>
+                                    @Html.ValidationMessageFor(m => m.LogOnModel.UserName)
+                                    @Html.EditorFor(m => m.LogOnModel.UserName, new { @class = "input input--large input--primary mb--" })
+                                </div>
+
+
+                                <div>
+                                    @Html.LabelFor(m => m.LogOnModel.Password)
+                                    @Html.ValidationMessageFor(m => m.LogOnModel.Password)
+                                    @Html.PasswordFor(m => m.LogOnModel.Password, new { @class = "input input--large input--primary mb-" })
+                                </div>
+                                <input type="submit" class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+" id="btnLogin" value="Login" />
+                            </div>
+                        }
+                        <br />
+                        <br />
+                        <br />
+                        <div>
+                            <a href="" id="btnForgotPwd">Forgot password</a>
+                            <div id="divForgotPwd" class="ph-">
+                                <div class="pt-">
+                                    <p class="mb type-small semibold color-dark"> Please enter your email address and we'll send you a new password.</p>
+                                    <label>Your Email Address</label>
+                                    <input type="text" id="txtfpEmail" class="input input--large input--primary mb--" />
+                                    <input type="button" class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+" id="btnResetPwd" value="Reset password" />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <label id="lblfpStatus"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h1 class="type-light h2 mb-">OR</h1>
+                        <a id="loginLink" href="@Url.Action("facebooklogin", "account", new { returnUrl = Model.RedirectURL })">
+                            <img src="/Content/images/fb-join-medium.png" alt="" style="height: 54px;line-height: 50px; width:100%;max-width:100%;">
+                        </a>
+
+                    </div>
+                </div>
+                <div class="layout__item large-and-up-1/2">
+                    <div class="ph-">
+                        <h1 class="type-light h2 mb-">Register</h1>
+                        <p class="mb type-small semibold color-dark">Not a Grub Club member yet? Register your details below.</p>
+                        @using (Html.BeginForm("NewRegister", "Account", new { redirectURL = Model.RedirectURL }, FormMethod.Post, new { id = "RegisterForm" }))
+                        {
+                            <div class="pt-">
+                                <div>
+                                    <label>First Name</label>
+                                    @Html.ValidationMessageFor(m => m.RegisterModel.FirstName)
+                                    @Html.EditorFor(m => m.RegisterModel.FirstName, new { @class = "input input--large input--primary mb" })
+                                </div>
+                                <div>
+                                    <label>Last Name</label>
+                                    @Html.ValidationMessageFor(m => m.RegisterModel.LastName)
+                                    @Html.EditorFor(m => m.RegisterModel.LastName, new { @class = "input input--large input--primary mb" })
+                                </div>
+                                <hr class="hr hr--dots mb">
+                                <div>
+                                    <label>Your Email Address</label>
+                                    @Html.ValidationMessageFor(m => m.RegisterModel.Email)
+                                    @Html.EditorFor(m => m.RegisterModel.Email, new { @class = "input input--large input--primary mb" })
+                                </div>
+                                <div>
+                                    <label>Confirm Your Email Address</label>
+                                    @Html.ValidationMessageFor(m => m.RegisterModel.ConfirmEmail)
+                                    @Html.EditorFor(m => m.RegisterModel.ConfirmEmail, new { @class = "input input--large input--primary mb" })
+                                </div>
+                                <hr class="hr hr--dots mb">
+                                <div>
+                                    <label>Password</label>
+                                    @Html.ValidationMessageFor(m => m.RegisterModel.Password)
+                                    @Html.PasswordFor(m => m.RegisterModel.Password, new { @class = "input input--large input--primary mb" })
+                                </div>
+                                <div>
+                                    <label>Confirm Your Password</label>
+                                    @Html.ValidationMessageFor(m => m.RegisterModel.ConfirmPassword)
+                                    @Html.PasswordFor(m => m.RegisterModel.ConfirmPassword, new { @class = "input input--large input--primary mb" })
+                                </div>
+                                <div>
+                                    <label>By clicking “Register” you confirm that you accept the <a href="@Url.Content("~/Home/TermsAndConditions")" target="_blank" style="color:#dd6000;">Terms and Conditions</a></label>
+                                </div>
+                                <br />
+                                <input type="submit" class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+" id="btnRegister" value="Register" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

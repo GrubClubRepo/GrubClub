@@ -1,0 +1,450 @@
+﻿@model SupperClub.Domain.Event
+@{
+    ViewBag.Title = Model.Name + " | Eat Out with Grub Club";
+    ViewBag.Description = Model.Description == null ? "" : (Model.Description.Length > 120 ? Model.Description.Substring(0, 120) : Model.Description);
+}
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title> <!--insert the event name server side here-->| Eat Out with Grub Club</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta Properties used for Sharing with OG -->
+    <meta property="og:title" content="@Model.Name" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@Request.Url.AbsoluteUri" />
+    <meta property="og:image" content="@(Request.Url.GetLeftPart(System.UriPartial.Authority) + Url.Content(SupperClub.Code.ServerMethods.EventImagePath + Model.ImagePath))" />
+    <meta property="og:description" content="@Model.Description" />
+    <meta property="og:site_name" content="GrubClub" />
+    <meta property="og:email" content="eat@grubclub.com" />
+
+    <style>
+
+    </style>
+    
+    <!--dependencies for navbar that can be extracted and refactored if and when we unify the code/implement angularjs-->
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/style/style.css")">
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/style/responsive.css")">
+    <script src="@Url.Content("~/Scripts/modernizer-2.5.3.js")"></script>
+    <script src="@Url.Content("~/Scripts/home/bootstrap.min.js")"></script>
+    <!--  page specific styling in main.css, sometimes overriding the above hence placement below those calls -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/style/main.css")">
+</head>
+<body>
+    <!--[if lt IE 7]>
+        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div class="head">
+        <div class="logo"><a href="">Grubclub</a></div>
+
+        <div class="menu-button"></div>
+        <div class="menu-click-hide"></div>
+
+        <div class="menu menu4items">
+            <!-- 'menu#items' makes the width of menu items -->
+            <div class="menu-item">
+                <div class="menu-item-link-block">
+                    <a class="menu-item-link" href="/what-is-a-grub-club">What is a Grub Club?</a>
+                </div>
+            </div>
+
+            <div class="menu-item menu-on">
+                <div class="menu-item-link-block">
+                    <a class="menu-item-link" href="@Url.Action("Index", "Search")">Find a Grub Club</a>
+                </div>
+                <div class="sub-menu">
+                    <div class="sub-item"><a href="/what-is-a-grub-club">What is a Grub Club?</a></div>
+                    <div class="sub-item"><a href="/how-to-find-and-book-a-grub-club">How It Works For Guests</a></div>
+                    <div class="sub-item"><a href="/what-you-need-to-know-about-attending-a-grub-club">Faqs for guests</a></div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <div class="menu-item-link-block">
+                    <a class="menu-item-link" href="@Url.Action("LogOn", "Account")?ReturnUrl=%2fcontact-us">Host a Grub Club</a>
+                </div>
+                <div class="sub-menu">
+                    <div class="sub-item"><a href="@Url.Action("LogOn", "Account")?ReturnUrl=%2fcontact-us">Host a Grub Club</a></div>
+                    <div class="sub-item"><a href="/how-to-set-up-a-grub-club">How It Works For Hosts</a></div>
+                    <div class="sub-item"><a href="/how-to-set-up-a-pop-up-restaurant">Faqs for Hosts</a></div>
+                    <div class="sub-item"><a href="/how-to-set-up-a-supperclub">How to host a Grub Club</a></div>
+                </div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-item-link-block">
+                    <a class="menu-item-link" href="@Url.Action("LogOn", "Account")"><!--Log On-->Log On</a>
+                </div>
+            </div>
+
+            @if (SupperClub.Code.UserMethods.IsAdmin)
+            {
+                <div class="menu-item">
+                    <div class="menu-item-link-block">
+                        <a class="menu-item-link" href="#">Admin</a>
+                    </div>
+                    <div class="sub-menu">
+                        <div class="sub-item">
+                            <a href="@Url.Action("AllUsers", "Admin")">Users</a>
+                            <ul>
+                                <li><a href="@Url.Action("UnlockUser", "Admin")">Unlock Specific User</a></li>
+                            </ul>
+                        </div>
+                        <div class="sub-item"><a href="@Url.Action("AllSupperClubs", "Admin")">Grub Clubs</a></div>
+                        <div class="sub-item"><a href="@Url.Action("Reports", "Admin")">Reporting</a></div>
+                        <div class="sub-item"><a href="@Url.Action("SendGuestEmail", "Admin")">Booking Confirmation Email</a></div>
+                        <div class="sub-item">
+                            <a href="@Url.Action("CheckReviews", "Admin")">Reviews</a>
+                            <ul>
+                                <li><a href="@Url.Action("CheckReviews", "Admin")">Check Reviews</a></li>
+                                <li><a href="@Url.Action("GenerateReviewKeys", "Admin")">Generate Review Links</a></li>
+                            </ul>
+                        </div>
+                        <div class="sub-item">
+                            <a href="#">Debug Tools</a>
+                            <ul>
+                                <li><a href="@Url.Action("TestEmail", "Admin")">Test Email</a></li>
+                                <li><a href="@Url.Action("DeviceInfo", "Admin")">Device Info</a></li>
+                                <li><a href="@Url.Content("~/version.txt")">Version</a></li> <!-- Uses content to view this file -->
+                            </ul>
+                        </div>
+                        <div class="sub-item">
+                            <a href="#">System Tools</a>
+                            <ul>
+                                <li><a href="@Url.Action("FlushExpiredTicketBaskets", "Admin")">Flush Expired Baskets</a></li>
+                                <li><a href="@Url.Action("Log4Net", "Admin", new { days = 1 })">System Logs</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="menu-button">
+        </div>
+
+        <div class="right-block">
+            <!-- v2: tw first, fb second -->
+            <div class="right-top-link tw-top">
+                <a href="http://www.twitter.com/Grub_Club" target="_blank" title="Twitter"></a>
+            </div>
+            <div class="right-top-link fb-top">
+                <a href="http://www.facebook.com/GrubClub1" target="_blank" title="Facebook"></a>
+            </div>
+            <div class="right-top-link mail">
+                <a href="/contact-us"  title="Contact"></a>
+            </div>
+        </div>
+    </div><!--END Navigation-->
+
+    <!-- breadcrumb container, to be hidden on mobile devices-->
+    <div class="container accented">
+        <div class="col-sm-12">
+            <nav>
+                <ol class="breadcrumb">
+
+                    <!-- Using Bootstrap's ol breadcrumb styling TODO:
+
+                        if page has navigational parent(s)
+                        print  parent stack li + current page SEO friendly title li
+                        else
+                        print current page title
+                        BUT FOR NOW WILL JUST DO >>
+        -->
+                    <li>
+                        <a href="grubclub.com/search/london/pop-up-restaurants">Events</a>
+                        <a href="hostName"></a>
+                        <a class="eventName"href=""></a>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!--secondary navigation and title container-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <h2 class="hostName">
+                    <!--host name goes here-->
+
+                </h2>
+            </div>
+            <div class="col-sm-7">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#">Key Details</a></li>
+                    <li><a href="#menu">Menu</a></li>
+                    <li><a href="#location">Venue</a></li>
+                    <li><a href="#about">About The Chef</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <h1 class="eventName">
+                <!--event title goes here-->
+            </h1>
+        </div>
+
+    </div>
+
+    <!--container for main page content-->
+    <div class="container">
+        <!--left column-->
+        <div class="col-sm-5">
+            <div class="panel panel-default">
+                <!--This is the social box-->
+                <div class="panel-heading accented">
+                    <h3>Share this event</h3>
+                    <a href="#"> <img src="#" alt="share on facebook" /></a>
+                    <a href="#"><img src="#" alt="share on twitter" /></a>
+                    <button class="btn btn-primary btn-sm">email to a friend</button>
+                </div>
+                <div class="panel-body">
+                    <!-- bootstrap carousel of event images, content to be constructed programmatically-->
+                    <div class="row">
+                        <div id="event-image-carousel" class="carousel slide" data-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#event-image-carousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#event-image-carousel" data-slide-to="1"></li>
+                                <li data-target="#event-image-carousel" data-slide-to="2"></li>
+                            </ol>
+
+                            <!-- Wrapper for slides, to use bootstrap carousel classes and js -->
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <img src="..." alt="...">
+                                    <div class="carousel-caption">
+                                        ...
+                                    </div>
+                                </div>
+                                ...
+                            </div>
+
+                            <!-- Controls -->
+                            <a class="left carousel-control" href="#event-image-carousel" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#event-image-carousel" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+                       
+                    </div>
+                    <div class="row">
+                        <!-- Event description goes here
+                        -->
+                    </div>
+                    <hr />
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <h3>Location: <span><!--event address goes here--></span></h3>
+            </div>
+            <div class="row">
+                <div><!--google map of location goes here--></div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-xs-6">
+                    <h3>Miscellaneous Details</h3>
+                    <!--TODO: for each misc. details include wrapped in ul item-->
+                </div>
+                <div class="col-xs-6">
+                    <h3>Associated Tags Cloud</h3>
+                    <!--TODO: for each associated tag display inline-->
+                </div>
+            </div>
+        </div>
+
+        <!--right column-->
+        <div class="col-sm-7">
+            <div class="well lg-well">
+                <!--form to go here-->
+                <form>
+                    <div>
+                        <select class="form-control">
+                            <!--list of event alternate dates here
+                            <option></option>
+                 -->
+                        </select>
+                    </div>
+                    <div>
+                        <p>seats left: <!--event seats left here--> <em><!--programmatic psych. hook based on seats left--></em></p>
+                    </div>
+                    <div>
+                        <p>How many tickets?:</p> <input type="number" name="quantity" value="1 guest" min="1" max="6" />
+                    </div>
+                    <div>
+                        <p><!-- num tickets x ticket for price= --><h2 class="lobster"><!--price--></h2></p>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary lobster">
+                        Book It Now
+                    </button>
+                </form>
+            </div>
+
+            <!--Menu container-->
+            <div class="menuContainer" id="menuContainer">
+                <h3>Menu</h3>
+                <ul></ul>
+                <!--on click toggle expand collapse of menu div; could just change innerhtml to keep it simple-->
+                <button class="btn btn-xs">Show More</button>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <img src="#" alt="Hosts profile picture" />
+                    <h3>About The Host</h3>
+                    <p><!--host description--></p>
+                </div>
+                <div class="col-xs-6">
+                    <p><span class="sub-info">Chef rating:</span> <!-- display star rating here using bootstrap glyphicons--></p>
+                    <p><!--host navigation, social twitter links etc--></p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <h3>Most Helpful Reviews</h3>
+                <!--for each review do -->
+                <div>
+                    <h4><!--reviewer first name Sirname.initial--> says...</h4>
+                    <div class="col-xs-8">
+                        <p><!--review content--></p>
+                    </div>
+                    <div class="col-xs-4"><!-- display star rating here using bootstrap glyphicons--></div>
+                    </p>
+                </div>
+                <a href="#">View More Reviews</a>
+            </div>
+            <hr />
+            <!--past/future events containing panel-->
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>More From This Chef</h3>
+                    <div>
+                        <h4>Upcoming events</h4>
+                        <a href="#">View All</a>
+                        <div id="event-future-carousel" class="carousel slide" data-ride="carousel">
+                            <!-- Controls -->
+                            <!-- Indicators to be positioned in between the prev h4 and a tags -->
+                            <a class="left carousel-control" href="#event-future-carousel" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            
+                            <ol class="carousel-indicators">
+                                <li data-target="#event-future-carousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#event-future-carousel" data-slide-to="1"></li>
+                                <li data-target="#event-future-carousel" data-slide-to="2"></li>
+                            </ol>
+                            <a class="right carousel-control" href="#event-future-carousel" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <img src="..." alt="...">
+                                    <div class="carousel-caption">
+                                        ...
+                                    </div>
+                                </div>
+                                ...
+                            </div>
+                        </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="container footer">
+            <footer>
+                <div class="col-xs-3">
+                    <h3>Useful Links</h3>
+
+                    <div><a href="http://www.grubclub.com/notes-from-a-pop-up-restaurant/">Notes from a Pop Up</a></div>
+                    <p>Also, we're just starting out so any <a href="/contact-us">feedback</a> is welcome!</p>
+                </div>
+                <div class="col-xs-3">
+                    <h3>A Bit About Us</h3>
+                    <p>
+                        This is a story of two food obsessed people who realised they simply wanted to share what they loved
+                        doing every day: get people together to share laughter around a dinner table... <a href="/about-us">read more</a>
+                    </p>
+                    <hr />
+
+                    <div class="link"><a href="/about-us">Read About Us</a></div>
+                    <div class="link"><a href="">Our Partners</a></div>
+                    <div><a href="/terms-and-conditions">Terms &amp; Conditions</a></div>
+                    <div><a href="@Url.Action("SiteMap","Home")">Site map</a></div>
+                </div>
+                <div class="col-xs-6">
+                    <h3>Get To Know Us Better</h3>
+                    <h4>Sign up to our news letter and stay in touch!</h4>
+                    <div>
+                        <span class=" fb-top">
+                            <a href="http://www.facebook.com/GrubClub1" target="_blank" rel="tooltip" title="Facebook"></a>
+                        </span>
+                        <span class=" tw-top">
+                            <a href="http://www.twitter.com/Grub_Club" target="_blank" rel="tooltip" title="Twitter"></a>
+                        </span>
+
+                        <span class=" mail">
+                            <a href="/contact-us" rel="tooltip" title="Contact"></a>
+                        </span>
+                    </div>
+                    <div>
+                        <form id="subscribeToggle">
+                            <input type="email" value="your email address..." name="email" id="email" required />
+                            <button class="btn btn-primary btn-sm">Sign Up</button>
+                        </form>
+                    </div>
+                    
+                </div>
+            </footer>
+        </div>
+
+
+        <!-- custom page specific js -->
+        <script src="js/main.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Using YQL and JSONP
+                $.ajax({
+                    url: "http://query.yahooapis.com/v1/public/yql",
+
+                    // the name of the callback parameter, as specified by the YQL service
+                    jsonp: "callback",
+
+                    // tell jQuery we're expecting JSONP
+                    dataType: "jsonp",
+
+                    // tell YQL what we want and that we want JSON
+                    data: {
+                        q: "select * from json where url='http://grubclub.com//api/getEventDetails?eventId=692'", // replace url content server side according to the http request
+                        format: "json"
+                    },
+
+                    // work with the response
+                    success: function (response) {
+                        //an assignment just because I am lazy
+                        var r = response.query.results;
+                        console.log(response.query.results.json); // server response check, comment out when putting live
+                        // some testing
+                        $(".data").html("<p>lol, here's a test: " + r.json.name + "</p>");
+                        $(".eventName").html(r.json.name);
+                        $(".eventName").html(r.json.name);
+                        $(".eventName").html(r.json.name);
+                    }
+                }); //END ajax
+            });
+        </script>
+
+</body>
+</html>

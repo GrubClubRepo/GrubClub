@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="csstransforms no-csstransforms3d csstransitions js" lang="en"><!--<![endif]--><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <!-- Basic Page Needs
+     ================================================== -->
+    <meta charset="utf-8">
+    <title>Buy 1 - Choose Tickets</title>
+
+    <!-- Mobile Specific
+     ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+     ================================================== -->
+    <link rel="stylesheet" type="text/css" href="files/style.css">
+    <link rel="stylesheet" type="text/css" href="files/supperclubcustom.css">
+    <link rel="stylesheet" type="text/css" href="files/css.css">
+
+    <!-- Java Script
+     ================================================== -->
+    <script src="files/ga.js" async="" type="text/javascript"></script><script src="files/jquery-1.js" type="text/javascript"></script>
+    <script src="files/jquery-ui-1.js" type="text/javascript"></script>
+
+    <!-- Template HTML Scripts
+     ================================================== -->
+    <script src="files/flexslider.js" type="text/javascript"></script>
+    <script src="files/jquery.js" type="text/javascript"></script>
+    <script src="files/custom.js" type="text/javascript"></script>
+    <script src="files/ender.js" type="text/javascript"></script>
+    <script src="files/selectnav.js" type="text/javascript"></script>
+    <script src="files/imagebox_002.js" type="text/javascript"></script>
+    <script src="files/carousel.js" type="text/javascript"></script>
+    <script src="files/twitter.js" type="text/javascript"></script>
+    <script src="files/tooltip.js" type="text/javascript"></script>
+    <script src="files/popover.js" type="text/javascript"></script>
+    <script src="files/effects.js" type="text/javascript"></script>
+    <!-- Page Specific Java Script -->
+    
+    <script src="files/jquery_003.js" type="text/javascript"></script>
+    <script src="files/jquery_002.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#BookingModel_numberOfTickets').change(function updateTotal() { 
+                var selectedNumberOfTickets = $('#BookingModel_numberOfTickets option:selected').text();
+                var costPerTicket = 36.05;
+                var currency = "GBP";
+
+                $.getJSON('/Booking/UpdateTickets', { numberTicketsRequested: selectedNumberOfTickets }, function (updateTickets) {
+                    if (updateTickets.Success == false) {
+                        alert("Sorry but we were not able to allocate the number of tickets you wanted. They've been snapped up!");
+                        // Session Timed out
+                        if(updateTickets.NumberTicketsAllocated == 0) {
+                            window.location('~/Booking/SessionExpired');
+                        }
+                        // Set the selected value back to its previous value
+                        $('#BookingModel_numberOfTickets').val(updateTickets.NumberTicketsAllocated);
+                        // Update the dropdownlist length if required
+                        var options = $('#BookingModel_numberOfTickets > option').length;
+                        if(options > updateTickets.NumberTicketsAvailable) {
+                            var optionsToRemove = (updateTickets.NumberTicketsAvailable - 1); // -1 for index
+                            $('#BookingModel_numberOfTickets').find('option:gt(' + optionsToRemove + ')').remove(); // :gt uses index, remove options with index greater than x
+                        }
+                    }
+
+                    // Update the cost. TODO: Currency symbol conversion
+                    var numberOfTickets = $('#BookingModel_numberOfTickets option:selected').text();
+                    if (Number(numberOfTickets)) {
+                        var totalDue = numberOfTickets * costPerTicket;
+                        $("#totalDue").html("£" + totalDue.toFixed(2));
+                    }
+                });
+            
+            });
+
+            // Force change in case of refresh
+            $('#BookingModel_numberOfTickets').change();
+        });
+    </script>
+
+</head>
+
+<body>
+<!-- Header -->
+<div id="header">
+
+	<!-- 960 Container Start -->
+	<div class="container ie-dropdown-fix">
+	
+		<!-- Logo -->
+		<div class="four columns">
+			<a href="https://grubclub.com/"><img src="files/logo.png" alt=""></a>
+		</div>
+		
+		<!-- Main Navigation Start -->
+		<div class="twelve columns">
+			<div id="navigation">
+				<ul id="nav">
+					<li class="toplevel"><a class="current" href="https://grubclub.com/Search">Find a Grub Club</a>
+                        <ul>
+                            <li><a href="https://grubclub.com/Search">Find a Grub Club</a></li>
+                            <li><a href="https://grubclub.com/Home/HowItWorksGuests">How It Works For Guests</a></li>
+                            <li><a href="https://grubclub.com/Home/FAQsGuest">FAQs for Guests</a></li>    
+                        </ul>
+                    </li>
+                         <li><a href="https://grubclub.com/Event/CreateEvent?supperClubId=3">Host New Event</a>
+                              <ul>
+                                  <li><a href="https://grubclub.com/Event/CreateEvent?supperClubId=3">Host New Event</a></li>
+                                    <li><a href="https://grubclub.com/Home/HowItWorksHosts">How It Works For Hosts</a></li>
+                                    <li><a href="https://grubclub.com/Home/FAQsHost">FAQs for Hosts</a></li>
+                                    <li><a href="https://grubclub.com/Home/HowToHost">How To Host a Grub Club</a></li>
+                                </ul>
+                           </li>
+                         <li class="toplevel"><a href="https://grubclub.com/Event/MyHostedEvents">My Events</a>
+                        <ul>
+                            <li><a href="https://grubclub.com/Event/MyEvents">My Events - Attending</a></li>
+                            <li><a href="https://grubclub.com/Event/MyHostedEvents">My Events - Hosting</a></li>
+                        </ul>
+                    </li>
+                    
+                    
+                    <li class="toplevel"><a href="https://grubclub.com/Account/UserDetails">My Account</a>
+						<ul>
+                            <li><a href="https://grubclub.com/Account/UserDetails">My Account Details</a></li>
+                            <li><a href="https://grubclub.com/Host/Details?supperClubId=3">My Grub Club Details</a></li>
+                            <li><a href="https://grubclub.com/Account/ChangePassword">Change Password</a></li>
+							<li><a href="https://grubclub.com/Account/LogOff">Log Off</a></li>
+						</ul>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+		<!-- Main Navigation End -->
+		
+	</div>
+	<!-- 960 Container End -->
+
+</div>
+<!-- End Header -->
+
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>Booking / Choose Tickets</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+    <!-- 960 Container Start -->
+    <div class="container">
+<form novalidate="novalidate" action="/Booking/ChooseTickets" method="post">            
+			
+            <div class="sixteen columns">
+                <ul id="breadcrumbs">
+                    <li class="active" style="color: #F60">Tickets <span>-</span></li>
+                    <li>Review <span>-</span></li>
+                    <li>Payment</li>
+                </ul>
+
+                <!-- TODO: Short Event Summary -->
+                <div class="container sub-title2">
+                    <h2>How many seats do you want?</h2>
+                </div>
+                <table class="standard-table">
+				    <tbody>
+                        <tr>
+                            <th>Event</th>
+					        <th>Number of Tickets</th>
+					        <th>Cost per Ticket</th>
+					        <th>Total</th>
+				        </tr>
+
+				        <tr>
+					        <td>
+                                Event: Nicole Tapas Specials
+                                <br>
+                                Date and Time: 25/12/2012 00:00 - 22:30
+                            </td>
+                            <td>
+                                <select class="custom_select" data-val="true" data-val-number="The field numberOfTickets must be a number." data-val-range="You can buy 1 to 10 tickets only" data-val-range-max="10" data-val-range-min="1" data-val-regex="You must enter a valid number of tickets" data-val-regex-pattern="^-?\d+$" data-val-required="*" id="BookingModel_numberOfTickets" name="BookingModel.numberOfTickets" style="margin-bottom: 0px;"><option selected="selected" value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+</select>
+                            </td>
+					        <td id="ticketCost">£36.05</td>
+					        <td id="totalDue">£36.05</td>
+				        </tr>
+			        </tbody>
+                </table>
+                <input data-val="true" data-val-number="The field eventId must be a number." data-val-required="The eventId field is required." id="BookingModel_eventId" name="BookingModel.eventId" value="7" type="hidden">
+                <input id="BookingModel_currency" name="BookingModel.currency" value="GBP" type="hidden">
+                <!-- darius: deleted 'br'
+                <br>
+                -->
+                <br>
+                <div class="field">
+                    <label>Any special requirements your host needs to know?</label>
+                    <span class="field-validation-valid" data-valmsg-for="BookingModel.bookingRequirements" data-valmsg-replace="true"></span>
+                    <textarea cols="20" data-val="true" data-val-length="1500 chars max" data-val-length-max="1500" id="BookingModel_bookingRequirements" name="BookingModel.bookingRequirements" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="sixteen columns">
+                <a href="https://grubclub.com/Booking/CancelBooking?eventId=7" class="button medium red" style="">
+                    <i class="icon-remove icon-white"></i>Cancel Booking</a>
+                <input value="Confirm Tickets" class="button medium green" style="float: right;" type="submit">
+            </div>
+</form>    </div>
+    <!-- 960 Container End -->
+
+
+<!-- Footer Start -->
+<div id="footer">
+
+	<!-- 960 Container -->
+	<div class="container">
+		
+		<!-- About -->
+		<div class="one-third column">
+			<h5>About Us</h5>
+			<p>This is a story of two food obsessed people who realised they 
+simply wanted to share what they loved doing every day: get people 
+together to share laughter around a dinner table... <a href="https://grubclub.com/Home/AboutUs">read more</a></p>
+            <p>We are just starting out so any <a href="https://grubclub.com/Home/ContactUs?messageText=I%27ve%20got%20some%20feedback%20and%20it%27s%20about%20">feedback</a> is welcome!</p>
+		</div>
+		
+		<!-- Useful Links -->
+		<div class="one-third column">
+			<h5>Useful Links</h5>
+			<ul class="links-list">
+                <li><a href="https://grubclub.com/Home/NotesFromASupperClub">Notes From A Supper Club</a></li>
+			</ul>
+		</div>
+		
+		<!-- Latest From Blog
+		<div class="four columns">
+			<h5>Latest From The Blog</h5>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_01.png" alt="" /></a>
+				<p><a href="#">Maecenas metus lore nulla, facili, pretium lipsum sit.</a></p>
+				<span>28 June 2012</span>
+			</div>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_02.png" alt="" /></a>
+				<p><a href="#">Aean metus lore nulla, facili, pretium lipsum dolor.</a></p>
+				<span>26 June 2012</span>
+			</div>
+			
+			<div class="latest-post">
+				<a href="#"><img src="images/latest_widget_img_03.png" alt="" /></a>
+				<p><a href="#">Metus lore lipsum nullam, facili, pretiumea lipsum.</a></p>
+				<span>22 June 2012</span>
+			</div>
+		</div> -->
+		
+		<!-- Twitter -->
+		<div class="one-third column">
+			<h5>Latest Tweets</h5>
+			<ul id="twitter"><li><span>For the #French-speakers out there: some seriously mouthwatering #recipes <a href="http://t.co/umNUPpzv">http://t.co/umNUPpzv</a>. Carambar #macaroons? Yes please!</span> <br><b><a href="http://twitter.com/grub_club/statuses/282520252682756097">11 minutes ago</a></b></li></ul>
+				<script type="text/javascript">
+				    jQuery(document).ready(function ($) {
+				        $.getJSON('http://api.twitter.com/1/statuses/user_timeline/Grub_Club.json?count=2&callback=?', function (tweets) {
+				            $("#twitter").html(tz_format_twitter(tweets));
+				        });
+				    });
+				</script>
+			<div class="clearfix"></div>
+		</div>
+
+	</div>
+	<!-- 960 Container End -->
+	
+</div>
+<!-- Footer End -->
+
+<!--  Footer Copyright-->
+<div id="footer-bottom">
+
+	<!-- 960 Container -->
+	<div class="container">
+				
+		<div class="eight columns">
+			<div id="copyright">© Copyright 2012 by <a href="https://grubclub.com/Home/ContactUs">GrubClub</a>. All Rights Reserved. <a href="https://grubclub.com/Home/TermsAndConditions">Terms and Conditions</a></div>
+		</div>
+		
+        
+
+		<div class="eight columns">
+			<ul class="social-links">
+				
+                <li>
+                    <a href="#" onclick="window.open('http://www.twitter.com/Grub_Club');" rel="tooltip" title="Twitter">
+                        <img src="files/twitter.png" alt="Facebook"></a>
+                </li>
+                <li>
+                    <a href="#" onclick="window.open('http://www.facebook.com/GrubClub1');" rel="tooltip" title="Facebook">
+                        <img src="files/facebook.png" alt="Facebook"></a>
+                </li>
+                <li>
+                    <a href="https://grubclub.com/Home/ContactUs" rel="tooltip" title="Contact">
+                        <img src="files/mail.png" alt="Contact"></a>
+                </li>
+				<!--<li class="digg"><a href="#">Digg</a></li>
+				<li class="vimeo"><a href="#">Vimeo</a></li>
+				<li class="youtube"><a href="#">YouTube</a></li>
+				<li class="skype"><a href="#">Skype</a></li>-->
+			</ul>
+		</div>
+
+	</div>
+	<!-- End 960 Container -->
+	
+</div>
+<!--  Footer Copyright End -->
+
+    <!-- Google Analytics -->    
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36514914-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+<!-- Back To Top Button -->
+<div id="backtotop"><a href="#"></a></div>
+
+<!-- Imagebox Build -->
+<script src="files/imagebox.js" type="text/javascript"></script><div id="ib-overlay"></div>
+
+<!-- Menu Highlighter -->
+<script type="text/javascript">
+    var loc = window.location.pathname;
+    var selectedMenuLink = $('li>a[href$="' + loc + '"]');
+    var link = selectedMenuLink[0];
+    if (link != null) {
+        $(".toplevel>a").removeClass("current");
+        if ($(link).parent().hasClass('toplevel')) {
+            $(link).addClass('current');
+        }
+        else {
+            // Assign the nearest top level menu item
+            var topLink = $(link).closest('.toplevel').children(':first-child a');
+            $(topLink).addClass("current");
+        }
+    }
+</script>
+
+
+</body></html>

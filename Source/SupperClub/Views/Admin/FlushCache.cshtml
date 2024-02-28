@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Reset Application cache";
+}
+
+@section PageSpecificScripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("FlushAppCache", "admin")',
+                   success:function(status){
+                       if (status) {
+                           $("#lblStatus").text("Application Cache reset successful!");
+                       }
+                       else
+                           $("#lblStatus").text("Error resetting application cache!");
+            },
+            error:function(){
+                $("#lblStatus").text("Error resetting application cache!");
+            }
+        }); 
+    });
+
+</script>
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+       <label id="lblStatus"></label>
+	</div>
+</div>

@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Problem with Booking";
+}
+
+<!-- Page Title End -->
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <div class="container">
+        <div class="sixteen columns">
+        
+            <div class="container sub-title2">
+                <h2>Uhoh!</h2>
+            </div>
+            <p>Something went wrong processing your payment, the error message we received was:</p>
+            <p style="color:Red">@ViewBag.ErrorMessage</p>
+        
+        </div>
+        
+        <div class="sixteen columns">
+
+            <a href="@Url.Action("CancelBooking", "Booking")" class="button medium red" style="">
+                <i class="icon-remove icon-white"></i>Cancel Booking</a> 
+            
+
+            @if (@ViewBag.EventId > 0)
+            {
+               if( HttpContext.Current.Session["GiftVoucher"] == null || string.IsNullOrEmpty(HttpContext.Current.Session["GiftVoucher"].ToString()))
+               {
+                <a href="@Url.Action("BookEvent", "Event", new { eventId = @ViewBag.EventId })" class="button medium green" style="float: right">
+                <i class="icon-repeat icon-white"></i>Try Again</a>
+               }
+               else
+               {
+                   <a href="@Url.Action("GiftVoucher", "home")" class="button medium green" style="float: right">
+                <i class="icon-repeat icon-white"></i>Try Again</a> 
+               }
+            }
+            else
+            {
+                <a href="@Url.Action("ReviewPurchase")"  class="button medium green" style="float: right">
+                <i class="icon-repeat icon-white"></i>Try Again</a>
+            }
+
+        </div>
+    </div>
+    <!-- 960 Container End -->
+}

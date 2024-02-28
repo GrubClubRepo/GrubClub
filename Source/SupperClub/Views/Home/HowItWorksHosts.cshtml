@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Quick Guide to Set up Your own Grub Club | Grub Club";
+    ViewBag.Description = "Four easy steps to set up the next Pop Up Restaurant or Supperclub. Grub Club can help you find venues and connect you with foodies.";
+}
+
+@section PageSpecificScripts {
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<div class="container sub-title2">
+    <h2>The Process For Hosts</h2>
+</div>
+
+<!--  960 Container Start -->
+<div class="container">
+
+	<!-- Choose -->
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Host.1.gif")" alt=""/>
+	</div>
+
+    <!-- Select -->
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Host.2.gif")" alt=""/>
+	</div>
+
+    <!-- Book -->
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Host.3.gif")" alt=""/>
+	</div>
+
+    <!-- Pay -->
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Host.4.gif")" alt=""/>
+	</div>
+
+</div>
+<div class="container sub-title2">
+    <h2>See How It Works</h2>
+</div>
+<div class="container">
+	<div align="center">
+		<div class="recently-added-events-vdo-box-large">
+		<iframe src="http://player.vimeo.com/video/65300127?title=0&amp;byline=0&amp;portrait=0&amp;color=ff6700" width="500" height="281" frameborder="1" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe><p>Filmed and edited by our friends at <a href="http://www.manuelfernandez.co.uk">www.manuelfernandez.co.uk</a></p>
+		</div>
+	</div>
+
+</div>
+<!-- End 960 Container -->

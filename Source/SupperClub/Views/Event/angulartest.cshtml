@@ -1,0 +1,29 @@
+﻿@{
+
+}
+
+@section PageSpecificScripts {
+    <script src="@Url.Content("~/Scripts/home/bootstrap.min.js")" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/bootstrap.min.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/welcomehost.css")" />  
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/ngtest.css")" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular-resource.js"></script>
+    <script src="@Url.Content("~/Content/js/angulartest.js")"></script>
+}
+
+<div class="container" ng-app="testApp">
+    <div class="col-sm-12" ng-controller="MyCtrl">
+        <div class="row" ng-repeat="data in testdata">{{data}}</div>
+        <div class="row"> <!--ng-repeat="event in events.SearchResults"-->
+                <div class="col-sm-4">
+                    <p>{{event}}</p>
+                    <img src="{{event.EventImage}}" alt="{{event.EventName}}">
+                </div>
+                <div class="col-sm-8">
+                    <h2>{{event.EventName}}</h2>
+                    <p>{{event.EventDescription}}</p>
+                </div>
+            </div>
+        </div>
+    </div>

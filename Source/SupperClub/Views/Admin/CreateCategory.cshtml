@@ -1,0 +1,135 @@
+﻿@model SupperClub.Domain.SearchCategory
+
+@{
+    ViewBag.Title = "Create Category";
+}
+@section PageSpecificScripts {
+   <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/multi-select.css")">        
+    <script src="@Url.Content("~/Scripts/jquery.multi-select.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.quicksearch.js")" type="text/javascript"></script>
+     
+     <script type="text/javascript">
+         $(document).ready(function () {
+             $('.searchable').multiSelect({
+                 selectableHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Search...'>",
+                 selectionHeader: "<input type='text' class='search-input' autocomplete='off' placeholder='Search...'>",
+                 afterInit: function(ms){
+                     var that = this,
+                         $selectableSearch = that.$selectableUl.prev(),
+                         $selectionSearch = that.$selectionUl.prev(),
+                         selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+                         selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+
+                     that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                     .on('keydown', function(e){
+                         if (e.which === 40){
+                             that.$selectableUl.focus();
+                             return false;
+                         }
+                     });
+
+                     that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                     .on('keydown', function(e){
+                         if (e.which == 40){
+                             that.$selectionUl.focus();
+                             return false;
+                         }
+                     });
+                 },
+                 afterSelect: function(){
+                     this.qs1.cache();
+                     this.qs2.cache();
+                 },
+                 afterDeselect: function(){
+                     this.qs1.cache();
+                     this.qs2.cache();
+                 }
+             });
+
+             $("#CreateCategoryForm").submit(function () {
+                 var str = "";
+                 $(".searchable option:selected").each(function () {
+                     str += $(this).val() + ",";
+                 });
+                 $("#TagList").val(str);
+                 $("#CreateCategoryForm").validate();
+             });
+
+             $('.searchable').change(function () {
+                 var str = "";
+                 $(".searchable option:selected").each(function() {
+                     str += $(this).val() + ",";
+                 });
+                 $("#TagList").val(str);                 
+             }).change();            
+                 
+         });
+         </script>
+}
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+<div class="container">
+	<div class="sixteen columns">
+        <h4 class="headline">Create new category here</h4>
+        @using (Html.BeginForm("CreateCategory", "Admin", FormMethod.Post, new { id = "CreateCategoryForm", enctype = "multipart/form-data" }))
+        {
+            <div class="field">
+                <label>Category Name</label>
+                @Html.ValidationMessageFor(m => m.Name)
+                @Html.EditorFor(m => m.Name)
+            </div>
+            <div class="field">
+                <label>SEO Friendly Name</label>
+                @Html.ValidationMessageFor(m => m.UrlFriendlyName)
+                @Html.EditorFor(m => m.UrlFriendlyName)
+            </div>
+            <div class="field">
+                <label>Meta Title</label>
+                @Html.ValidationMessageFor(m => m.MetaTitle)
+                @Html.EditorFor(m => m.MetaTitle)
+            </div>
+            <div class="field">
+                <label>Meta Description</label>
+                @Html.ValidationMessageFor(m => m.MetaDescription)
+                @Html.EditorFor(m => m.MetaDescription)
+            </div>            
+            <div class="field">
+                <label>Description</label>
+                @Html.ValidationMessageFor(m => m.Description)
+                @Html.EditorFor(m => m.Description)
+            </div>
+            <div class="field">
+                <label>Tags</label>
+                @Html.HiddenFor(m => m.TagList)
+
+                <select class="searchable" multiple="multiple">
+                    @foreach (SupperClub.Domain.Tag t in ViewBag.Tags)
+                    {
+                        
+                        if (@Model != null && @Model.SelectedTagIds != null && @Model.SelectedTagIds.Contains(t.Id))
+                        {
+                            <option value="@t.Id" selected="selected">@t.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@t.Id">@t.Name</option>
+                        }
+                    }
+                </select>       
+            </div>            
+            <input type="submit" value="Create Category" class="button small green" />
+        }
+	</div>
+</div>

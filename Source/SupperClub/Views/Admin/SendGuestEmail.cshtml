@@ -1,0 +1,56 @@
+﻿@model SupperClub.Models.SendGuestEmail
+
+@{
+    ViewBag.Title = "Send Guest Email";
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+        
+        @using (Html.BeginForm())
+        {
+            <div class="tab-content">
+                <div class="field">
+                    <label>Event Id</label>
+                    @Html.TextBoxFor(m => m.EventId)
+                </div>
+                <div class="field">
+                    <label>Comma Separated Email Ids</label>
+                    @Html.TextAreaFor(m => m.UserEmailList)
+                </div>
+                <div class="field">
+                    <label>Additional Comments to add</label>
+                    @Html.TextBoxFor(m => m.Comments, new { style = "width:950px;" })
+                </div>
+                <div class="field check-box-field" style="margin-bottom:10px;">            
+                    @Html.EditorFor(m => m.SendToAll) 
+                    <p style="display:inline;">Tick this box if you want to send e-mail to all guests for this event</p>
+                </div>
+
+                @if (Model.ShowStatus)
+                {
+                    <p>@Model.SendStatus</p>                    
+                }
+                
+                <input type="submit" value="Send Email(s)" class="button small green" style="margin-top:10px;"/>
+                
+            </div>
+        }
+	</div>
+</div>

@@ -1,0 +1,762 @@
+﻿@model SupperClub.Models.SearchViewModel
+
+@{
+    ViewBag.Title = "Pop Up Restaurants Near You| Eat Out with Grub Club";
+    ViewBag.Description = "Search for the latest Pop Up Restaurants and Supperclubs in your area. Be the first to try our creative chef’s latest creations.";
+}
+
+@section PageSpecificScripts {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/datepicker/jquery-ui-1.8.23.custom.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/jquery-ui-1.10.3.min.css")" />
+    <style>
+        #map_canvas img {
+            max-width: none;
+        }
+    </style>
+
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    @*This script handles additional custom date validation on dd/MM/yy*@
+    <script src="@Url.Content("~/Scripts/jquery.validate.custom.js")" type="text/javascript"></script>
+
+    <script src="@Url.Content("~/Scripts/jquery.tmpl.js")" type="text/javascript"></script>
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+    <script language="javascript" type="text/javascript">
+        function resizeMap(m) {
+            google.maps.event.trigger(m, 'resize');
+        };
+
+        var map;
+        var results;
+        var centrePointLat;
+        var centrePointLng;
+
+        var arrMarkers = [];
+        var infoWindow = null;
+
+        $(document).ready(function () {
+
+            $("#lblStatus").text("");
+            $("#lblStatus").hide();
+            $("#dialog").hide();
+
+            $.datepicker.setDefaults($.datepicker.regional['en-GB']);
+            $.datepicker.setDefaults({ dateFormat: 'dd/mm/yy' });
+
+            $('.date').datepicker({
+                dateFormat: "dd/mm/yy",
+                minDate: new Date(@DateTime.Now.Year, @DateTime.Now.Month - 1, @DateTime.Now.Day)
+            });
+
+            // Show Hide Filter menu in mobile
+            $(".search-show").click(function () {
+                $('.search-show').switchClass( "none", "results-hide", 0 );
+                $('.search-hide').switchClass( "results-hide", "none", 0 );
+                $('.filter-results').switchClass( "none", "results-show", 0 );
+            });
+            $(".search-hide").click(function () {
+                $('.search-hide').switchClass( "none", "results-hide", 0 );
+                $('.search-show').switchClass( "results-hide", "none", 0 );
+                $('.filter-results').switchClass( "results-show", "none", 0 );
+            });
+
+            $('.hideCuisines').hide();
+            $("#moreCuisine").click(function () {
+                $(".hideCuisines").show("slow");
+                $("#moreCuisine").hide();
+            });
+
+            $("#lessCuisine").click(function () {
+                $(".hideCuisines").hide("slow");
+                $("#moreCuisine").show();
+            });
+
+
+            $('.hideDiets').hide();
+            $("#moreDiet").click(function () {
+                $(".hideDiets").show("slow");
+                $("#moreDiet").hide();
+            });
+
+            $("#lessDiet").click(function () {
+                $(".hideDiets").hide("slow");
+                $("#moreDiet").show();
+            });
+
+            $("#btnAddWaitListNew").click(function () {
+                var emailId = $("#txtAddWaitlistEmail").val();
+                var eventId = $("input[id=hdnEventId]").val();
+
+                if(!IsEmail(emailId))
+                {
+                    $("input.txtAddWaitlistEmail").focus();
+                    $("#lblStatus").text("E-mail address entered is not valid. Please check and enter a valid e-mail address!");
+                    $("#lblStatus").css("color", 'red');
+                    $("#lblStatus").show();
+                }
+                else
+                {
+                    if(eventId != null || eventId == 0)
+                    {
+                        $.getJSON('@Url.Action("AddToWaitList", "search")', { eventId: eventId, email: emailId, source: "Search" }, function (actionStatus) {
+                            $("#lblStatus").text(actionStatus.NotificationMessage);
+                            if(actionStatus.Success)
+                                $("#lblStatus").css("color", 'green');
+                            else
+                                $("#lblStatus").css("color", 'red');
+                            $("#lblStatus").show();
+                        });
+                    }
+                    else
+                    {
+                        $("#lblStatus").text("There was a problem adding to waiting list, please try again or contact an Administrator.");
+                        $("#lblStatus").css("color", 'red');
+                        $("#lblStatus").show();
+                    }
+                }
+            });
+
+            $("#btnClose").click(function () {
+                $( "#dialog" ).dialog("close");
+                $( "#dialog" ).hide();
+            });
+
+            $(".tab-content").hide();
+            $("ul.tabs-nav li:first").addClass("active").show();
+            $(".tab-content:first").show();
+            // display map if so requested in url
+            if (document.location.toString().toLowerCase().match('showmap')) {
+                $("ul.tabs-nav li").removeClass("active");
+                $("ul.tabs-nav li:nth-child(2)").addClass("active");
+                $(".tab-content").hide();
+                var activeTab = $("ul.tabs-nav li:nth-child(2)").find("a").attr("href");
+                $(activeTab).fadeIn();
+            };
+
+            // tab logic
+            $("ul.tabs-nav li").click(function () {
+                $("ul.tabs-nav li").removeClass("active");
+                $(this).addClass("active");
+                $(".tab-content").hide();
+                var activeTab = $(this).find("a").attr("href");
+                $(activeTab).fadeIn();
+                if (activeTab == '#tab2') {
+                    $(window).resize(function () {
+                        //$("#tab2").css({'display':'block'});
+                        //$("#map_canvas").css({'width':'630px', 'height':'400px'});
+                        //initialize();
+                        //alert('Changed!');
+                    });
+                }
+                return false;
+            });
+
+            function doMarker(inlatlng) {
+                var marker = new google.maps.Marker({ map: map, position: inlatlng, clickable: true });
+                return marker;
+            };
+
+            // initialize Map
+            function initialize(results, centrePointLat, centrePointLng) {
+
+                var centreLatlng = new google.maps.LatLng(centrePointLat, centrePointLng);
+
+                var mapOptions = {
+                    zoom: 10,
+                    maxZoom: 15,
+                    scrollwheel: false,
+                    zoomControl: true,
+                    streetViewControl: false,
+                    disableDefaultUI: false,
+                    panControl:false,
+                    center: centreLatlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                }
+
+                map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+
+                var bounds = new google.maps.LatLngBounds();
+                //alert(results);
+                for (var i = 0; i < results.length; i++) {
+                    var latlng = new google.maps.LatLng(results[i].lat, results[i].lng);
+                    var name = results[i].EventName;
+                    var teaser = results[i].EventDescription;
+                    var thumbsrc = results[i].EventImage;
+                    var link = '/' + results[i].EventUrlFriendlyName + '/' + results[i].EventId;
+                    //var desc = '<div id="myInfoWindow" style="width: 300px;"><h3><a href="' + link + '">' + name + '</a></h3><img src="/content/images/events/' + thumbsrc + '" title="' + name + '" style="max-width:200px" /><p>' + teaser + '</p></div>';
+                    var desc = '<div id="myInfoWindow" style=""><h3><a href="' + link + '">' + name + '</a></h3><p>' + teaser + '</p></div>';
+
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map
+                    });
+                    marker.Content = desc;
+                    arrMarkers[i] = marker;
+
+                    google.maps.event.addListener(marker, 'click', function () {
+                        map.panTo(this.getPosition());
+                        if(infoWindow != null) {
+                            infoWindow.close();
+                        }
+                        infoWindow = new google.maps.InfoWindow({
+                            maxWidth: 300,
+                            content: this.Content,
+                            disableAutoPan: false
+                        });
+                        infoWindow.open(map, this);
+                    });
+
+                    bounds.extend(latlng);
+                }
+
+                if (results.length > 0) {
+                    map.fitBounds(bounds);
+
+                }
+            };
+
+            // Function added to help reset map and container boundaries
+            $("#showMap").click(function () {
+                $("#tab2").css({ 'display': 'block' });
+                $("#map_canvas").css({ 'width': '100%', 'height': '400px' });
+                initialize(results, centrePointLat, centrePointLng);
+                //alert('showMap Clicked!');
+            });
+
+            var searchFilter = {
+                Location: $("#SearchCriteria_Location").val(),
+                Guests: $("#SearchCriteria_Guests").val(),
+                StartDate: $("#SearchCriteria_StartDate").val(),
+                Distance: $("#SearchCriteria_Distance").val(),
+                FoodKeyword: $("#SearchCriteria_Keyword").val(),
+                EndDateOffset: $("#SearchCriteria_EndDateOffset").val(),
+                QueryTag: $("#SearchCriteria_QueryTag").val(),
+                Charity: $('#SearchCriteria_Charity').is(':checked') ? true : null,
+                Alcohol: $('#SearchCriteria_Alcohol').is(':checked') ? true : null,
+                PriceRangeOptions: [],
+                DietOptions: [],
+                CuisineOptions: [],
+                AllergyFriendly: $('#SearchCriteria_AllergyFriendly').is(':checked') ? true : false
+            };
+
+            $.ajax({
+                url: "@Url.Action("searchresultjson", "search")",
+                type: "POST",
+                data: searchFilter,
+                success: function (result) {
+                    $("#tab1").empty(); 		 // Remove current
+                    if(result.SearchResults.length > 0) {
+                        $("#eventsTemplate").tmpl(result.SearchResults).appendTo("#tab1");
+                    }
+                    else {
+                        $("#tab1").append("<p>No results to display</p>");
+                    }
+                    //$("#totalResult").text(" ("+result.SearchResults.length+")");
+                    results = result.SearchResults;
+                    if(result.SearchLocation != null && result.SearchLocation.Latitude != null && result.SearchLocation.Longitude != null)
+                    {
+                        centrePointLat = result.SearchLocation.Latitude;
+                        centrePointLng = result.SearchLocation.Longitude;
+                    }
+                    else
+                    {
+                        var geocoder = new google.maps.Geocoder();
+                        geocoder.geocode({ 'address': "London, UK"}, function(results, status) {
+                            if(results != null)
+                            {
+                                var location = results[0].geometry.location;
+                                centrePointLat = location.lat();
+                                centrePointLng = location.lng();
+                            }
+                            else
+                            {
+                                centrePointLat = 51.534377;
+                                centrePointLng = -0.119691;
+                            }
+                        });
+                    }
+                    initialize(result.SearchResults, centrePointLat, centrePointLng);
+                },
+                error: function () {
+                    alert("There was a problem with Search.");
+                }
+            });
+
+            // applying filter to search
+
+            $('#SearchCriteriaForm').submit(function () {
+                var PriceRangeVals = [];
+                var DietVals = [];
+                var CuisineVals = [];
+                $('input[name="PriceRangeOptions"]:checked').each(function () {
+                    //alert($(this).val());
+                    PriceRangeVals.push($(this).val());
+                });
+                $('input[name="DietOptions"]:checked').each(function () {
+                    //alert($(this).val());
+                    DietVals.push($(this).val());
+                });
+                $('input[name="CuisineOptions"]:checked').each(function () {
+                    //alert($(this).val());
+                    CuisineVals.push($(this).val());
+                });
+                var max = 0;
+                $('input[name="EndDataOffset"]:checked').each(function ()
+                {
+                    var selVal = parseInt($(this).val());
+                    if(selVal > max)
+                        max = selVal;
+                });
+                $("#SearchCriteria_EndDateOffset").val(max);
+
+                var searchModel = {
+                    Location: $("#SearchCriteria_Location").val(),
+                    Guests: $("#SearchCriteria_Guests").val(),
+                    StartDate: $("#SearchCriteria_StartDate").val(),
+                    Distance: $("#SearchCriteria_Distance").val(),
+                    EndDateOffset: $("#SearchCriteria_EndDateOffset").val(),
+                    QueryTag: $("#SearchCriteria_QueryTag").val(),
+                    FoodKeyword: $("#SearchCriteria_Keyword").val(),
+                    Charity: $('#SearchCriteria_Charity').is(':checked') ? true : null,
+                    Alcohol: $('#SearchCriteria_Alcohol').is(':checked') ? true : null,
+                    PriceRangeOptions: PriceRangeVals,
+                    DietOptions: DietVals,
+                    CuisineOptions: CuisineVals,
+                    AllergyFriendly: $('#SearchCriteria_AllergyFriendly').is(':checked') ? true : false
+                };
+                // track the search submit keyword
+                _gaq.push(['_trackEvent', 'Event Search', 'Search', $("#SearchCriteria_Keyword").val()]);
+                // test alert($("#SearchCriteria_Keyword").val());
+                $.ajax({
+                    url: this.action,
+                    type: this.method,
+                    data: searchModel,
+                    dataType: "json",
+                    traditional: true,
+                    success: function (result) {
+                        $("#tab1").empty(); 		 // Remove current set
+                        //$("#totalResult").text(" ("+result.SearchResults.length+")");
+                        if(result.SearchResults.length > 0) {
+                            $("#eventsTemplate").tmpl(result.SearchResults).appendTo("#tab1");
+                        }
+                        else {
+                            $("#tab1").append("<p>No results to display</p>");
+                        }
+                        results = result.SearchResults;
+                        if(result.SearchLocation != null && result.SearchLocation.Latitude != null && result.SearchLocation.Longitude != null)
+                        {
+                            centrePointLat = result.SearchLocation.Latitude;
+                            centrePointLng = result.SearchLocation.Longitude;
+                        }
+                        else
+                        {
+                            var geocoder = new google.maps.Geocoder();
+                            geocoder.geocode({ 'address': "London, UK"}, function(results, status) {
+                                if(results != null)
+                                {
+                                    var location = results[0].geometry.location;
+                                    centrePointLat = location.lat();
+                                    centrePointLng = location.lng();
+                                }
+                                else
+                                {
+                                    centrePointLat = 51.534377;
+                                    centrePointLng = -0.119691;
+                                }
+                            });
+                        }
+                        initialize(result.SearchResults, centrePointLat, centrePointLng);
+                    },
+                    error: function () {
+                        alert("There was a problem with Search.");
+                    }
+                });
+                return false;
+            });
+
+            $(function () {
+                $('input[type="checkbox"]').bind('click', function () {
+                    var PriceRangeVals = [];
+                    var DietVals = [];
+                    var CuisineVals = [];
+                    $('input[name="PriceRangeOptions"]:checked').each(function () {
+                        //alert($(this).val());
+                        PriceRangeVals.push($(this).val());
+                    });
+                    $('input[name="DietOptions"]:checked').each(function () {
+                        //alert($(this).val());
+                        DietVals.push($(this).val());
+                    });
+                    $('input[name="CuisineOptions"]:checked').each(function () {
+                        //alert($(this).val());
+                        CuisineVals.push($(this).val());
+                    });
+
+                    var max = 0;
+                    $("input[name='EndDataOffset']:checked").each(function ()
+                    {
+                        var selVal = parseInt($(this).val());
+
+                        if(selVal > max)
+                            max = selVal;
+                    });
+                    $("#SearchCriteria_EndDateOffset").val(max);
+
+                    var searchModel = {
+                        Location: $("#SearchCriteria_Location").val(),
+                        Guests: $("#SearchCriteria_Guests").val(),
+                        StartDate: $("#SearchCriteria_StartDate").val(),
+                        Distance: $("#SearchCriteria_Distance").val(),
+                        EndDateOffset: $("#SearchCriteria_EndDateOffset").val(),
+                        QueryTag: $("#SearchCriteria_QueryTag").val(),
+                        FoodKeyword: $("#SearchCriteria_Keyword").val(),
+                        Charity: $('#SearchCriteria_Charity').is(':checked') ? true : null,
+                        Alcohol: $('#SearchCriteria_Alcohol').is(':checked') ? true : null,
+                        PriceRangeOptions: PriceRangeVals,
+                        DietOptions: DietVals,
+                        CuisineOptions: CuisineVals,
+                        AllergyFriendly: $('#SearchCriteria_AllergyFriendly').is(':checked') ? true : false
+                    };
+
+                    //alert(PriceRangeVals.length);
+
+                    $.ajax({
+                        url: '@Url.Action("searchresultjson", "search")',
+                        type: 'POST',
+                        data: searchModel,
+                        dataType: "json",
+                        traditional: true,
+                        success: function (result) {
+                            $("#tab1").empty();
+                            //$("#totalResult").text(" ("+result.SearchResults.length+") ");		 // Remove current set
+                            if(result.SearchResults.length > 0) {
+                                $("#eventsTemplate").tmpl(result.SearchResults).appendTo("#tab1");
+                            }
+                            else {
+                                $("#tab1").append("<p>No results to display</p>");
+                            }
+                            results = result.SearchResults;
+                            if(result.SearchLocation != null && result.SearchLocation.Latitude != null && result.SearchLocation.Longitude != null)
+                            {
+                                centrePointLat = result.SearchLocation.Latitude;
+                                centrePointLng = result.SearchLocation.Longitude;
+                            }
+                            else
+                            {
+                                var geocoder = new google.maps.Geocoder();
+                                geocoder.geocode({ 'address': "London, UK"}, function(results, status) {
+                                    if(results != null)
+                                    {
+                                        var location = results[0].geometry.location;
+                                        centrePointLat = location.lat();
+                                        centrePointLng = location.lng();
+                                    }
+                                    else
+                                    {
+                                        centrePointLat = 51.534377;
+                                        centrePointLng = -0.119691;
+                                    }
+                                });
+
+                            }
+                            initialize(result.SearchResults, centrePointLat, centrePointLng);
+
+                        },
+                        error: function () {
+                            alert("There was a problem with Search.");
+                        }
+                    });
+
+                });
+            });
+
+        });
+
+        // Waiting List Pop-up
+        function PutOnWaitList(eventId) {
+            if(eventId == null)
+            {
+                alert("There was a problem adding to waiting list, please try again or contact an Administrator.");
+            }
+            else
+            {
+                if("@SupperClub.Code.UserMethods.IsLoggedIn.ToString().ToUpper()" == "TRUE")
+                {
+                    $.getJSON('@Url.Action("AddToWaitListRegisteredUser", "search")', { eventId: eventId, source: "Search" }, function (success) {
+                        if (success == false) {
+                            alert("There was a problem adding to waitlist, please try again or contact an Administrator.");
+                        }
+                        else {
+                            alert("You have been added to Waitlist.");
+                        }
+                    });
+                }
+                else
+                {
+                    $("input[id=hdnEventId]").val(eventId);
+                    $("#txtAddWaitlistEmail").val("");
+                    $("#lblStatus").text("");
+                    $("#dialog").show();
+                    $("#dialog").dialog();
+                }
+            }
+        }
+        function IsEmail(email) {
+            var regex = /^([a-zA-Z0-9_\.\-])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return regex.test(email);
+        }
+    </script>
+
+}
+<div class="container pattern-design2">
+    <div class="container">
+        <p>
+            @HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title
+             </p>
+    </div>
+</div>
+
+@using (Html.BeginForm("searchresultjson", "search", FormMethod.Post, new { id = "SearchCriteriaForm", name = "SearchCriteriaForm" }))
+{
+    <div class="container search-bar">
+        <ul class="container search-fields-container">
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="@Url.Content("~/Content/images/i-calender.png")" width="34" height="34" alt="calender-icon" onclick="$('#SearchCriteria_StartDate').focus(); return false;">
+                </span>
+                @Html.EditorFor(m => m.SearchCriteria.StartDate, "SearchDatePicker")
+            </li>
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="@Url.Content("~/Content/images/i-map.png")" width="34" height="34" alt="map-icon" onclick="$('#SearchCriteria_Location').focus(); return false;">
+                </span>
+                @Html.TextBoxFor(m => m.SearchCriteria.Location, new { @class = "search-input", placeholder = "Where?", type = "search" })
+            </li>
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="@Url.Content("~/Content/images/i-ppl.png")" width="34" height="34" alt="people-icon" onclick="$('#SearchCriteria_Guests').focus(); return false;">
+                </span>
+                @Html.TextBoxFor(m => m.SearchCriteria.Guests, new { @class = "search-input", placeholder = "How many?", type = "search" })
+            </li>
+
+            <li class="three columns">
+                <span class="input-icon-container">
+                    <img src="@Url.Content("~/Content/images/i-keyword.png")" width="34" height="34" alt="keyword-icon" onclick="$('#SearchCriteria_Keyword').focus(); return false;">
+                </span>
+                @Html.TextBoxFor(m => m.SearchCriteria.Keyword, new { @class = "search-input", placeholder = "Key Word", type = "search" })
+            </li>
+            <li class="three columns search-button-container">
+                <span class="search-button button" onclick="$('#SearchCriteriaForm').submit();">
+                    <i class="icon-search icon-white"></i>Find It
+                </span>
+            </li>
+            @*This button to allow Enter key submission*@
+            <li><input type="submit" id="btnsubmitForm" style="visibility:hidden; padding:0px" /></li>
+        </ul>
+    </div>
+
+    <div class="container sub-title3">
+        <h2>
+            Check out these great Grub Clubs. Filter by Price, Cuisine and Category.
+            <!--conditionally replace with tag headline-->
+        </h2>
+        @Html.HiddenFor(m => m.SearchCriteria.EndDateOffset)
+        @Html.HiddenFor(m => m.SearchCriteria.QueryTag)
+    </div>
+    <!-- Conditionally show tag meta for the tag in the url a string
+        <div class="container">
+            <div class="">Text for the tag goes gere</div>
+        </div>
+        -->
+    <div id="SearchResult" class="container" style="min-height: 150px;padding-top:2.5em;">
+        <!-- divs for hiding and showing filters on mobile -->
+        <div class="search-display search-show">
+            Show search filters
+        </div>
+        <div class="search-display search-hide results-hide">
+            Hide search filters
+        </div>
+
+        <div id="displayFilter" class="three columns filter-results">
+            <h5>
+                Filter Results by:
+            </h5>
+            <fieldset>
+                <h6>Price</h6>
+                @foreach (var item in Model.SearchCriteria.PriceRange)
+                {
+                    var optionValue = "PriceRangeOptions" + item.Id.ToString();
+
+                    <div class="editor field check-box-field">
+                        <input type="checkbox" id="@item.Id" class="styled check-box" name="PriceRangeOptions" value="@item.Id" />
+                        <label for="@optionValue">@item.PriceName</label>
+                    </div>
+
+                }
+            </fieldset>
+            <fieldset>
+                <h6>Cuisine</h6>
+                @{int count = 0;}
+                @{string hideClass = string.Empty;}
+                @foreach (var item in Model.SearchCriteria.Cuisine.OrderBy(c => c.Name))
+                {
+                    var optionValue = "PriceRangeOptions" + item.Id.ToString();
+                    if (count == 3)
+                    {
+                        hideClass = "hideCuisines";
+                        <a href="#" id="moreCuisine">more</a>
+
+                    }
+                    count++;
+                    <div class="editor field check-box-field @hideClass">
+                        <input type="checkbox" id="@item.Id" class="styled check-box" name="CuisineOptions" value="@item.Id" />
+                        <label for="@optionValue">@item.Name</label>
+                    </div>
+                    if (count > 3 && Model.SearchCriteria.Cuisine.Count == count)
+                    {
+                        <a href="#" id="lessCuisine" class="@hideClass">less</a>
+                    }
+                }
+            </fieldset>
+            <fieldset>
+                <h6>Diet</h6>
+                @{count = 0;}
+                @{hideClass = string.Empty;}
+                @foreach (var item in Model.SearchCriteria.Diet)
+                {
+                    var optionValue = "DietOptions" + item.Id.ToString();
+                    if (count > 3)
+                    {
+                        hideClass = "hideDiets";
+                        <a href="#" id="moreDiet">more</a>
+                    }
+                    count++;
+                    <div class="editor field check-box-field @hideClass">
+                        <input type="checkbox" id="@item.Id" class="styled check-box" name="DietOptions" value="@item.Id" />
+                        <label for="@optionValue">@item.Name Friendly</label>
+                    </div>
+                    if (count > 3 && Model.SearchCriteria.Diet.Count == count)
+                    {
+                        <a href="#" id="lessDiet" class="@hideClass">less</a>
+                    }
+                }
+                @*Extra checkbox for Allergy Friendly Filter *@
+                <div class="editor field check-box-field">
+                    @Html.EditorFor(model => model.SearchCriteria.AllergyFriendly)
+                    @Html.LabelFor(model => model.SearchCriteria.AllergyFriendly)
+                    @Html.ValidationMessageFor(model => model.SearchCriteria.AllergyFriendly)
+                </div>
+            </fieldset>
+            <fieldset>
+                <h6>Misc</h6>
+                <div class="editor field check-box-field">
+                    @Html.EditorFor(model => model.SearchCriteria.Charity, "NullableBoolean")
+                    @Html.LabelFor(model => model.SearchCriteria.Charity)
+                    @Html.ValidationMessageFor(model => model.SearchCriteria.Charity)
+                </div>
+                <div class="editor field check-box-field">
+                    @Html.EditorFor(model => model.SearchCriteria.Alcohol, "NullableBoolean")
+                    @Html.LabelFor(model => model.SearchCriteria.Alcohol)
+                    @Html.ValidationMessageFor(model => model.SearchCriteria.Alcohol)
+                </div>
+            </fieldset>
+        </div>
+        <div id="displayEvents" class="twelve columns">
+            <ul class="tabs-nav" style="margin-bottom:5px;">
+                <li><a href="#tab1">As List<span id="totalResult"></span></a></li>
+                <li><a href="#tab2" id="showMap">On Map</a></li>
+                <span style="display: inline-block">
+                    <span style="display:inline;font-family:'Lobster', Cursive;font-size:22px;vertical-align:middle;color:#800000;margin-top:10px;">Show: </span>
+                    <span style="display: inline-block;">
+                        <input type="checkbox" name="EndDataOffset" id="thisWeek" value="7" checked="checked" style="display:inline;">
+                        <label for="thisWeek" style="padding-right:2px;display:inline;font-size:14px;">This Week</label></input>
+                    </span>
+                    <span style="display: inline-block;">
+                        <input type="checkbox" name="EndDataOffset" id="nextWeek" value="14" checked="checked" style="display:inline;">
+                        <label for="nextWeek" style="padding-right:2px;display:inline;font-size:14px;">Next Week</label></input>
+                    </span>
+                    <span style="display: inline-block;">
+                        <input type="checkbox" name="EndDataOffset" id="thisMonth" value="30" checked="checked" style="display:inline;">
+                        <label for="thisMonth" style="padding-right:2px;display:inline;font-size:14px;">This Month</label></input>
+                    </span>
+                    <span style="display: inline-block;">
+                        <input type="checkbox" name="EndDataOffset" id="allEvents" value="100" checked="checked" style="display:inline;">
+                        <label for="allEvents" style="padding-right:2px;display:inline;font-size:14px;">All</label></input>
+                    </span>
+                </span>
+            </ul>
+            <div class="tabs-container">
+                <div id="tab1" class="tab-content">
+                </div>
+                <div id="tab2" class="tab-content" style="margin-top: 0px;">
+                    <div id="map_canvas" style="width: 630px; height: 400px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dialog" class="popup_box">
+        <label>Email address</label>
+        <input type="text" value="" id="txtAddWaitlistEmail" />
+        <input type="text" id="hdnEventId" style="display:none;" value="0" />
+        <br />
+        <input type="button" value="Add to Waiting List" id="btnAddWaitListNew" class="button small green" />
+        <input type="button" value="Close" class="button small green" id="btnClose" />
+        <br /><br />
+        <label id="lblStatus" title="" style="font-weight:bold;" />
+    </div>
+}
+<script id="eventsTemplate" type="text/x-jquery-tmpl">
+    <div class="container results-column">
+        {{if ShowListingTitle}}
+        <span style="font-family:'Lobster', Cursive;font-size:25px;color:#800000;margin-bottom:10px;margin-left:15px;">${ListingTitle}</span> <br /><br />
+        {{/if}}
+        <div class="two columns">
+            {{if GuestsAttending >= TotalSeats}}
+            <div class="soldout-label"></div>
+            {{/if}}
+            <a href="/${EventUrlFriendlyName}/${EventId}">
+                <img src="@Url.Content("~/Content/images/Events/")${EventImage}" alt="" class="EventImage" />
+            </a>
+        </div>
+        <div class="six columns" style="float:left;margin-left:0;margin-right:0;">
+            <h4 style="margin-bottom: 0px;">
+                <a href="/${EventUrlFriendlyName}/${EventId}">
+                    ${EventName}
+                </a>
+            </h4>
+            <h5>
+                <a href="/${GrubClubUrlFriendlyName}">By ${GrubClubName}</a>
+            </h5>
+            <p class="Summary">
+                {{html EventDescription}}
+            </p>
+            <span class="timings">
+                <span>${EventDate}</span>
+                {{if !MultiSeating}}
+                <span>${EventStart} - ${EventEnd}</span>
+                {{else}}
+                <span>${EventStart} Onwards</span>
+                {{/if}}
+                <span class="location">${EventPostCode}</span>
+            </span>
+
+        </div>
+        <div class="three columns rating-box" style="margin-left:0;">
+            <span class="price">
+                <span>${Cost}</span>
+            </span>
+            {{if GuestsAttending < TotalSeats}}
+            <a href="@Url.Action("BookEvent", "Event")?eventId=${EventId}" class="button medium green">Book Now</a>
+            {{else}}
+            <input type="button" class="button medium green" value="Add Me to Waiting List" onclick="PutOnWaitList(${EventId});" />
+            {{/if}}
+            @if (SupperClub.Code.UserMethods.IsAdmin)
+            {
+                <p style="margin-top:10px;">
+                    <span style="font-weight:bold;color:red;">${TotalSeats - GuestsAttending}/${TotalSeats} available</span>
+                </p>
+            }
+        </div>
+    </div>
+</script>

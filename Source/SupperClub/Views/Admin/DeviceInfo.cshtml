@@ -1,0 +1,45 @@
+﻿@model SupperClub.Models.DeviceInfoModel
+
+@{
+    ViewBag.Title = "Device Info";
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<!-- 960 Container Start -->
+<div class="container">
+    <div class="sixteen columns">
+        <p></p>
+        @if (@Model.IsMobileDevice)
+        {
+            <h5>You're on a Mobile Device</h5>
+        }
+        else
+        {
+            <h5>You're on a Desktop or Laptop Device</h5>
+        }
+            <p></p>
+
+            <h5>Manufacturer</h5>
+            <p>@Model.Manufacturer</p>
+
+            <h5>Model</h5>
+            <p>@Model.Model</p>
+
+            <h5>Screen</h5>
+            <p>@Model.Screen</p>
+
+            <h5>Platform</h5>
+            <p>@Model.Platform</p>
+
+            <h5>Browser</h5>
+            <p>@Model.Browser</p>
+    </div>
+</div>    
+<!-- 960 Container End -->

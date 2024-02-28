@@ -1,0 +1,1677 @@
+﻿@model SupperClub.Models.EventViewModel
+@{
+    ViewBag.Title = Model.Event.Name + " | Eat Out with Grub Club";
+    ViewBag.Description = Model.Event.EventDescription == null ? "" : (Model.Event.EventDescription.Length > 120 ? Model.Event.EventDescription.Substring(0, 120) : Model.Event.EventDescription);   
+}
+@section PageSpecificScripts {
+    <!-- Meta Properties used for Sharing with OG -->
+    <meta property="og:title" content="@Model.Event.Name" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@Request.Url.AbsoluteUri" />
+    <meta property="og:image" content="@(Request.Url.GetLeftPart(System.UriPartial.Authority) + Url.Content(SupperClub.Code.ServerMethods.EventImagePath + Model.Event.ImagePath))" />
+    <meta property="og:description" content="@Model.Event.NonHtmlDescription" />
+    <meta property="og:site_name" content="GrubClub" />
+   
+<script src="@Url.Content("~/Scripts/jquery.tmpl.js")" type="text/javascript"></script>
+
+      <style>
+          .hidden {
+              display: none;
+          }
+          
+          .shown {
+              display: block;
+          }
+
+          .overlayNew {
+              height: 100%;
+              left: 0;
+              position: absolute;
+              top: 0px;
+              width: 100%;
+              z-index: 10000;
+              opacity: 0;
+              -moz-opacity: 0;
+              filter: alpha(opacity=0);
+              -webkit-transition: opacity 180ms ease-in-out;
+              -moz-transition: opacity 180ms ease-in-out;
+              -o-transition: opacity 180ms ease-in-out;
+              transition: opacity 180ms ease-in-out;
+          }
+
+              .overlayNew.zoom {
+                  background: url(@Url.Content("~/Content/images/")overlay.png) no-repeat center center, url(@Url.Content("~/Content/images/")overlay_bg.png) center center;
+              }
+      </style>
+
+        
+    <script type="text/javascript">
+    var pageSize = 4;
+    var isInt = false;
+    var reviews;
+    var reviewspageNumber = 1;
+    var reviewsCount = 0;
+
+    function showFullDescription(){
+        $("#short_description").addClass('hidden');
+        $("#full_description").removeClass('hidden');
+        $("#show_more").addClass('hidden');
+    };
+    function IsEmail(email) {
+        var regex1 = /^([a-zA-Z0-9_\.\-])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex1.test(email);
+    };
+    function _followChef(){
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("FollowChef", "Host")',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({supperClubId: @Model.Event.SupperClubId}),
+            success: function(response) {
+                $(".message-popup-wraper .messages-popup").addClass("is-hidden"), $("#followMessage").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(3100).queue(function () { $(this).remove() }), $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") });
+              },
+            error: function(response) {
+                alert(response.status);
+            }
+        });
+    }
+    function _unfollowChef(){
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UnfollowChef", "Host")',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({supperClubId: @Model.Event.SupperClubId}),
+            success: function(response) {
+                $("#unfollowMessage").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(3100).queue(function () { $(this).remove() }), $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") }); 
+            },
+            error: function(response) {
+                alert(response.status);
+            }
+        });
+    }
+    function _addWishList(eventId)
+    {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddEventToFavourite", "Event")',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({eventId: eventId}),
+            success: function(response) {
+                if(response.success)
+                {
+                    //$(this).parent().parent().addClass('is-active');
+                    //$(this).parent().hasClass("is-active") ?
+                    $(".message-popup-wraper .messages-popup").addClass("is-hidden"), $("#wishMessage").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(3100).queue(function () { $(this).remove() }), $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") });
+
+                }
+            },
+            error: function(response) {
+                alert(response.status);
+            }
+        });
+
+    }
+    function _removeWishList(eventId)
+    {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("RemoveEventFromFavourite", "Event")',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({eventId: eventId}),
+            success: function(response) {
+                if(response.success)
+                {
+                    //$(".message-popup-wraper .messages-popup").addClass("is-hidden"),
+                    $("#removeWishMessage").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(3100).queue(function () { $(this).remove() }), $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") });
+                }
+            },
+            error: function(response) {
+                alert(response.status);
+            }
+        });
+    }
+    function _addWS(eventId)
+    {
+        _addWishList(eventId);
+        $("#divRmWs_"+ eventId.toString()).removeClass('hidden');
+        $("#divAddWs_" + eventId.toString()).addClass('hidden');
+        return false;
+    }
+    function _adWishList(eventId)
+    {
+        _addWishList(eventId);
+        $(".imgSldrRmWs").removeClass('hidden');
+        $(".imgSldrAddWs").addClass('hidden');
+        return false;
+    }
+    function _removeWS(eventId)
+    {
+        _removeWishList(eventId);
+        $("#divRmWs_"+ eventId.toString()).addClass('hidden');
+        $("#divAddWs_" + eventId.toString()).removeClass('hidden');
+        return false;
+    }
+    function _rmWishList(eventId)
+    {
+        _removeWishList(eventId);
+        $(".imgSldrRmWs").addClass('hidden');
+        $(".imgSldrAddWs").removeClass('hidden');
+        return false;
+    }
+
+    function initialize()
+    {
+        @Html.Raw(string.Format("var mapCenter = new google.maps.LatLng({0}, {1});", Model.Event.Latitude.ToString("F3"), Model.Event.Longitude.ToString("F3")))
+
+        var mapOptions = {
+            zoom: 13,
+            maxZoom: 15,
+            scrollwheel: true,
+            zoomControl: true,
+            streetViewControl: false,
+            disableDefaultUI: false,
+            panControl:true,
+            center: mapCenter,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById('map-single-pin'), mapOptions);
+        google.maps.event.addDomListener(window, 'load', initialize);
+        var marker = new google.maps.Marker({
+            map: map,
+            @Html.Raw(string.Format("position : new google.maps.LatLng({0}, {1}),", Model.Event.Latitude.ToString("F3"), Model.Event.Longitude.ToString("F3")))
+            title: ''
+        });
+        var circle = new google.maps.Circle({
+            map: map,
+            @Html.Raw(string.Format("radius: {0},", SupperClub.Code.ServerMethods.GoogleMapsCircleRadius))    // metres
+            strokeWeight:1,
+            strokeColor:'#AA0000',
+            clickable: false,
+            editable: false,
+            fillColor: '#AA0000',
+            fillOpacity: 0.2,
+            strokeOpacity:0.1
+        });
+        circle.bindTo('center', marker, 'position');
+        marker.setVisible(true);
+    };
+
+
+    $(document).ready(function () {
+        var _iEventId = parseInt(@Model.Event.Id);
+        var _iSupperClubId = parseInt(@Model.Event.SupperClubId);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LoadReviews", "Event")',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({eventId:_iEventId, supperClubId: _iSupperClubId}),
+            success: function (response) {
+                //debugger;
+                if(response != null && response.reviews !=null)
+                {
+                    reviews = response.reviews;
+                    reviewsCount = response.reviews.length;
+                    renderResults(reviews);
+                }
+            },
+            error: function(response) {
+
+            }
+        });
+        $("#btnReviewLoadMore").click(function () {
+            renderPagedResults($("#DivReviews"), reviewspageNumber, reviews);
+        });
+        function renderResults(result) {
+            reviewspageNumber = 1;
+            var _rev = $("#DivReviews");
+
+            if (reviews.length > 0) {
+                renderPagedResults(_rev, reviewspageNumber, reviews);
+            }
+            else
+            {
+                _rev.append("<p>No Reviews yet</p>");
+            }
+        }
+
+        function renderPagedResults(divResult, pageNumber, results) {
+            //debugger;
+            var currPage = pageNumber;
+            var startIndex = (currPage - 1) * pageSize;
+            var targetNum = (currPage) * pageSize;
+            var toBeRenderedresult = [];
+            for (var i = startIndex; i < targetNum && i < results.length; i++) {
+                toBeRenderedresult.push(results[i]);
+            }
+            //debugger;
+            $('#ReviewTemplate').tmpl(toBeRenderedresult).appendTo(divResult);
+            showLoadMore($("#btnReviewsLoadMorediv"), results.length, reviewspageNumber)
+            ++reviewspageNumber;
+        }
+        function showLoadMore(loadmorediv, resultcount, currentPageNumber ) {
+            //debugger;
+            var count = resultcount;
+            var page = currentPageNumber;
+
+            if (count > page * pageSize) {
+                loadmorediv.css("display", "block");
+            }
+            else {
+                loadmorediv.css("display", "none");
+            }
+        }
+        var hash = window.location.hash;
+        if (hash.toLowerCase() == "#reviews") {
+            $("#tabReviews").click();            
+        }
+        if (hash.toLowerCase() == "#details") {
+            $("#tabDetails").click();}
+        if (hash.toLowerCase() == "#chef") {
+            $("#tabChef").click();}
+        if (hash.toLowerCase() == "#menu") {
+            $("#tabMenu").click();}
+        
+        $("#showMapLink").click(function () {
+            initialize();
+            //$("#map-canvas").addClass('type-small color-gray open-popup');
+            //$("#map-canvas").dialog("open");
+        });
+        $("#tktSelector").change(function () {
+            var tkt = this.value;
+            $("#NumberOfTickets").val(tkt);
+        });
+        $("#btnFollowChef").click(function () {
+            _followChef();
+            $("#btnUnFollowChefSideBar").removeClass('hidden');
+            $("#btnFollowChefSideBar").addClass('hidden');
+            $("#btnUnFollowChef").removeClass('hidden');
+            $("#btnFollowChef").addClass('hidden');
+            return false;
+        });
+        $("#btnFollowChefSideBar").click(function () {
+            _followChef();
+            $("#btnUnFollowChefSideBar").removeClass('hidden');
+            $("#btnFollowChefSideBar").addClass('hidden');
+            $("#btnUnFollowChef").removeClass('hidden');
+            $("#btnFollowChef").addClass('hidden');
+            return false;
+        });
+        $("#btnUnFollowChef").click(function () {
+            _unfollowChef();
+            $("#btnUnFollowChefSideBar").addClass('hidden');
+            $("#btnFollowChefSideBar").removeClass('hidden');
+            $("#btnUnFollowChef").addClass('hidden');
+            $("#btnFollowChef").removeClass('hidden');
+            return false;
+        });
+        $("#btnUnFollowChefSideBar").click(function () {
+            _unfollowChef();
+            $("#btnUnFollowChefSideBar").addClass('hidden');
+            $("#btnFollowChefSideBar").removeClass('hidden');
+            $("#btnUnFollowChef").addClass('hidden');
+            $("#btnFollowChef").removeClass('hidden');
+            return false;
+        });
+        $("#btnLoginSideBarBottom").click(function (e) {
+            e.preventDefault();
+            var _rurl = "@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.UrlFriendlyName)" + "/"+ @Model.Event.Id.ToString();
+            var tem = "@Url.Action("WishListEvent","Event")";
+            var _url = encodeURIComponent(tem + "?eventId=" + @Model.Event.Id.ToString() + "&rurl=" + _rurl);
+            $("#RedirectURL").val(_url);
+            $('#login-dialog').load("@Url.Action("loginRegister", "account", new {})"+ "?returnUrl=" + _url);
+            $( $(this).attr("href")).show();
+        });
+        $("#btnLoginSideBarTop").click(function (e) {
+            e.preventDefault();
+            var _rurl = "@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.UrlFriendlyName)" + "/"+ @Model.Event.Id.ToString();
+            var tem = "@Url.Action("FollowChef","Host")";
+            var _url = encodeURIComponent(tem + "?supperClubId=" + @Model.Event.SupperClubId.ToString() + "&rurl=" + _rurl);
+            $("#RedirectURL").val(_url);
+            $('#login-dialog').load("@Url.Action("loginRegister", "account", new {})"+ "?returnUrl=" + _url);
+            $( $(this).attr("href") ).show();
+        });
+        $("#btnLoginChefTab").click(function (e) {
+            e.preventDefault();
+            var _rurl = "@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.UrlFriendlyName)" + "/"+ @Model.Event.Id.ToString();
+            var tem = "@Url.Action("FollowChef","Host")";
+            var _url = encodeURIComponent(tem + "?supperClubId=" + @Model.Event.SupperClubId.ToString() + "&rurl=" + _rurl);
+            $("#RedirectURL").val(_url);
+            $('#login-dialog').load("@Url.Action("loginRegister", "account", new {})"+ "?returnUrl=" + _url);
+            $( $(this).attr("href") ).show();
+        });
+
+        $("#btnLoginBookNow").click(function (e) {
+            e.preventDefault();
+            //debugger;
+            var tem = "@Url.Action("BookEvent", "Event")";
+            var _url = encodeURIComponent(tem + "?eventId=" + @Model.Event.Id.ToString() + "&numOfTickets=" + @Model.NumberOfTickets.ToString());
+            $("#RedirectURL").val(_url);
+            $('#login-dialog').load("@Url.Action("loginRegister", "account", new {})"+ "?returnUrl=" + _url);
+            $( $(this).attr("href") ).show();
+        });
+        $('#loginForm').submit(function(e) {
+            e.preventDefault();
+            var url = "@Url.Action("LogIn","Account")";
+            var fu = $("#RedirectURL").val();
+            $('#loginForm').prop('action', url + "?returnUrl=" + fu);
+            $('#loginForm')[0].submit();
+            return true;
+        });
+
+        $('#RegisterForm').submit(function(e) {
+            e.preventDefault();
+            var url = "@Url.Action("RegisterNew","Account")";
+            var fu = $("#RedirectURL").val();
+            $('#RegisterForm').prop('action', url + "?redirectURL=" + fu);
+            $('#RegisterForm')[0].submit();
+            return true;
+        });
+
+        $('#fbloginForm').submit(function(e) {
+            e.preventDefault();
+            var url = "@Url.Action("FacebookLogin","Account")";
+            var fu = $("#RedirectURL").val();
+            $('#fbloginForm').prop('action', url + "?returnUrl=" + fu);
+            $('#fbloginForm')[0].submit();
+            return true;
+        });
+        $("#addToWishList").click(function () {
+            _addWishList(@Model.Event.Id);
+            $("#removeFromWishList").removeClass('hidden');
+            $("#addToWishList").addClass('hidden');
+            return false;
+        });
+
+        $("#removeFromWishList").click(function () {
+            _removeWishList(@Model.Event.Id);
+            $("#removeFromWishList").addClass('hidden');
+            $("#addToWishList").removeClass('hidden');
+            return false;
+        });
+        $("#btnLoadMoreReviews").click(function () {
+            var currentval = parseInt($("#_reviewCounter").val());
+            var hiddendivcntr = currentval*5+3;
+            $("#divMoreReview_"+ hiddendivcntr).removeClass('hidden');
+            $("#_reviewCounter").val(currentval+1);
+        });
+        $("#UnRegisteredUserWaitListLink").click(function (e){
+            e.preventDefault();
+            $("#txtAddWaitlistEmail").val("");
+            $("#lblStatus").text("");
+            $("#wlDialog").load();
+        });
+        $("#btnAddWaitList").click(function (){
+            var _eId = @Model.Event.Id;
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("AddToWaitListRegisteredUser", "Search")',
+                contentType: "application/json",
+                dataType: "json",
+                data: {eventId: _eId, source: "event" },
+                success: function(success) {
+                    if(success)
+                    {
+                        alert("You have been added to the wait list.")
+                    }
+                    else
+                    {alert("Sorry, some error occured while processing your request. Please try again!");}
+                },
+                error: function(success) {
+                    alert("Sorry, some error occured while processing your request. Please try again!");
+                }
+            });
+        });
+        $("#btnAddWaitListNew").click(function () {
+            var emailId = $("#txtAddWaitlistEmail").val();
+            var _eventId = @Model.Event.Id;
+            if(!IsEmail(emailId))
+            {
+                $("input.txtAddWaitlistEmail").focus();
+                $("#lblStatus").text("E-mail address entered is not valid. Please check and enter a valid e-mail address!");
+                $("#lblStatus").css("color", 'red');
+                $("#lblStatus").show();
+            }
+            else
+            {
+                if(_eventId != null || _eventId == 0)
+                {
+                    $.getJSON('@Url.Action("AddToWaitList", "Search")', { eventId: _eventId, email: emailId, source: "Event" }, function (actionStatus) {
+                        $("#lblStatus").text(actionStatus.NotificationMessage);
+                        if(actionStatus.Success)
+                            $("#lblStatus").css("color", 'green');
+                        else
+                            $("#lblStatus").css("color", 'red');
+                        $("#lblStatus").show();
+                    });
+                }
+                else
+                {
+                    $("#lblStatus").text("There was a problem adding to waiting list, please try again or contact an Administrator.");
+                    $("#lblStatus").css("color", 'red');
+                    $("#lblStatus").show();
+                }
+            }
+        });
+        $(".loginWishList").click(function (e) {
+            e.preventDefault();
+            var clkId = jQuery(this).attr("id");
+            var eId = parseInt(clkId.split(" ")[0]);
+            var _rurl = "@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.UrlFriendlyName)" + "/"+ @Model.Event.Id.ToString();
+            var tem = "@Url.Action("WishListEvent","event")";
+            var _url = encodeURIComponent(tem + "?eventId=" + eId.toString() + "&rurl=" + _rurl);
+            $('#login-dialog').load("@Url.Action("loginRegister", "account", new {})"+ "?returnUrl=" + _url);
+            $( $(this).attr("href")).show();
+        });
+
+    });
+
+
+</script>
+
+        @if (!Model.Event.SupperClub.Active)
+{    <meta name="robots" content="noindex,follow" />}
+
+        }
+
+
+
+      
+
+          @*<div class="container mb+">
+            <ul class="breadcrumbs list-inline list-inline--delimited pt-- mb">
+        <li><a href="@(SupperClub.Code.ServerMethods.ServerUrl)">Home</a></li>
+        <li><a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)">Chef</a></li>
+        <li><a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.UrlFriendlyName + "/" + Model.Event.Id.ToString())">@Model.Event.Name </a></li>
+      </ul>
+
+          </div>*@
+
+          <div class="container" itemprop="event" itemscope itemtype="http://schema.org/Event">
+              @Html.HiddenFor(m => m.NumberOfTickets)
+              @Html.HiddenFor(m => m.RedirectURL)
+              <div class="layout">
+                  <div class="layout__item large-and-up-2/3">
+                      <h1 class="type-light mb"><span itemprop="name">@Model.Event.Name</span></h1>
+
+                      <div class="owl-carousel owl-carousel--single-image mb">
+                    @if (Model.Event.EventImages != null && Model.Event.EventImages.Count > 1)
+                    {
+                          foreach (var _image in Model.Event.EventImages)
+                          {
+                              <div>
+                                  <a href="#!" rel="imagebox" title="@Model.Event.Name">
+                                      <img src="@Url.Content(SupperClub.Code.ServerMethods.EventImagePath + _image.ImagePath)" alt="@Model.Event.Name | Grubclub" style="width:600px;" />
+                                  </a>
+                                      @if (SupperClub.Code.UserMethods.IsLoggedIn)
+                                      {
+                                          if (SupperClub.Code.UserMethods.CurrentUser.WishListedEventIds.Contains(Model.Event.Id))
+                                          {
+                                              <div class="tooltip-links-wl is-active imgSldrRmWs">
+                                                  <a href="#!" onclick="_rmWishList(@Model.Event.Id);">
+                                                      <svg role="img" class="icon color-white icon--38x35">
+                                                          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                                      </svg>
+                                                  </a>
+                                              </div>
+                                              <div class="tooltip-links-wl hidden imgSldrAddWs">
+                                                  <a href="#!" onclick="_adWishList(@Model.Event.Id);">
+                                                      <svg role="img" class="icon color-white icon--38x35">
+                                                          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                                      </svg>
+                                                  </a>
+                                              </div>
+                                          }
+                                          else
+                                          {
+                                              <div class="tooltip-links-wl is-active hidden imgSldrRmWs">
+                                                  <a href="#!" onclick="_rmWishList(@Model.Event.Id);">
+                                                      <svg role="img" class="icon color-white icon--38x35">
+                                                          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                                      </svg>
+                                                  </a>
+                                              </div>
+                                              <div class="tooltip-links-wl imgSldrAddWs">
+                                                  <a href="#!" onclick="_adWishList(@Model.Event.Id);">
+                                                      <svg role="img" class="icon color-white icon--38x35">
+                                                          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                                      </svg>
+                                                  </a>
+                                              </div>
+                                          }
+
+                                      }
+                                      else
+                                      {
+                                          <div class="tooltip-links-wl">
+                                              <a id='@Model.Event.Id tooltip' class="loginWishList open-popup" href="#login-dialog">
+                                                  <svg role="img" class="icon color-white icon--38x35">
+                                                      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                                  </svg>
+                                              </a>
+                                          </div>
+                                      }
+</div>
+                          }
+                    }
+                    else
+                    {
+                      <div>
+                          <a href="#!" rel="imagebox" title="@Model.Event.Name">
+                              <img src="@Url.Content(SupperClub.Code.ServerMethods.EventImagePath + Model.Event.ImagePath)" alt="@Model.Event.Name | Grubclub" style="width:600px;" />
+                          </a>
+                              @if (SupperClub.Code.UserMethods.IsLoggedIn)
+                              {
+                                  if (SupperClub.Code.UserMethods.CurrentUser.WishListedEventIds.Contains(Model.Event.Id))
+                                  {
+                                      <div class="tooltip-links-wl is-active imgSldrRmWs">
+                                          <a href="#!" onclick="_rmWishList(@Model.Event.Id);">
+                                              <svg role="img" class="icon color-white">
+                                                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                              </svg>
+                                          </a>
+                                      </div>
+                                      <div class="tooltip-links-wl hidden imgSldrAddWs">
+                                          <a href="#!" onclick="_adWishList(@Model.Event.Id);">
+                                              <svg role="img" class="icon color-white">
+                                                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                              </svg>
+                                          </a>
+                                      </div>
+                                  }
+                                  else
+                                  {
+                                      <div class="tooltip-links-wl is-active hidden imgSldrRmWs">
+                                          <a href="#!" onclick="_rmWishList(@Model.Event.Id);">
+                                              <svg role="img" class="icon color-white">
+                                                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                              </svg>
+                                          </a>
+                                      </div>
+                                      <div class="tooltip-links-wl imgSldrAddWs">
+                                          <a href="#!" onclick="_adWishList(@Model.Event.Id);">
+                                              <svg role="img" class="icon color-white">
+                                                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                              </svg>
+                                          </a>
+                                      </div>
+                                  }
+
+                              }
+                              else
+                              {
+                                  <div class="tooltip-links-wl">
+                                      <a id='@Model.Event.Id tooltip' class="loginWishList open-popup" href="#login-dialog">
+                                          <svg role="img" class="icon color-white">
+                                              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                          </svg>
+                                      </a>
+                                  </div>
+                              }
+</div>
+                    }
+                    
+                      </div>
+
+                      <div class="tabs mb+">
+                          <ul class="tabs__nav layout layout--flush">
+                              <li class="layout__item large-and-up-1/4"><a href="#Details" id="tabDetails">About</a></li>
+                              <li class="layout__item large-and-up-1/4"><a href="#Menu" id="tabMenu">Your Menu</a></li>
+                              <li class="layout__item large-and-up-1/4"><a href="#Chef" id="tabChef">Your Host</a></li>
+                              <li class="layout__item large-and-up-1/4"><a href="#reviews" id="tabReviews">Reviews</a></li>
+                          </ul>
+
+                          <div id="Details" class="tab-item pt-">
+                              <h3 class="mb--">Why Join the Table?</h3>
+
+                              @*@if (Model.Event.Summary != null && Model.Event.Summary != "")
+                              {
+                                  <div id="summarydiv" class="stuff">
+                                      <p class="mb">
+                                          <b>     @Html.Raw(@Model.Event.Summary.Replace("\r\n", "<br />").Replace("\n", "<br />"))</b>
+                                      </p>
+                                  </div>
+                              }*@
+                              <div id="short_description" class="stuff">
+                                  <p class="mb">
+                                      @Html.Raw(@ViewBag.ShortEventDescription.Replace("\r\n", "<br />").Replace("\n", "<br />"))
+                                  </p>
+                              </div>
+                              <div id="full_description" class="stuff hidden">
+                                  <p class="mb">
+                                      @Html.Raw("<span itemprop=\"description\">" + @Model.Event.EventDescription.Replace("\r\n", "<br />").Replace("\n", "<br />") + "</span>")
+                                  </p>
+                              </div>
+                              <div class="text-center stuff">
+                                  <input type="button" class="btn--primary btn--transparent type-semibold color-black type-small inline-block btn--h22" id="show_more" value="Show More" onclick="showFullDescription();">
+                              </div>
+                              @if (Model.Event.HouseRule != null && Model.Event.HouseRule != "")
+                              {
+                                  <div id="full_description" class="stuff">
+                                      <p class="mb">
+
+                                          <b>House Rules:</b>
+                                          @Html.Raw("<span itemprop=\"description\">" + @Model.Event.HouseRule.Replace("\r\n", "<br />").Replace("\n", "<br />") + "</span>")
+                                      </p>
+                                  </div>
+                              }
+                              
+                              @if (Model.Event.Start < DateTime.Now)
+                              {
+                                  <div style="margin-bottom: 30px;">
+                                      <a class="text-underline" href="@Url.Action("AddReview", "Event", new { eventId = Model.Event.Id })" style="font-weight: bold; color: #FF3300; display: inline; padding-right: 15px; margin-left:50px !important;">Add Your Review</a>
+                                  </div>
+                              }
+
+                          </div>
+                          <div id="Menu" class="tab-item">
+                              @*<div class="menu-box text-center mb">
+                              <h3 class="h6 type-semibold color-darken">Starter:</h3>
+                              <p class="mb">Bell pepper and pistachio tartlets drizzled with Rotiya's home made chilli jam</p>
+                              <h3 class="h6 type-semibold color-darken">Main:</h3>
+                              <p class="mb">Freshly made rotis filled with: Herby grilled lamb, accompanied by zingy tabbouleh, finished with a dollop of tahini raita Smoky aubergine, smothered in tamarind sauce, with an almond crunch All of our rotis are served with leafy salad</p>
+                              <h3 class="h6 type-semibold color-darken">Dessert:</h3>
+                              <p class="mb">Oozing salted caramel and pecan mud pie topped with clotted cream ice-cream (well worth the sin!)</p>
+                              <h3 class="h6 type-semibold color-darken">Drinks:</h3>
+                              <p class="mb+">A glass of bubbly on arrival, red &amp; white wines, filter coffee</p>
+                              <p class="type-small">Join the foodie conversation:</p>
+                              <p class="type-small"><span class='color-orange'>#grubclublondon</span> <span class='color-orange'>@thehungrychef</span></p>
+                            </div>*@
+                              <div class="menu-box text-center mb">
+                                  @foreach (string s in Model.Event.Menu.Split('*'))
+                          {
+                                      <p class="mb">@Html.Raw(@s.Trim())</p>
+                          }
+                              </div>
+
+                             @if (Model.Event.MultiMenuOption)
+                             {
+                                 var menuCnt = 1;
+                                 <h2 class="type-semibold color-darken type-small mb-- ph"> Menu Options</h2>
+                              <div id="multiMenuListing">
+                                  
+                                  @foreach (SupperClub.Domain.EventMenuOption emo in Model.Event.EventMenuOptions)
+                                  {
+                                      <ul class="menuMulti1" style="list-style-type: none;">
+                                          @if (Model.Event.EventMenuOptions.Count > 1)
+                                          {
+                                              <li style="font-weight:bold;">Option @menuCnt:</li>
+                                          }
+                                          <li style="display:inline;padding-right:15px;">  @emo.Title</li>
+                                          <li style="font-weight:bold;color:#FF3300; display:inline;padding-right:15px;"> £@SupperClub.Domain.CostCalculator.CostToGuest(@emo.Cost, @Model.Event.Commission)</li>
+                                          @if (SupperClub.Code.UserMethods.UserId == Model.Event.SupperClub.UserId || SupperClub.Code.UserMethods.IsAdmin)
+                                          {
+                                              if (@emo.IsDefault)
+                                              {
+                                                  <li style="color:#FF3300;font-family:'Lobster', Cursive;font-size:16px;display:inline;" id="menu-@menuCnt">Main Menu Option</li>
+                                              }
+                                              else
+                                              {
+                                                  <li style="display:inline;" id="menu-@menuCnt"></li>
+                                              }
+                                          }
+                                          <li>  @emo.Description</li>
+
+                                      </ul>
+                                      <br />
+                                          menuCnt++;
+                                  }
+                              </div>
+                             }
+
+
+                              @*<div class="text-center mb+">
+                                  <a href="" class="btn btn--primary btn--huge mr--">Download Menu</a>
+                                  <a href="" class="btn btn--primary btn--huge ml--">Share this Menu</a>
+                              </div>*@
+                          </div>
+                          <div id="Chef" class="tab-item pt large-and-up-ph">
+                              <div class="ph pv bgr-white mb- large-and-up-mh-">
+                                  <div class="flag flag--top flag--responsive">
+                                      <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)">
+                                          <div class="flag__img">
+                                              <img style="width: 65px" src="@Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + Model.Event.SupperClub.ImagePath)" alt="@Model.Event.SupperClub.Name | GrubClub" />
+                                          </div>
+                                      </a>
+                                          <div class="flag__body">
+                                              <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)">
+                                                  <h3 class="h2 type-light color-darken line-height-1-15">@Model.Event.SupperClub.Name</h3>
+                                              </a>
+
+                                              <ul class="rating inline-block mr-">
+                                                  @for (int i = 0; i < (@Model.Event.SupperClub.AverageRank == null? 0 : (int)@Model.Event.SupperClub.AverageRank); i++)
+        {
+
+                                                      <li class="is-checked">
+
+                                                          <svg role="img" class="icon ">
+                                                              <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-star"></use>
+                                                          </svg>
+
+                                                      </li>
+        }
+                                                  @for (int i = 0; i < 5 - (@Model.Event.SupperClub.AverageRank == null ? 0 : (int)@Model.Event.SupperClub.AverageRank); i++)
+        {
+                                                      <li class="">
+                                                          <svg role="img" class="icon ">
+                                                              <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-star"></use>
+                                                          </svg>
+                                                      </li>
+        }
+                                              </ul>
+
+                                              <span class='color-gray inline-block'>
+                                                  <svg role="img" class="icon icon--12x12">
+                                                      <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-bubble_icon"></use>
+                                                  </svg>
+                                              </span> <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)#reviews">
+                                                  <span class="color-gray">@Model.Event.SupperClub.NumberOfReviews Reviews</span>
+                                              </a>
+                                              <div class="clearfix mb"></div>
+                                              <div class="pt--">
+                                                  <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase">View profile</a>
+                                                  @if(SupperClub.Code.UserMethods.IsLoggedIn)
+                                              {
+                                                  if(ViewBag.IsFollowingChef)
+                                                  {
+                                                      <a id="btnFollowChef" href="" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase mr- hidden">Follow</a>
+                                                      <a id="btnUnFollowChef" href="" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase mr- btn--unfollow">Unfollow</a>
+                                                  }
+                                                  else
+                                                  {
+                                                      <a id="btnFollowChef" href="" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase mr-">Follow</a>
+                                                      <a id="btnUnFollowChef" href="" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase mr- btn--unfollow hidden">Unfollow</a>
+                                                  }
+                                              }
+                                              else{
+                                                      <a href="#login-dialog" id="btnLoginChefTab" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase mr- type-small open-popup">Follow</a>
+                                              }
+                                              </div>
+                                          </div>
+</div>
+                              </div>
+                              <h3 class="h4">In a Nutshell</h3>
+                              @Html.Raw("<p class=\"mb-\">" + @Model.Event.SupperClub.Summary.Replace("\r\n", "<br />").Replace("\n", "<br />") + "</p>")
+                              <h3 class="h4">The Whole Hog</h3>
+                              @Html.Raw("<p class=\"mb-\"><span itemprop=\"description\">" + @Model.Event.SupperClub.Description.Replace("\r\n", "<br />").Replace("\n", "<br />") + "</span></p>")                              
+                          </div>
+                          <div id="reviews" class="tab-item pt">
+                              <div class="comments-box" itemprop="review" itemscope itemtype="http://schema.org/Review">
+                                  @if (ViewBag.SupperClubReviews!= null && ViewBag.SupperClubReviews.Count == 0)
+                                {
+                                      @: No reviews for this chef yet!
+                                      <br /><br />
+                                }
+                                  else
+                                  {
+                                    <div class="container container--small" id="DivReviews1">
+                                        @Html.Partial("_Reviews")
+                                    </div>
+                                    <div class="text-center mb" id="btnReviewsLoadMorediv" style="display:none">
+
+                                        <button type="button" id="btnReviewLoadMore" class="btn btn--primary btn--radius btn--white">Load More</button>
+                                    </div>
+
+                                  }
+                              
+                              </div>
+                          
+                          </div>
+
+                      </div>
+
+                      <h2 class="type-uppercase type-semibold color-darken type-small mb-- ph">More about this Experience</h2>
+                      <ul class="information-icons ph pb-">
+                        @if(Model.Event.Alcohol)
+                        {
+                            <li class="information-icons__item tooltip-wrap mb-">
+                                <a href="/byob">
+                                    <svg role="img" class="icon icon--20x40">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-large_botles"></use>
+                                    </svg>
+                                </a>
+                                <div class="tooltip">Bring Your Own Bottle</div>
+                            </li>
+                        }
+
+                    @if(Model.Event.SelectedTagIds.Contains(45))
+                        {
+                          <li class="information-icons__item tooltip-wrap mb-">
+                              <a href="/vegan">
+                                  <svg role="img" class="icon icon--38x35">
+                                      <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-leaf"></use>
+                                  </svg>
+                              </a>
+                                  <div class="tooltip">Vegan Friendly</div>
+                           </li>
+                        }
+                    @if(Model.Event.SelectedTagIds.Contains(11))
+                    {
+                              <li class="information-icons__item tooltip-wrap mb-">
+                                  <a href="/byo-children">
+                                  <svg role=" img" class="icon icon--38x35">
+                                      <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-baby_prams"></use>
+                                      </svg>
+                                      </a>
+                                      <div class="tooltip">Child Friendly</div>
+</li>
+                    }
+                    @if(Model.Event.SelectedTagIds.Contains(9))
+                        {
+                          <li class="information-icons__item tooltip-wrap mb-">
+                              <a href="/feel-good">
+                                  <svg role="img" class="icon icon--38x35">
+                                      <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart_signal"></use>
+                                  </svg>
+                              </a>
+                              <div class="tooltip">Be Good to Your Health</div>
+                          </li>
+                    }
+                    @*@if(Model.Event.SelectedTagIds.Contains(51))
+                        {
+                          <li class="information-icons__item tooltip-wrap mb-">
+
+                              <svg role="img" class="icon icon--38x35">
+                                  <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                              </svg>
+
+                              <div class="tooltip">Flirting Encouraged</div>
+                          </li>
+                    }*@
+                          @*<li class="information-icons__item tooltip-wrap mb-">
+
+                              <svg role="img" class="icon icon--38x35">
+                                  <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-smile_face"></use>
+                              </svg>
+
+                              <div class="tooltip">Info text</div>
+                          </li>*@
+                        @if(Model.Event.SelectedTagIds.Contains(10))
+                        {
+                          <li class="information-icons__item tooltip-wrap mb-">
+                              <a href="/byo-food">
+                                  <svg role="img" class="icon icon--12x40">
+                                      <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-fork"></use>
+                                  </svg>
+                              </a>
+                              <div class="tooltip">Bring your own food</div>
+                          </li>
+                        }
+                        @if(Model.Event.SelectedTagIds.Contains(15))
+                        {
+                          <li class="information-icons__item tooltip-wrap mb-">
+                              <a href="/wheelchair-friendly">
+                                  <svg role="img" class="icon icon--33x39">
+                                      <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-disability"></use>
+                                  </svg>
+                              </a>
+                              <div class="tooltip">Wheelchair friendly</div>
+                          </li>
+                        }
+                        <li class="information-icons__item tooltip-wrap mb-">
+                            <a href="/pop-up-restaurants">
+                                <svg role="img" class="icon icon--33x39">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-big_user"></use>
+                                </svg>
+                            </a>
+                              <div class="tooltip">Great on your own!</div>
+                          </li>
+                       
+                    @if (Model.Event.SelectedTagIds.Contains(44))
+                    {
+                          <li class="information-icons__item tooltip-wrap mb-">
+                              <a href="/vegetarian">
+                                  <svg role="img" class="icon icon--29x34">
+                                      <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-v"></use>
+                                  </svg>
+                              </a>
+                              <div class="tooltip">Vegetarian Friendly</div>
+                          </li>
+                     }
+                          @*<li class="information-icons__item tooltip-wrap mb-">
+
+                              <svg role="img" class="icon icon--33x39">
+                                  <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-apple"></use>
+                              </svg>
+
+                              <div class="tooltip">Info text</div>
+                          </li>*@
+                      </ul>
+                      <hr class="hr hr--dots mb--">
+                      <p class="color-darken mb pb-">
+                          <svg role="img" class="icon ">
+                              <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-tags"></use>
+                          </svg>
+                          <span>Event Tags:</span> <span class="type-semibold">
+                            @if(Model.Event.EventTags != null && Model.Event.EventTags.Count > 0)
+                            {
+                                var _cntr = 1;
+                                foreach(SupperClub.Domain.EventTag _et in Model.Event.EventTags)
+                                {
+                                     if(_et.Tag.Private == false || (SupperClub.Code.UserMethods.IsLoggedIn && SupperClub.Code.UserMethods.IsAdmin))
+                                    {
+                                        if(_cntr == Model.Event.EventTags.Count)
+                                        {
+                                          @: <a href="@(SupperClub.Code.ServerMethods.ServerUrl+_et.Tag.UrlFriendlyName)">@_et.Tag.Name</a>
+                                        }
+                                        else
+                                        {
+                                          @: <a href="@(SupperClub.Code.ServerMethods.ServerUrl+_et.Tag.UrlFriendlyName)">@_et.Tag.Name</a>,
+                                        }
+                                        _cntr++; 
+                                    }
+                                } 
+                            } </span> </p> 
+                  
+                  @if ((@Model.Event.TotalEventGuests - @Model.Event.TotalNumberOfAvailableSeats) > 10) 
+                  { 
+                      <h2 class="h4 type-bold mb-">Already at the Table
+                      <span class="type-default type-semibold">(@(Model.Event.TotalEventGuests - Model.Event.TotalNumberOfAvailableSeats))</span></h2> 
+                      <ul class="list-bare list-inline mb"> 
+                          @for (int i = 0; i < (Model.Event.TotalEventGuests - Model.Event.TotalNumberOfAvailableSeats); i++) 
+                          { 
+                              <li class="mr-- mb--"> 
+                                    @*<a href="">
+                                    <img src="@Url.Content("~/Content/images/")icons/martini2.png" alt="">
+                                    </a>*@ 
+                                  <svg role="img" class="icon icon--33x39">
+                                      <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-big_user"></use>
+                                  </svg>
+                                  
+                              </li> 
+                          }                              @*<li class="mr-- mb--">
+                                  <a href=""><img src="@Url.Content("~/Content/images/")people/img10.jpg" alt=""></a>
+                              </li>*@  
+                      </ul> 
+                  } 
+                  </div>  
+                  
+                  
+                  <div class="layout__item large-and-up-1/3"> <aside class="sidebar-event"> 
+                      <input type="hidden" id="_redirect" value="" />
+                      <div class="flag flag--top flag--small flag--responsive mb pb-"> 
+                      <div class="flag__img"> 
+                          <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)">
+                              <img class="border-white" src="@Url.Content(SupperClub.Code.ServerMethods.SupperClubImagePath + Model.Event.SupperClub.ImagePath)" alt="@Model.Event.SupperClub.Name | GrubClub" style="height:73px;width:73px;" />
+                          </a>
+                      </div> 
+                      <div class="flag__body"> 
+                          <div class="justifize mb--"> 
+                          <div class="justifize__box"> 
+                              <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)"><h3 class="type-semibold type-small type-uppercase color-darken line-height-1-15">@Model.Event.SupperClub.Name</h3></a>
+</div> 
+                          <div class="justifize__box"> 
+                              @if(SupperClub.Code.UserMethods.IsLoggedIn)
+                              {
+                                  if(ViewBag.IsFollowingChef)
+                                  {                                    
+                                        <a id="btnFollowChefSideBar" href="" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase mr- hidden">Follow</a>
+                                        <a id="btnUnFollowChefSideBar" href="" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase mr- btn--unfollow">Unfollow</a>
+                                  }
+                                  else
+                                  {
+                                      <a id="btnFollowChefSideBar" href="" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase mr-">Follow</a>
+                                      <a id="btnUnFollowChefSideBar" href="" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase mr- btn--unfollow hidden">Unfollow</a>
+                                  }
+                              }
+                              else
+                              {
+                                  <a id="btnLoginSideBarTop" href="#login-dialog" class="btn btn--primary btn--small large-and-up-float-right type-small type-uppercase mr- type-small open-popup">Follow</a> 
+                              } 
+                              
+                              </div> </div> <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)"><p>By <span class="type-semibold">@Model.Event.SupperClub.User.FirstName @Model.Event.SupperClub.User.LastName</span></p></a>
+                           <div class="justifize"> <div class="justifize__box">   
+                               <ul class="rating "> @for (int i = 0; i < (@Model.Event.SupperClub.AverageRank == null? 0 : (int)@Model.Event.SupperClub.AverageRank); i++) { <li class="is-checked"> <svg role="img" class="icon "> <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-star"></use> </svg> </li> } @for (int i = 0; i < 5 - (@Model.Event.SupperClub.AverageRank == null ? 0 : (int)@Model.Event.SupperClub.AverageRank); i++) { <li class=""> <svg role="img" class="icon "> <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-star"></use> </svg> </li> } </ul>  </div> <div class="justifize__box"> <span class='color-gray inline-block'> <svg role="img" class="icon icon--12x12"> <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-bubble_icon"></use> </svg> </span> 
+                                <a href="@(SupperClub.Code.ServerMethods.ServerUrl + Model.Event.SupperClub.UrlFriendlyName)#reviews"><span class="color-gray">@Model.Event.SupperClub.NumberOfReviews Reviews</span></a> </div> </div> </div> </div>  <h2 class="type-semibold type-default type-uppercase color-darken line-height-1-15 mb-">Book this Experience</h2>  <div class="book-form"> <form action=""> <h3 class="h6 mb--">@Model.Event.Name</h3> 
+                      
+                      <hr class="hr hr--dots mb--"> 
+                        @if (Model.Event.TotalNumberOfAvailableSeats < 5 && Model.Event.TotalNumberOfAvailableSeats > 0)
+                        {
+                            <div class="mb--">
+
+                                <svg role="img" class="icon color-blue icon--14x14 mr--">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-flag"></use>
+                                </svg>
+                                <span class="color-blue type-bold">Nearly Sold Out!</span>
+                            </div>
+                        }
+                        @if (Model.Event.TotalNumberOfAvailableSeats <= 0)
+                        {
+                            <div class="mb--">
+
+                                <svg role="img" class="icon color-blue icon--14x14 mr--">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-flag"></use>
+                                </svg>
+                                <span class="color-blue type-bold">Sold Out!</span>
+                            </div>
+                        }
+                      <div class="flag flag--flush mb--"> 
+                        <div class="flag__img">  
+                          <svg role="img" class="icon color-blue icon--14x14 mr--"> 
+                            <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-medium_calendar"></use> 
+                          </svg>  
+                        </div> 
+                      <div class="flag__body"> <span>@Model.Event.Start.ToString("ddd, d MMM")</span> @*<label class="relative datepicker-wrap display-block">
+                    <input type="text" class="js__datepicker input--full input--primary" placeholder="Pick a date">
+                    <div class="select__icon">
+                        <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+                        <!-- <svg class="icon"><use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-email-arrow"/></svg> -->
+                    </div>
+                </label>*@  </div> </div> 
+                     
+                      <div> 
+                          @if (!Model.Event.MultiSeating  || Model.Event.EventSeatings.Count <= 0) {
+                           <svg role="img" class="icon color-blue icon--14x14 mr--"> 
+                          <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-small_clock"></use> 
+                          </svg> <span>
+                             @Model.Event.Start.ToShortTimeString() - @Model.Event.End.ToShortTimeString()
+                                                            </span>
+                               if (SupperClub.Code.UserMethods.IsLoggedIn && Model.Event.NumberOfAttendeeGuests(SupperClub.Code.UserMethods.UserId) > 0)
+                              {
+                                <p> @Model.Event.NumberOfAttendeeGuests(SupperClub.Code.UserMethods.UserId) Ticket(s) Booked</p>
+                          }
+                          }
+                          else
+                          {
+                              if (SupperClub.Code.UserMethods.IsLoggedIn && Model.Event.NumberOfAttendeeGuests(SupperClub.Code.UserMethods.UserId) > 0)
+                              {
+                                <p> Model.Event.NumberOfAttendeeGuests(SupperClub.Code.UserMethods.UserId) Ticket(s) Booked</p>
+
+                                  foreach (SupperClub.Domain.EventSeating seating in Model.Event.EventSeatings)
+                                  {
+                                      if (seating.Id == ViewBag.DefaultSeatingId)
+                                      {
+                                          if (seating.TotalNumberOfAvailableSeats <= 0)
+                                          { <p>
+                                    <svg role="img" class="icon color-blue icon--14x14 mr--">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-small_clock"></use>
+                                    </svg> <span>
+                                         @seating.Start.ToShortTimeString() - @seating.End.ToShortTimeString()
+                                    </span>
+                                </p>
+                          }else
+                                  {
+                                      <p>
+                                    <svg role="img" class="icon color-blue icon--14x14 mr--">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-small_clock"></use>
+                                    </svg> <span>
+                                         @seating.Start.ToShortTimeString() - @seating.End.ToShortTimeString()
+                                     </span>
+                                </p>
+                                  }
+                                  }
+
+                              }
+                                  }
+                                  else
+                                  { 
+
+
+                              foreach (SupperClub.Domain.EventSeating seating in Model.Event.EventSeatings)
+                              {
+                                if (seating.TotalNumberOfAvailableSeats <= 0)
+                                  { <p>
+                                    <svg role="img" class="icon color-blue icon--14x14 mr--">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-small_clock"></use>
+                                    </svg> <span><del>
+                                         @seating.Start.ToShortTimeString() - @seating.End.ToShortTimeString()
+                                    </del> </span>
+                                </p>
+                          }else
+                                  {
+                                      <p>
+                                    <svg role="img" class="icon color-blue icon--14x14 mr--">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-small_clock"></use>
+                                    </svg> <span>
+                                         @seating.Start.ToShortTimeString() - @seating.End.ToShortTimeString()
+                                     </span>
+                                </p>
+                                  }
+
+                              }
+                          }
+                          }
+                          
+                      </div>
+                                       @if (SupperClub.Code.UserMethods.IsLoggedIn && Model.Event.MultiMenuOption && Model.Event.NumberOfAttendeeGuests(SupperClub.Code.UserMethods.UserId) > 0)
+                        {
+                           
+                                <hr class="hr hr--dots" />
+                                <div style="margin-bottom:10px;margin-top:7px;">
+                                <svg role="img" class="icon color-blue icon--14x14 mr--">
+                                <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-bulb"></use>
+                                </svg>
+                                <span>@Html.Raw(ViewBag.DefaultMenuOption.Replace("\r\n", "<br />").Replace("\n", "<br />"))
+                                    </span>
+                                </div>
+                            
+                        
+                        
+                        }
+                      @if (SupperClub.Code.UserMethods.IsLoggedIn && Model.Event.NumberOfAttendeeGuests(SupperClub.Code.UserMethods.UserId) > 0)
+                      {
+                        <div style="margin-bottom:10px;margin-top:7px;">
+                            <svg role="img" class="icon color-blue icon--14x14 mr--">
+                                <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-smallest_pin"></use>
+                            </svg>
+                            <span>
+                                @Model.Event.Address
+                                @(string.IsNullOrEmpty(Model.Event.Address2) ? "" : ", " + Model.Event.Address2)
+                                , @Model.Event.City @Model.Event.PostCode
+                            </span>                           
+                        </div>
+                            if (ViewBag.SpecialRequirements != null && ViewBag.SpecialRequirements !="")
+                            {
+                                <hr class="hr hr--dots" />
+                                <div style="margin-bottom:10px;margin-top:7px;">
+                                    <svg role="img" class="icon color-blue icon--14x14 mr--">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-bulb"></use>
+                                    </svg>
+                                    <span>@ViewBag.SpecialRequirements</span>
+                                </div>
+                            }
+                       }
+                            else
+                            {
+                            <div style="margin-bottom:10px;margin-top:7px;">
+                                <svg role="img" class="icon color-blue icon--14x14 mr--">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-smallest_pin"></use>
+                                </svg>
+                                @if (Model.Event.Id == 21415 || Model.Event.Id == 21417)
+                                {
+                                <span>Borough Market - <a id="showMapLink" href="#map-single-pin-wrap" class="color-gray open-popup">View on Map</a></span>
+                                }
+                                else
+                                {
+                                <span>@Model.Event.PostCode.Split(new string[] { " " }, StringSplitOptions.None)[0] - <a id="showMapLink" href="#map-single-pin-wrap" class="color-gray open-popup">View on Map</a></span>
+                                }
+                            </div>
+                            }
+                     
+                      <hr class="hr hr--dots">
+                      <div class="justifize">
+                          <div class="justifize__box">
+                              <span class='type-bold h4 color-dark'>@Html.DisplayFor(m => m.Event.CostToGuest)</span>
+                          </div>
+                          @if(Model.Event.Alcohol)
+                          {
+                          <div class="justifize__box">
+                              <a href="/byob">
+                                  <span class='type-bold h4 color-dark tooltip-wrap'>
+                                      <svg role="img" class="icon icon--11x21">
+                                          <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-large_botles"></use>
+                                      </svg>
+                                      BYOB <div class="tooltip">Bring your own bottle</div>
+                                  </span>
+                                  </a>
+
+</div>
+                          }
+                      </div>
+                      
+                        
+                                  @if (Model.Event.Start > DateTime.Now && Model.Event.Status == (int)SupperClub.Domain.EventStatus.Active)
+                                  {
+                                    <hr class="hr hr--dots mb-" />
+                                      if (int.Parse(ViewBag.AvailableSeats) > 0 && Model.Event.Status == (int)SupperClub.Domain.EventStatus.Active)
+                                      {
+                                          if (SupperClub.Code.UserMethods.IsLoggedIn)
+                                          {
+                                              if (Model.Event.NumberOfAttendeeGuests(SupperClub.Code.UserMethods.UserId) > 0)
+                                              {
+                                                <a href="@Url.Action("BookEvent", "Event", new { eventId = Model.Event.Id, numOfTickets = Model.NumberOfTickets })" class="btn btn--primary btn--huge btn--full mb-" style="">Book Again</a>
+                                              }
+                                              else
+                                              {
+                                                <a href="@Url.Action("BookEvent", "Event", new { eventId = Model.Event.Id, numOfTickets = Model.NumberOfTickets})" class="btn btn--primary btn--huge btn--full mb-" style="">Book Now</a>
+                                              }
+                                          }
+                                          else
+                                          {
+                                            //<a href="@Url.Action("BookEvent", "Event", new { eventId = Model.Event.Id, numOfTickets = Model.NumberOfTickets})" class="btn btn--primary btn--huge btn--full mb-" style="">Book Now</a>
+                                            <a id="btnLoginBookNow" href="#login-dialog" class="btn btn--primary btn--huge btn--full mb- open-popup">Book Now</a>
+                                          }
+                                     }       
+                                    if (Model.Event.TotalNumberOfAvailableSeats <= 0)
+                                    {
+                                        if(SupperClub.Code.UserMethods.IsLoggedIn)
+                                        {
+                                        <a href="#!" class="btn btn--primary btn--huge btn--full mb-" id="btnAddWaitList">Add me to waitlist</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#wlDialog" id="UnRegisteredUserWaitListLink" class="btn btn--primary btn--huge btn--full mb- open-popup" style="">Add me to waitlist</a>
+                                        }
+                                    }
+                                  }
+                 
+                       @if((SupperClub.Code.UserMethods.IsLoggedIn && SupperClub.Code.UserMethods.IsAdmin) || (SupperClub.Code.UserMethods.IsLoggedIn && SupperClub.Code.UserMethods.UserId == Model.Event.SupperClub.UserId && @Model.Event.Start > DateTime.Now))
+                      {
+                       <a href="@Url.Action("details", "event", new { eventid= Model.Event.Id})" class="btn btn--primary btn--huge--pad btn--full mb-">Edit Event</a>
+                      }
+                      @if (SupperClub.Code.UserMethods.IsLoggedIn && (SupperClub.Code.UserMethods.IsAdmin || SupperClub.Code.UserMethods.IsLoggedIn && SupperClub.Code.UserMethods.UserId == Model.Event.SupperClub.UserId))
+                      {
+                        <a href="/event/guestlist?eventid=@Model.Event.Id" class="btn btn--primary btn--huge--pad btn--full mb-">Guest List</a>
+                        if (Model.Event.TotalNumberOfAvailableSeats <= 0)
+                        {
+                            <a href="/event/waitlist?eventid=@Model.Event.Id" class="btn btn--primary btn--huge--pad btn--full mb-">Wait List</a>
+                          }
+                        <a href="/event/cloneevent?eventid=@Model.Event.Id" class="btn btn--primary btn--huge--pad btn--full mb-">Replicate Event</a>
+                      }
+                    <hr class="hr hr--dots mb-">
+                    @*
+                        <div class="justifize">
+                        <div class="justifize__box">
+                            <a href="http://www.facebook.com/sharer/sharer.php?u=@ViewBag.EventURL" target="_blank" class="btn btn--primary btn--white">
+                                <svg role="img" class="icon icon--17x14">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-share"></use>
+                                </svg>
+                                Share
+                            </a>
+                        </div>
+                        <div class="justifize__box">
+                            @if (SupperClub.Code.UserMethods.IsLoggedIn)
+                            {
+                                if (ViewBag.IsEventWishListed)
+                                {
+                                    <a id="removeFromWishList" href="" class="btn btn--primary btn--white">
+                                        <svg role="img" class="icon icon--17x14">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                        </svg>
+                                        Remove From Wishlist
+                                    </a>
+                                    <a id="addToWishList" href="" class="btn btn--primary btn--white hidden">
+                                        <svg role="img" class="icon icon--17x14">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                        </svg>
+                                        Wishlist
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a id="addToWishList" href="" class="btn btn--primary btn--white">
+                                        <svg role="img" class="icon icon--17x14">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                        </svg>
+                                        Wishlist
+                                    </a>
+                                    <a id="removeFromWishList" href="" class="btn btn--primary btn--white hidden">
+                                        <svg role="img" class="icon icon--17x14">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                        </svg>
+                                        Remove From Wishlist
+                                    </a>
+                                }
+                            }
+                            else
+                            {
+                                <a id="btnLoginSideBarBottom" href="#login-dialog" class="btn btn--primary btn--white type-small color-gray open-popup">
+                                    <svg role="img" class="icon icon--17x14">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                    </svg>
+                                    Wishlist
+                                </a>
+                            }
+                        </div>
+                    </div>*@
+                <h2 class="share-menu">Share with your Friends</h2>           
+                <div class="footer-main__social">
+                    <div class="">
+                        <div class="justifize__box" style="padding-right:7px;">
+                            <a href="http://www.twitter.com/share?url=@ViewBag.EventURL&text=@ViewBag.TwitterText" target="_blank" class="icon-wrap text-center bgr-twitter">
+                                <svg role="img" class="icon color-white icon--16x13">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-twitter"></use>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="justifize__box" style="padding-right:7px;">
+                            <a href="http://www.facebook.com/sharer/sharer.php?u=@ViewBag.EventURL" target="_blank" class="icon-wrap text-center bgr-facebook">                                
+                                    <svg role="img" class="icon color-white icon--9x17">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-facebook"></use>
+                                    </svg>
+                                </a></div>
+                       
+                        @*<div class="justifize__box">
+    <a href="" class="icon-wrap text-center bgr-youtube">
+    <svg role="img" class="icon color-white icon--18x12">
+    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-youtube"></use>
+    </svg>
+    </a>
+    </div>*@
+    @*<div class="justifize__box">
+        <a href="http://pinterest.com/pin/create/button/?url=@ViewBag.EventURL&media=@ViewBag.ImageURL&description=@HttpUtility.UrlEncode(Model.Event.Name)" target="_blank" class="icon-wrap text-center bgr-pinterest">
+            <svg role="img" class="icon color-white icon--16x21">
+                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-pinterest"></use>
+            </svg>
+        </a>
+    </div>*@
+                    </div>
+                    </div>
+</form>
+              </div>
+          </aside>
+      </div>
+      </div>
+
+
+     @*@if(Model.SupperClub.ShowRecommendation)
+     {*@ 
+      <h2 class="h4 type-bold mb-">Still Hungry? How about these Grub Clubs?</h2>
+
+      <div class="layout mb+">
+          @if(Model.Event.EventRecommendations != null && Model.Event.EventRecommendations.Count >0)
+          {
+              foreach(SupperClub.Domain.EventRecommendation _er in Model.Event.EventRecommendations.ToList())
+              {
+              <div class="layout__item large-and-up-1/4 medium-1/2">
+                  <div class="search-result search-result--grid">
+                      <div class="search-result__box">                     
+                          <a href="@Url.Action("DetailsByIdWithName","Event",new{eventId=@_er.RecommendedEventId, eventSeoFriendlyName = @_er.RecommendedEvent.UrlFriendlyName, hostname = @_er.RecommendedEvent.SupperClub.UrlFriendlyName})" rel="imagebox" title="@_er.RecommendedEvent.Name">
+                              <figure>
+                                  <img src="@Url.Content(SupperClub.Code.ServerMethods.EventImagePath + @_er.RecommendedEvent.ImagePath)" alt="@_er.RecommendedEvent.Name | Grubclub" style="height:180px; width:220px;" />
+                                  @if(@_er.RecommendedEvent.TotalNumberOfAvailableSeats <= 0)
+                                  {
+                                    <div class="figure__img-marker figure__img-marker--alternative">Sold Out</div>
+                                  }
+                                  else
+                                  {
+                                      if(@_er.RecommendedEvent.TotalNumberOfAvailableSeats > 0 && @_er.RecommendedEvent.TotalNumberOfAvailableSeats < 5)
+                                      {
+                                        <div class="figure__img-marker figure__img-marker--alternative">Last seats</div>
+                                      }
+                                  }                                  
+                                  @if(@_er.RecommendedEvent.EarlyBird != null && @_er.RecommendedEvent.EarlyBird > 0  && @_er.RecommendedEvent.TotalNumberOfAttendeeGuests<= @_er.RecommendedEvent.EarlyBird)
+                                  {
+                                  @*<div style="margin-top:-16px;" class="figure__img-marker">Early Bird</div>*@
+                                    <div class="figure__img-marker figure__img-marker--alternative">Early Bird</div>
+                                  }
+                                  @if( @_er.RecommendedEvent.SupperClub.Events != null && @_er.RecommendedEvent.SupperClub.Events.Count < 3 )
+                                  {                                    
+                                    <div class="figure__img-marker figure__img-marker--alternative">New Chef</div>
+                                  }
+                              </figure>
+                          </a>
+                          <header class='mb-'>
+                              <a href="@Url.Action("DetailsByIdWithName","Event",new{eventId=@_er.RecommendedEventId, eventSeoFriendlyName = @_er.RecommendedEvent.UrlFriendlyName, hostname = @_er.RecommendedEvent.SupperClub.UrlFriendlyName})"><h2 class="color-darken" style="height:50px;overflow:hidden;">@_er.RecommendedEvent.Name</h2></a>
+                              <div class="justifize">
+                                  <div class="justifize__box">
+                                      <span>
+
+                                          <ul class="rating ">
+
+                                              @for (int i = 0; i < (_er.RecommendedEvent.SupperClub.AverageRank == null? 0 : (int)_er.RecommendedEvent.SupperClub.AverageRank); i++)
+            {
+                                                  <li class="is-checked">
+                                                      <svg role="img" class="icon ">
+                                                          <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-star"></use>
+                                                      </svg>
+                                                  </li>
+            }
+                                              @for (int i = 0; i < 5 - (_er.RecommendedEvent.SupperClub.AverageRank == null ? 0 : (int)_er.RecommendedEvent.SupperClub.AverageRank); i++)
+            {
+                                                  <li class="">
+                                                      <svg role="img" class="icon ">
+                                                          <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-star"></use>
+                                                      </svg>
+                                                  </li>
+            }
+
+                                          </ul>
+                                      </span>
+                                  </div>
+                                  <div class="justifize__box">
+                                      <a href="@(SupperClub.Code.ServerMethods.ServerUrl + @_er.RecommendedEvent.SupperClub.UrlFriendlyName)#reviews">
+    <span class="color-gray">
+        <svg role="img" class="icon ">
+            <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-bubble_icon"></use>
+                                        </svg>
+                                        @_er.RecommendedEvent.SupperClub.NumberOfReviews Reviews
+                                    </span>
+                                </a>
+                                  </div>
+                              </div>
+                          </header>
+                          <footer>
+                              <div class="tableize tableize--bottom">
+                                  <div class="tableize__cell">
+                                      <div class="justifize">
+                                          <div class="justifize__box">
+                                              <span class="price">£@_er.RecommendedEvent.CostToGuest</span>
+                                          </div>
+                                          <div class="justifize__box">
+                                              <time>
+                                                  <svg role="img" class="icon ">
+                                                      <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-small_calendar"></use>
+                                                  </svg>
+                                                  @_er.RecommendedEvent.Start.ToString("ddd, d MMM")
+                                              </time>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </footer>
+                              @*<ul class="list-bare">
+                                    <li><h3 class="type-small">New list title here...</h3></li>
+                                    <li><a href="">Indian Food</a></li>
+                                    <li><a href="">Interesting Places</a></li>
+                                    <li><a href="">Valentines &lt; 3</a></li>
+                                </ul>*@
+                              @if(SupperClub.Code.UserMethods.IsLoggedIn)
+                                {
+                                    if(SupperClub.Code.UserMethods.CurrentUser.WishListedEventIds.Contains(_er.RecommendedEvent.Id))
+                                    {
+                                        <div class="tooltip-links-wl is-active" id="divRmWs_@(_er.RecommendedEvent.Id)">
+                                            <a href="#!" onclick="_removeWS(@_er.RecommendedEvent.Id);">
+                                                <svg role="img" class="icon color-white">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="tooltip-links-wl hidden" id="divAddWs_@(_er.RecommendedEvent.Id)">
+                                            <a href="#!" onclick="_addWS(@_er.RecommendedEvent.Id);">
+                                                <svg role="img" class="icon color-white">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="tooltip-links-wl is-active hidden" id="divRmWs_@(_er.RecommendedEvent.Id)">
+                                            <a href="#!" onclick="_removeWS(@_er.RecommendedEvent.Id);">
+                                                <svg role="img" class="icon color-white">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="tooltip-links-wl" id="divAddWs_@(_er.RecommendedEvent.Id)">
+                                            <a href="#!" onclick="_addWS(@_er.RecommendedEvent.Id);">
+                                                <svg role="img" class="icon color-white">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    }
+
+                                }
+                                else{
+                                <div class="tooltip-links-wl">
+                                    <a id='@_er.RecommendedEvent.Id tooltip' class="loginWishList open-popup" href="#login-dialog">
+                                        <svg role="img" class="icon color-white">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                                    }
+                                
+                      </div>
+                  </div>
+              </div>
+              }   
+          }      
+      </div>
+     @*}*@
+      </div>
+
+          <div id="map-single-pin-wrap" class="map--single-pin-wrap mfp-hide magnific-content">
+            <div id="map-single-pin" class="map--single-pin--big map--popup"></div>
+              <button title="Close (Esc)" type="button" class="mfp-close">
+                  <span>
+                      <svg role="img" class="icon">
+                          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/content/images/icons/icons.svg#icon-X-close"></use>
+                      </svg>
+                  </span>
+              </button>
+          </div>
+
+          @if (Model.Event.TotalNumberOfAvailableSeats <= 0)
+          {
+            <div id="wlDialog" class="mfp-hide magnific-content max-width-820 bgr-gray border-width-3 border-black">
+                <div class="pt-">
+                    <div style="margin-left:20px;">
+                        <label>Email address</label>
+                        <input type="text" value="" id="txtAddWaitlistEmail" class="input input--large input--primary mb--" />
+                        <br />
+                        <input type="button" value="Add to Waiting List" id="btnAddWaitListNew" class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+" />
+                        <br /><br />
+                        <label id="lblStatus" title="" style="font-weight:bold;" />                        
+                    </div>
+                </div>
+                <button title="Close (Esc)" type="button" class="mfp-close">
+                    <span>
+                        <svg role="img" class="icon">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/content/images/icons/icons.svg#icon-X-close"></use>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+                    }
+
+    <div class="message-popup-wraper text-center" id="divMessage"></div>
+<span class="messages-popup messages-popup--added" id="wishMessage">
+    <svg role="img" class="icon icon-heart">
+        <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart"></use>
+    </svg>
+    Event is added to wish list!
+</span>
+<span class="messages-popup messages-popup--removed" id="removeWishMessage">
+    <svg role="img" class="icon icon-heart-break">
+        <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-heart-break"></use>
+    </svg>
+    Event is removed from wish list!
+</span>
+
+<span class="messages-popup messages-popup--added" id="followMessage">
+
+    You are now following this chef!
+</span>
+<span class="messages-popup messages-popup--removed" id="unfollowMessage">
+
+    You have stopped following this chef!
+</span>
+
+<script id="ReviewTemplate" type="text/x-jquery-tmpl">
+
+    <div class="flag flag--top flag--flush flag--responsive mb">
+        <div class="flag__img ph">
+            <img src="@Url.Content("~/Content/images/")placeholder-img2.jpg" alt="">
+        </div>
+        <div class="flag__body">
+            <h3 class="h6 type-semibold">
+                <span itemprop="author">${userName}</span>
+                <meta itemprop="datePublished" content="${dateCreatedSEO}"><time>${dateCreated}</time>
+            </h3>
+            <h3 class="h6 type-semibold"><span itemprop="name">${reviewTitle}</span></h3>
+
+            {{if rating== 5}}
+            <ul class="rating ">
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            {{/if}}
+            {{if rating== 4}}
+            <ul class="rating ">
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            {{/if}}
+            {{if rating== 3}}
+            <ul class="rating ">
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            {{/if}}
+            {{if rating== 2}}
+            <ul class="rating ">
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            {{/if}}
+            {{if rating== 1}}
+            <ul class="rating ">
+                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            {{/if}}
+            {{if rating== 0}}
+            <ul class="rating ">
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+            </ul>
+            {{/if}}
+
+            <p class="type-light">${reviewText}</p>
+            {{if hostResponse!=null}}
+            <span>Response from our Host</span>
+            <p class="type-light">
+                ${hostResponse}  ${hostResponseDate}
+                {{if isHost}}
+                <a href="/Event/EditReviewResponse?eventid=${eventId}&reviewid=${reviewId}">(edit)</a>
+                {{/if}}
+            </p>
+            {{else}}
+            {{if isHost}}
+            <a href="/Event/EditReviewResponse?eventid=${eventId}&reviewid=${reviewId}">(Respond to guest)</a>
+            {{/if}}
+            {{/if}}
+
+            {{if adminResponse!= null}}
+            <span>Response from Grubclub</span>
+            <p class="type-light">
+                ${adminResponse}  ${adminResponseDate}
+                {{if isAdmin}}
+                <a href="/Event/EditReviewResponse?eventid=${eventId}&reviewid=${reviewId}">(edit)</a>
+                {{/if}}
+            </p>
+            {{else}}
+            {{if isAdmin}}
+            <a href="/Event/EditReviewResponse?eventid=${eventId}&reviewid=${reviewId}">(Respond to guest)</a>
+            {{/if}}
+            {{/if}}
+
+        </div>
+    </div>
+</script>
+

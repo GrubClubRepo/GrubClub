@@ -1,0 +1,39 @@
+﻿@model SupperClub.Models.NotificationModel
+
+<!-- Container for Notification -->
+@if(!Model.NoContainer)
+{
+    @Html.Raw("<div class=\"container\"")
+    if(Model.HideMainContainer)
+    {
+        @Html.Raw("style=\"min-height: 320px;\"")
+    }
+    @Html.Raw(">")
+        @Html.Raw("<div class=\"sixteen columns\">")
+        @Html.Raw("<p></p>")
+ }   	
+
+<!-- Main Notification -->
+@Html.Raw("<div class=\"notification")
+    @Html.Raw(Model.Type.ToString().ToLower() == "info" ? "notice" : Model.Type.ToString().ToLower())
+    @if(Model.Closaeable)
+    {
+        @Html.Raw(" closeable")
+    }
+    @Html.Raw("\">")
+	<p>
+        <span>
+            @Model.Type.ToString()
+            @Html.Raw(":")
+        </span> @Model.Text
+        @Html.ValidationSummary(true)
+    </p>
+@Html.Raw("</div>")
+<!-- End Main Notification -->
+
+@if(!Model.NoContainer)
+{
+        @Html.Raw("</div>")
+    @Html.Raw("</div>")
+}
+<!-- Container for Notification -->

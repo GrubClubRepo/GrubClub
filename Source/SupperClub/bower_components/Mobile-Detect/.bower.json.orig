@@ -1,0 +1,30 @@
+<<<<<<< local
+{
+  "name": "Mobile-Detect",
+  "homepage": "https://github.com/serbanghita/Mobile-Detect",
+  "version": "2.8.11",
+  "_release": "2.8.11",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.8.11",
+    "commit": "c20f74196605e11eed55309a428eb5336f8f673f"
+  },
+  "_source": "https://github.com/serbanghita/Mobile-Detect.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/serbanghita/Mobile-Detect.git"
+=======
+{
+  "name": "Mobile-Detect",
+  "homepage": "https://github.com/serbanghita/Mobile-Detect",
+  "version": "2.8.11",
+  "_release": "2.8.11",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.8.11",
+    "commit": "c20f74196605e11eed55309a428eb5336f8f673f"
+  },
+  "_source": "https://github.com/serbanghita/Mobile-Detect.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/serbanghita/Mobile-Detect.git"
+>>>>>>> other
+}

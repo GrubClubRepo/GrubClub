@@ -1,0 +1,726 @@
+﻿@model SupperClub.Models.HostDetailModel
+@{
+    ViewBag.Title = "Host Profile";
+}
+@section PageSpecificScripts {
+<link rel='stylesheet' type="text/css" href="@Url.Content("~/Content/css/mprogress.min.css")">
+<script src="@Url.Content("~/Scripts/mprogress.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/feather.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        function NewHostTabActive(Tab) {
+            $(".tab-item").hide();
+            var a = $("#" + Tab).show();
+            $(a).show();
+            //   $(Tab).css('display', 'block');
+
+            $('.TabMenu').removeClass('is-active');
+            $("#tab" + Tab).addClass('is-active');
+
+            return false;
+        }
+        var featherEditor = new Aviary.Feather({
+            apiKey: '@System.Web.Configuration.WebConfigurationManager.AppSettings["AviaryApiKey"]',
+            onSave: function (imageID, newURL) {
+                debugger;
+                if (imageID.substring(0, 1) === "t") {
+                    debugger;
+                    $.post('/event/saveUpdatedImage', { url: newURL, imageId: imageID })
+                    $("#editedId").val(imageID);
+                    $("#editedOldId").val(imageID);
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("saveUpdatedImageEdit", "Event")',
+                        contentType: "application/json",
+                        dataType: "json",
+                        data: JSON.stringify({ url: newURL, imageId: imageID }),
+                        success: function (data) {
+                            debugger;
+                            if (data.error == null) {
+                                $("#editedId").val(data.folderPathIdentifier + "_" + data.newImageId);
+                                $("#editedOldId").val(data.oldImageId);
+                                var _currentImagePaths = $("#supperclub_ImagePaths").val();
+                                $("#supperclub_ImagePaths").val(_currentImagePaths.replace(data.oldImageId, data.newImageId));
+                            }
+                            else {
+                                alert("error:" + data.error);
+                            }
+                        },
+                        error: function (data) {
+                            alert("error:" + data.error);
+                        }
+                    });
+                }
+            },
+            onClose: function (isDirty) {
+                if (isDirty) {
+                    $("#editedId").val("");
+                    $("#editedOldId").val("");
+                }
+                else {
+                    debugger;
+                    var latestEditedImageIdNew = $("#editedId").val();
+                    var latestEditedImageId = $("#editedOldId").val();
+                    if (latestEditedImageIdNew && latestEditedImageIdNew.length > 0) {
+                        var res = latestEditedImageIdNew.split("_");
+                        if (res.length > 1) {
+                            var folderPathIdentifier = res[0];
+                            var fileName = res[1];
+                            if (latestEditedImageId == latestEditedImageIdNew)
+                                latestEditedImageId = fileName;
+                            var folderPath = "";
+                            switch (folderPathIdentifier) {
+                                case "t":
+                                    folderPath = "@SupperClub.Code.ServerMethods.ServerUrl" + "@SupperClub.Code.ServerMethods.TempImagePathPartial";
+                                    break;
+                                case "e":
+                                    folderPath = "@SupperClub.Code.ServerMethods.ServerUrl" + "@SupperClub.Code.ServerMethods.EventImagePathPartial";
+                                    break;
+                                case "s":
+                                    folderPath = "@SupperClub.Code.ServerMethods.ServerUrl" + "@SupperClub.Code.ServerMethods.SupperClubImagePathPartial";
+                                    break;
+                            }
+                            if (folderPath.length > 0) {
+                                if (folderPathIdentifier == "t") {
+                                    localFileDest = folderPath + fileName;
+                                    var img = document.getElementById('dis_' + latestEditedImageId);
+                                    img.src = localFileDest + "?" + +new Date().getTime();
+                                    img.id = "dis_" + fileName;
+                                }
+                                else {
+                                    localFileDest = folderPath + fileName;
+                                    var newImageFullUrl = localFileDest;
+                                    var newRow = "<tr class='rowImgDetails' id='row_" + fileName.substring(0, 36) + "'>";
+                                    var cols = "";
+                                    var _imgId = fileName;
+                                    cols += '<td style="display:none;" class="ImgId">' + _imgId + '</td>';
+                                    cols += '<td style="display:none;"><img src="' + newImageFullUrl + '" id="' + latestEditedImageIdNew + '" /></td>';
+                                    cols += '<td style="padding:20px;"><img src="' + newImageFullUrl + '" alt="@Model.supperclub.Name" style="width:240px;" id="dis_' + _imgId + '" /></td>';
+                                    cols += '<td><a class="btn btn--primary btn--small-wide btn--radius btnEditImage" onclick="return launchEditor(\'' + latestEditedImageIdNew + '\',\'' + newImageFullUrl + '\');">Edit your picture</a></td>';
+                                    cols += '<td><a class="btn btn--primary btn--small-wide btn--radius btnDeleteImage" href="#">Delete</a></td></tr>';
+                                    newRow = newRow + cols;
+                                    $("#row_" + latestEditedImageId.substring(0, 36)).after(newRow);
+                                    $("#row_" + latestEditedImageId.substring(0, 36)).remove();
+                                }
+                            }
+                        }
+                    }
+                    $("#editedId").val("");
+                    $("#editedOldId").val("");
+                }
+            },
+            onError: function (errorObj) {
+                alert(errorObj.message);
+            }
+        });
+
+        function launchEditor(id, src) {
+            debugger;
+            featherEditor.launch({
+                image: id,
+                url: src,
+                cropPresets: [
+                'Custom',
+                'Original',
+                ['Square', '1:1'],
+                '3:2', '5:3', '4:3', '5:4', '6:4', '7:5', '10:8', '16:9'
+                ],
+                cropPresetsStrict: true,
+                forceCropPreset: ['', '1:1'],
+                forceCropMessage: 'Images need to be square'
+            });
+            return false;
+        }
+        $(document).ready(function () {
+            var tagsText = "";
+            var cnt = $("#TagsDL option:selected").length;
+
+            for (i = 0; i < cnt; i++) {
+                tagsText = tagsText + ", " + $("#TagsDL option:selected")[i].value;
+            }
+
+            $("#supperclub_SupperClubProfileTagList").val(tagsText);
+
+            var tags = $("#supperclub_SupperClubProfileTagList").val();
+            if (tags != null && tags != "") {
+
+                tags = tags.substring(0, tags.length - 1);
+                var tagList = tags.split(",");
+                var tagval = "";
+
+                $("#TagsDL").val(tagList);
+                $("#TagsDL").trigger('change');
+
+                $("#TagsDL").trigger('chosen:updated');
+            }
+            $("#hostStatus").change(function () {
+                debugger;
+                var selectedStatus = $("#hostStatus option:selected").val();
+                if (selectedStatus != "")
+                    $("#supperclub_Status").val(selectedStatus);
+            });
+
+
+            $("#TagsDL").change(function () {
+                var tagsText = "";
+                var cnt = $("#TagsDL option:selected").length;
+
+                for (i = 0; i < cnt; i++) {
+                    tagsText = tagsText + ", " + $("#TagsDL option:selected")[i].value;
+                }
+
+                $("#supperclub_SupperClubProfileTagList").val(tagsText);
+
+            });
+
+            var iPaths = $("#supperclub_ImagePaths").val();
+            if (iPaths.length > 0)
+                $("#tblImgList").show();
+            else
+                $("#tblImgList").hide();
+
+            // Delete Images
+            $('body').on('click', 'a.btnDeleteImage', function (e) {
+                debugger;
+                var tempScrollTop = $(window).scrollTop();
+                var imagePaths = $("#supperclub_ImagePaths").val();
+                var imageToRemove = $(this).closest('tr').children('td.ImgId').text();
+                if (imagePaths.length > 0 && imagePaths.indexOf(imageToRemove) != -1) {
+                    imagePaths = imagePaths.replace("," + imageToRemove, "");
+                    imagePaths = imagePaths.replace(imageToRemove + ",", "");
+                    imagePaths = imagePaths.replace(imageToRemove, "");
+                }
+                $("#supperclub_ImagePaths").val(imagePaths);
+                $(this).closest("tr").remove();
+                $(window).scrollTop(tempScrollTop);
+                e.preventDefault();
+                return false;
+            });
+            var mp3 = new Mprogress({
+                template: 3,
+                parent: '#demoIn'
+            });
+            $('#btnImgUpload').click(function (e) {
+                debugger;
+                e.preventDefault();
+                var files = $("#avatar").prop("files");
+                var totalRequestSize = 0;
+                if (files.length > 0) {
+                    if (window.FormData !== undefined) {
+                        var form_data = new FormData();
+                        for (var x = 0; x < files.length; x++) {
+                            form_data.append("file" + x, files[x]);
+                            totalRequestSize += files[x].size;
+                        }
+                        if (totalRequestSize > 1024 * 1024 * 7) {
+                            alert("Total file size exceeded 7MB. Please select fewer files and continue.");
+                            return false;
+                        }
+                        else {
+                            mp3.start();
+                            $.ajax({
+                                type: "POST",
+                                url: '@Url.Action("SaveUploadedFile", "Event")',
+                                dataType: 'json',
+                                data: form_data,
+                                processData: false,
+                                contentType: false,
+                                success: function (data, textStatus, request) {
+                                    debugger;
+                                    var imageUrl = data.Message;
+                                    var imagePath = $("#supperclub_ImagePaths").val();
+                                    if (imagePath.length > 0)
+                                        imagePath = imagePath + "," + imageUrl;
+                                    else if (imagePath.length == 0)
+                                        imagePath = imageUrl;
+                                    $("#supperclub_ImagePaths").val(imagePath);
+                                    //logic to render thumbnail and edit button
+                                    var res = imageUrl.split(",");
+                                    for (var i = 0; i < res.length; i++) {
+                                        var imageFullUrl = "@SupperClub.Code.ServerMethods.ServerUrl" + "Content/Images/tempImages/" + res[i];
+                                        var newRow = $("<tr>");
+                                        var cols = "";
+                                        var _imgId = res[i];
+                                        cols += '<td style="display:none;" class="ImgId">' + _imgId + '</td>';
+                                        cols += '<td style="display:none;"><img src="' + imageFullUrl + '" id="t_' + _imgId + '" /></td>';
+                                        cols += '<td><img src="' + imageFullUrl + '" alt="@Model.supperclub.Name" style="width:280px;" id="dis_' + _imgId + '" /></td>';
+                                        cols += '<td><a class="btn btn--primary btn--small-wide btn--radius btnEditImage" onclick="return launchEditor(\'t_' + _imgId + '\',\'' + imageFullUrl + '\');">Edit your picture</a></td>';
+                                        cols += '<td><a class="btn btn--primary btn--small-wide btn--radius btnDeleteImage" href="#">Delete</a></td></tr>';
+                                        newRow.append(cols);
+                                        $("#tblImgList").append(newRow);
+                                    }
+                                    $("#tblImgList").show();
+                                    $('#divImgEdit').show();
+                                    mp3.end(true);
+                                },
+                                error: function (request, textStatus, errorThrown) {
+                                    alert("error:" + errorThrown);
+                                }
+                            });
+                            e.preventDefault();
+                        }
+                    }
+                    else {
+                        alert("This browser doesn't support HTML5 file uploads!");
+                    }
+                }
+            });
+
+            var a = $("#supperclub_Summary")[0].textLength;
+
+            $("#summaryLength").text(a);
+
+            $("#supperclub_Summary").keyup(function () {
+
+                var a = $("#supperclub_Summary")[0].textLength;
+
+                $("#summaryLength").text(a);
+
+            });
+        });
+
+</script>
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/multi-select.css")">
+<script src="@Url.Content("~/Scripts/jquery.multi-select.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@*This script handles additional custom date validation on dd/MM/yy*@
+<script src="@Url.Content("~/Scripts/jquery.validate.custom.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/ww.jquery.min.js")" type="text/javascript"></script>
+
+<div class="container mb+">
+
+
+    @if (ViewBag.Notification != null)
+{
+    <div style="margin-top: 10px; color: #dd6000;">
+        @Html.Partial("_Notification", (SupperClub.Models.NotificationModel)ViewBag.Notification);
+    </div>
+}
+<div class="profile-head">
+    <div class="justifize profile-head__links mt">
+        <div class="justifize__box mb">
+            <h1 class="type-light">Your Settings</h1>
+        </div>
+        <div class="justifize__box mb">
+            @*<div class="tooltip-wrap inline-block mr-">
+                <svg role="img" class="icon icon--22x22">
+                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-edit"></use>
+                </svg>
+
+                <div class="tooltip p0 no-radius">
+                    <a href="">Edit event (steps)</a>
+                    <ul class="list-bare">
+                        <li><a href="">Step 1</a></li>
+                        <li><a href="">Step 2</a></li>
+                        <li><a href="">Step 3</a></li>
+                        <li><a href="">Step 4</a></li>
+                        <li><a href="">Step 5</a></li>
+                    </ul>
+                </div>
+            </div>*@
+            <a href="/@Model.supperclub.UrlFriendlyName" class="no-underline mr-">
+                <span class="tooltip-wrap">
+                    <svg role="img" class="icon icon--29x18">
+                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-view"></use>
+                    </svg>
+                    <div class="tooltip tooltip--top">View Public Profile</div>
+                </span>
+            </a>
+            <a href="/account/userdetails" class="no-underline mr-">
+                <span class="tooltip-wrap">
+                    <svg role="img" class="icon icon--22x22">
+                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-settings"></use>
+                    </svg>
+                    <div class="tooltip tooltip--top">Settings</div>
+                </span>
+            </a>
+            <a href="/host/welcome" class="btn btn--primary btn--radius btn--h44">Host a Grub Club</a>
+        </div>
+    </div>
+    @*<div class="justifize mb-">
+        <div class="justifize__box mb">
+            <span class="complete-line mr-" data-complete="85"><b></b></span>
+            <span class='h6 type-semibold align-middle'>Your profile is <span>85</span>% complete.</span>
+        </div>
+        <div class="justifize__box mb">
+            <a href="/host/welcome" class="btn btn--primary btn--radius btn--h44">Host a Grub Club</a>
+        </div>
+    </div>*@
+    <hr class="hr hr--dots mb--">
+
+</div>
+</div>
+
+<div class="container">
+    <div class="layout">
+        @using (Html.BeginForm("HostProfile", "Host", FormMethod.Post, new { id = "SaveUserForm", enctype = "multipart/form-data" }))
+        {
+            @Html.EditorFor(m => m.user.Id, new { style = "display: none;" } )
+                <aside class="layout__item large-and-up-1/4 medium-1/2" style="padding-top:20px !important;">
+                    <ul class="list-bare nav-about mb">
+                        <li><a href="#Tab1" class="TabMenu is-active" id="tabTab1" onclick="javascript: NewHostTabActive('Tab1');">Personal Details</a></li>
+                        <li><a href="#Tab2" class="TabMenu" id="tabTab2" onclick="javascript: NewHostTabActive('Tab2');">Bank Details</a></li>
+                        <li><a href="#Tab3" class="TabMenu" id="tabTab3" onclick="javascript: NewHostTabActive('Tab3');">Gallery</a></li>
+                    </ul>
+                </aside>
+                <!-- Tabs Content -->
+                <div class="layout__item large-and-up-3/4">
+                    <div class="tabs mb+" style="padding-top:15px;">
+                        <div class="tab-item pt" id="Tab1">
+
+                          @Html.HiddenFor(m => m.supperclub.Id)
+                            @Html.HiddenFor(m => m.supperclub.DateCreated)
+                                <h2 class="h6 type-semibold opacity-7 mb-">Login Details</h2>
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray mb--" placeholder="Username...">*@
+                                @Html.TextBoxFor(m => m.user.Email, new { @class = "input--primary input--full input--h44 border-gray mb--", @readonly = "readonly", placeholder = "Username..." })
+                                <div class="mb"><span> * Your username is your email address. If you would like to change this, please email <a href="mailto:eat@grubclub.com">eat@grubclub.com</a> </span></div>
+                               <h2 class="h6 type-semibold opacity-7 mb-">First Name</h2>
+                                @Html.EditorFor(m => m.user.FirstName, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "First Name..." })
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray mb--" placeholder="First Name...">*@
+                               <h2 class="h6 type-semibold opacity-7 mb-">Last Name</h2> 
+                               @Html.EditorFor(m => m.user.LastName, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "SurName..." })
+
+                            <h2 class="h6 type-semibold opacity-7 mb-">Contact Number</h2>
+                            @Html.EditorFor(m => m.user.ContactNumber, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "SurName..." })
+
+
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray mb--" placeholder="Surname...">*@
+                        
+                                @*<input type="password" class="input--primary input--full input--h44 border-gray mb--" placeholder="Password...">
+                                <input type="password" class="input--primary input--full input--h44 border-gray mb" placeholder="Confirm Password...">
+                                <h2 class="h6 type-semibold opacity-7 mb-">Add a profile image</h2>
+                                <div class="flag mb">
+                                    <div class="flag__body">
+                                        <div class="upload-image">
+                                            <label for='upload-image'>
+                                                <div id="icon-photo">
+                                                    <svg role="img" class="icon icon--21x21 color-gray-7">
+                                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-photo"></use>
+                                                    </svg>
+                                                </div>
+                                            </label>
+                                            <input type="file" id="upload-image">
+                                            <input type="text" class="input--primary input--full input--h44 border-gray" placeholder="Placeholder text to help the user...">
+                                        </div>
+                                    </div>
+                                    <div class="flag__img pr0 pl-">
+                                        <button class="btn btn--primary btn--h44 btn--radius">Upload</button>
+                                    </div>
+                                </div>*@
+
+                                <h2 class="h6 type-semibold opacity-7 mb-">Add a short biography...</h2>
+                            <p>Limited to 500 character (inc. spaces) - this is the brief description that will show on your profile</p>
+                            @Html.TextAreaFor(m => m.supperclub.Summary, new { @class = "input--primary input--textarea input--full input--h140 mb--", placeholder = "Short description ", maxlength = "501" })
+                            <span id="summaryLength"></span>
+                                @*<textarea class="input--primary input--textarea input--full input--h140 mb--" placeholder='Placeholder text to help the user...'></textarea>*@
+                                <div class="text-right mb"><span></span></div>
+
+                                <h2 class="h6 type-semibold opacity-7 mb-">Tell Grub Clubbers more about what to expect at your events</h2>
+                                @Html.TextAreaFor(m => m.supperclub.Description, new { @class = "input--primary input--textarea input--full input--h140 mb--", placeholder = "Full description " })
+                       
+                                <div class="text-right mb"><span></span></div>
+
+                                <h2 class="h6 type-semibold opacity-7 mb-">Social Networks...</h2>
+                                <div class="layout mb">
+                                    <div class="layout__item large-and-up-1/2">
+                                        <label class="display-block mb--">
+                                            <div class="flag flag--middle flag--small">
+                                                <div class="flag__img">
+                                                    <div class="icon-circle bgr-twitter">
+                                                        <svg role="img" class="icon color-white icon--16x13">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-twitter"></use>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="flag__body">
+                                                    @Html.EditorFor(m => m.supperclub.Twitter, new { @class = "input--primary input--full input--h44 border-gray", placeholder = "twitter.com" })
+                                                    @*<input type="text" class="input--primary input--full input--h44 border-gray" placeholder="twitter.com">*@
+                                                </div>
+                                            </div>
+                                        </label>
+                                        <label class="display-block mb--">
+                                            <div class="flag flag--middle flag--small">
+                                                <div class="flag__img">
+                                                    <div class="icon-circle bgr-instagram">
+                                                        <svg role="img" class="icon color-white icon--16x16">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-instagram"></use>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="flag__body">
+                                                    @Html.EditorFor(m => m.supperclub.Instagram, new { @class = "input--primary input--full input--h44 border-gray", placeholder = "instagram.com" })
+                                        
+                                                </div>
+                                            </div>
+                                        </label>
+                                        <div style="display:none;">
+                                            <label class="display-block mb--">
+                                                <div class="flag flag--middle flag--small">
+                                                    <div class="flag__img">
+                                                        <div class="icon-circle bgr-pinterest">
+                                                            <svg role="img" class="icon color-white icon--16x21">
+                                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-pinterest"></use>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flag__body">
+                                                        @Html.EditorFor(m => m.supperclub.Pinterest, new { @class = "input--primary input--full input--h44 border-gray", placeholder = "Pinterest" })
+
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="layout__item large-and-up-1/2">
+                                        <label class="display-block mb--">
+                                            <div class="flag flag--middle flag--small">
+                                                <div class="flag__img">
+                                                    <div class="icon-circle bgr-facebook">
+                                                        <svg role="img" class="icon color-white icon--9x17">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-facebook"></use>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="flag__body">
+                                                    @Html.EditorFor(m => m.supperclub.Facebook, new { @class = "input--primary input--full input--h44 border-gray", placeholder = "facebook.com" })
+                                                    @*<input type="text" class="input--primary input--full input--h44 border-gray" placeholder="facebook.com">*@
+                                                </div>
+                                            </div>
+                                        </label>
+                                        @*<label class="display-block mb--">
+                                            <div class="flag flag--middle flag--small">
+                                                <div class="flag__img">
+                                                    <div class="icon-circle bgr-youtube">
+                                                        <svg role="img" class="icon color-white icon--20x16">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-youtube"></use>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="flag__body">
+                                                    @Html.EditorFor(m => m.supperclub.Facebook, new { @class = "input--primary input--full input--h44 border-gray", placeholder = "youtube.com" })
+                                                    <input type="text" class="input--primary input--full input--h44 border-gray" placeholder="youtube.com">
+                                                </div>
+                                            </div>
+                                        </label>*@
+                                        <label class="display-block mb--">
+                                            <div class="flag flag--middle flag--small">
+                                                <div class="flag__img">
+                                                    <div class="icon-circle bgr-mail">
+                                                        <svg role="img" class="icon icon-20x20 color-gray">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-earth_20x20"></use>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="flag__body">
+                                                    @Html.TextBoxFor(m => m.supperclub.Blog, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "Blog" })
+                                                    @*<input type="text" class="input--primary input--full input--h44 border-gray" placeholder="Email address">*@
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            @Html.EditorFor(m => m.supperclub.Status, new { style = "display:none;" })
+
+                            @if (SupperClub.Code.UserMethods.IsAdmin)
+                            {
+                                <h2 class="h6 type-semibold opacity-7 mb-">Status</h2>
+
+
+                                <div class="select select--medium select--medium inline-block">
+                                    <select class="select__item pl" id="hostStatus">
+                                        <option value="">Select</option>
+
+                                        @foreach (var s in ViewBag.HostStaus)
+                                        {
+                                            if (Model.supperclub.Status.ToString().Contains(s.Value.ToString()))
+                                            {
+
+                                                <option value="@s.Value" selected="selected">@s.Key</option>
+                                            }
+                                            else
+                                            {
+
+                                                <option value="@s.Value">@s.Key</option>
+                                            }
+                                        }
+                                    </select>
+                                    <div class="select__icon">
+                                        <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+                                    </div>
+                                </div>
+
+                            }
+
+                            @Html.EditorFor(m => m.supperclub.SupperClubProfileTagList, new { style = "display:none;" })
+                            @*@Html.DropDownList("TagsDL", (SelectList)ViewBag.Tags, "- Select Cuisine -", new { @class = "custom_select" })*@
+
+                            <select data-placeholder="Add a tag..." multiple class="chosen-select full-width mb tip" id="TagsDL">
+                                @if  (ViewBag.Tags != null)
+                                { 
+                                foreach (SupperClub.Domain.ProfileTag t in ViewBag.Tags)
+                                {
+                                    if (@Model.supperclub.SelectedProfileTagIds.Contains(t.Id))
+                                    {
+                                        <option value="@t.Id" selected="selected">@t.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@t.Id">@t.Name</option>
+                                    }
+                                }
+                                }
+                            </select>
+
+                                <h2 class="h6 type-semibold opacity-7 mb-">What is your address?</h2>
+                                @*<div class="flag mb--">
+                                    <div class="flag__body">
+                                        <input type="text" class="input--primary input--full input--h44 border-gray" placeholder="Add your postcode and search...">
+                                    </div>
+                                    <div class="flag__img pr0 pl-">
+                                        <button class="btn btn--primary btn--h44 btn--radius">Search</button>
+                                    </div>
+                                </div>*@
+                                @Html.TextBoxFor(m => m.supperclub.Address, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "Address Line1" })
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray mb--" placeholder="Placeholder text to help the user...">*@
+                                @Html.TextBoxFor(m => m.supperclub.Address2, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "Address Line2" })
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray mb--" placeholder="Placeholder text to help the user...">*@
+                                @Html.TextBoxFor(m => m.supperclub.City, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "City" })
+                                @Html.TextBoxFor(m => m.supperclub.Country, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "Country" })
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray mb" placeholder="Placeholder text to help the user...">*@
+                                @Html.TextBoxFor(m => m.supperclub.PostCode, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "PostCode" })
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray" placeholder="Add your postcode ">*@
+                                <button class="btn btn--primary btn--full btn--large btn--h55 mb++">Save</button>
+                    
+                        </div>
+                        <div class="tab-item pt" id="Tab2">
+                    
+                            @*<form action="">*@
+                                <h2 class="h6 type-semibold opacity-7 mb-">Business Trading Name</h2>
+                                @Html.EditorFor(m => m.supperclub.TradingName, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "Trading Name..." })
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray mb" placeholder="Placeholder text to help the user...">*@
+                                <h2 class="h6 type-semibold opacity-7 mb-">VAT Number</h2>
+                                @Html.EditorFor(m => m.supperclub.VATNumber, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "VAT Number" })
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray mb" placeholder="Placeholder text to help the user...">*@
+                                <h2 class="h6 type-semibold opacity-7 mb-">Bank Name</h2>
+                                @Html.EditorFor(m => m.supperclub.BankName, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "Bank Name" })
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray mb" placeholder="Placeholder text to help the user...">*@
+                                <div class="profile__sort-code">
+                                    <div class="inline-block">
+                                        <div class="justifize justifize--top">
+                                            <div class="justifize__box">
+                                                <h2 class="h6 inline-block type-semibold opacity-7 mb-">Sort Code</h2>
+                                            </div>
+                                            <div class="justifize__box">
+                                                <div class="tooltip-wrap">
+                                                    <div class="info-circle">
+                                                        <svg role="img" class="icon color-white icon--5x9">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-questionmark"></use>
+                                                        </svg>
+                                                    </div>
+                                                    <div class="tooltip">
+                                                        Info text
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="justifize justifize--top mb">
+                                            @Html.EditorFor(m => m.supperclub.SortCode, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "Sort Codee" })
+                                            @*<div class="justifize__box">
+                                                <input type="text"  name ="sc1" class="input--primary input--small input--h44 border-gray mr" placeholder="00">
+                                            </div>
+                                            <div class="justifize__box">
+                                                <input type="text" class="input--primary input--small input--h44 border-gray mr" placeholder="00">
+                                            </div>
+                                            <div class="justifize__box">
+                                                <input type="text" class="input--primary input--small input--h44 border-gray" placeholder="00">
+                                            </div>*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <h2 class="h6 type-semibold opacity-7 mb-">Account Number</h2>
+                                @*<input type="text" class="input--primary input--full input--h44 border-gray mb" placeholder="Placeholder text to help the user...">*@
+                                @Html.EditorFor(m => m.supperclub.AccountNumber, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "Account Number" })
+
+                                <h2 class="h6 type-semibold opacity-7 mb-">Bank Address</h2>
+                                <div class="flag mb-">
+                                    @*<div class="flag__body">*@
+                                        @*<input type="text" Id="BandAddress1" name="BankAddress" class="input--primary input--full input--h44 border-gray" placeholder="Address Line1">*@
+                                    @*</div>
+                                    <div class="flag__img pr0 pl-">
+                                        <button class="btn btn--primary btn--h44 btn--radius">Search</button>
+                                    </div>*@
+                                </div>
+                                @*<input type="text" id="BandAddress2" name="BankAddress" class="input--primary input--full input--h44 border-gray mb-" placeholder="Address Line2">
+                                <input type="text" id="City" name="BankAddress" class="input--primary input--full input--h44 border-gray mb-" placeholder="City">
+                                <input type="text" id="Country" name="BankAddress" class="input--primary input--full input--h44 border-gray mb" placeholder="Country">
+                                <input type="text" id="PostCode" name="BankAddress" class="input--primary input--full input--h44 border-gray mb" placeholder="Post Code">*@
+                                @Html.EditorFor(m => m.supperclub.BankAddress, new { @class = "input--primary input--full input--h44 border-gray mb--", placeholder = "Bank Address" })
+                                <button class="btn btn--primary btn--full btn--large btn--h55 mb++">Save</button>
+                            @*</form>*@
+
+                        </div>
+                        <div class="tab-item pt" id="Tab3">                    
+                            
+                                @Html.HiddenFor(m => m.supperclub.ImagePaths)    
+                            <input type="hidden" id="editedId" value="" />
+                            <input type="hidden" id="editedOldId" value="" /> 
+                            <p class="h6 type-semibold mb-">Step 1: Select the pictures</p>                   
+                                <input id="avatar" type="file" name="avatar" multiple />                                
+                            <p class="h6 type-semibold mt mb-"> Step 2: Upload your pictures   </p>
+
+                                <button id="btnImgUpload" class="btn btn--primary btn--small-wide btn--radius" value="Upload">Upload</button>
+                                <div id="demoIn" class="demo-bar"></div>                                
+                                <div id="divImgEdit" style="float: left; display: block;" class="mb">
+                                    <p class="h6 type-semibold mt mb-">Step 3: Edit your pictures</p>
+                                    <div class="type-semibold" style="color:red;text-align:left;">
+                                        To ensure pictures look great on the site,
+                                        <ul class="links-list-red mb ml">
+                                            <li>Press "Edit your picture"</li>
+                                            <li>Select "Crop"</li>
+                                            <li>Select the "Square" option to crop your image to the correct size.</li>
+                                            <li>Click "Apply" and then</li>
+                                            <li>Click on "Save"</li>
+                                        </ul>
+                                    </div>
+                                        <table id="tblImgList" class="tblImgList-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="display:none;">ImageId</th>
+                                                    <th style="display:none;">ImagePathFull</th>
+                                                    <th>Image</th>
+                                                    <th>Edit</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (SupperClub.Domain.SupperClubImage sci in Model.supperclub.SupperClubImages)
+                                                {
+                                                    <tr class="rowImgDetails">
+                                                        <td style="display:none;" class="ImgId">@sci.ImagePath</td>
+                                                        <td style="display:none;"><img src="@SupperClub.Code.ServerMethods.ServerUrl@SupperClub.Code.ServerMethods.SupperClubImagePathPartial@sci.ImagePath" id="s_@(sci.ImagePath)" /></td>
+                                                        <td><img src="@SupperClub.Code.ServerMethods.ServerUrl@SupperClub.Code.ServerMethods.SupperClubImagePathPartial@sci.ImagePath" alt="@Model.supperclub.Name" style="width:280px;" id="dis_@(sci.ImagePath)" /></td>
+                                                        <td><a class="btn btn--primary btn--small-wide btn--radius btnEditImage" href="#" onclick="return launchEditor('s_@(sci.ImagePath)','@SupperClub.Code.ServerMethods.ServerUrl@SupperClub.Code.ServerMethods.SupperClubImagePathPartial@sci.ImagePath');">Edit your picture</a></td>
+                                                        <td><a class="btn btn--primary btn--small-wide btn--radius btnDeleteImage" href="#">Delete</a></td>                                                        
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+</div>
+                                <button class="btn btn--primary btn--full btn--large btn--h55 mb++">Save</button>
+</div>
+
+                                
+
+                        </div>
+                    </div>
+                
+        }
+    </div>
+</div>
+

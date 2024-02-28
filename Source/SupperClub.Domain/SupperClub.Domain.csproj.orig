@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{27939E1A-B0DD-42E2-8A0B-CC16D555B283}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SupperClub.Domain</RootNamespace>
+    <AssemblyName>SupperClub.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Braintree-2.27.0">
+      <HintPath>..\..\..\..\..\Downloads\Braintree-2.27.0.dll</HintPath>
+    </Reference>
+    <Reference Include="CodeFirstStoredProcs">
+      <HintPath>..\packages\CodeFirstStoredProcs.2.2\Content\bin\CodeFirstStoredProcs.dll</HintPath>
+    </Reference>
+    <Reference Include="DataAnnotationsExtensions">
+      <HintPath>..\packages\DataAnnotationsExtensions.1.1.0.0\lib\NETFramework40\DataAnnotationsExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="DataAnnotationsExtensions.ClientValidation">
+      <HintPath>..\packages\DataAnnotationsExtensions.MVC3.1.1.0.0\lib\NETFramework40\DataAnnotationsExtensions.ClientValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Facebook">
+      <HintPath>..\packages\Facebook.6.0.24\lib\net40-client\Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.JScript" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebActivator">
+      <HintPath>..\packages\WebActivator.1.2.0.0\lib\NETFramework40\WebActivator.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="aspnet_Membership.cs" />
+    <Compile Include="aspnet_Users.cs" />
+    <Compile Include="ActionStatus.cs" />
+    <Compile Include="BookingConfirmationToFriends.cs" />
+    <Compile Include="BraintreeTransaction.cs" />
+    <Compile Include="BookingCancellationLog.cs" />
+    <Compile Include="Area.cs" />
+    <Compile Include="City.cs" />
+    <Compile Include="HtmlContentFormatter.cs" />
+    <Compile Include="EventArea.cs" />
+    <Compile Include="EventCity.cs" />
+    <Compile Include="EventRecommendation.cs" />
+<<<<<<< local
+    <Compile Include="PageCMS.cs" />
+=======
+    <Compile Include="SiteMapEventList.cs" />
+>>>>>>> other
+    <Compile Include="SearchCategoryTag.cs" />
+    <Compile Include="SearchCategory.cs" />
+    <Compile Include="EventPriceChangeLog.cs" />
+    <Compile Include="PushNotificationLog.cs" />
+    <Compile Include="SearchLogDetail.cs" />
+    <Compile Include="SupperClubVoucher.cs" />
+    <Compile Include="EventVoucher.cs" />
+    <Compile Include="PopularEvent.cs" />
+    <Compile Include="UserVoucherTypeDetail.cs" />
+    <Compile Include="Voucher.cs" />
+    <Compile Include="MessageTemplate.cs" />
+    <Compile Include="UserFacebookFriend.cs" />
+    <Compile Include="UserFavouriteSupperClub.cs" />
+    <Compile Include="UserFavouriteEvent.cs" />
+    <Compile Include="DateConverter.cs" />
+    <Compile Include="FavouriteEvent.cs" />
+    <Compile Include="UserDevice.cs" />
+    <Compile Include="EventListing.cs" />
+    <Compile Include="EventWaitList.cs" />
+    <Compile Include="UserInvitee.cs" />
+    <Compile Include="SupperClubImage.cs" />
+    <Compile Include="EventImage.cs" />
+    <Compile Include="TileTag.cs" />
+    <Compile Include="Tile.cs" />
+    <Compile Include="Image.cs" />
+    <Compile Include="EventTag.cs" />
+    <Compile Include="Tag.cs" />
+    <Compile Include="PressRelease.cs" />
+    <Compile Include="EventMenuOption.cs" />
+    <Compile Include="EventSeating.cs" />
+    <Compile Include="Money.cs" />
+    <Compile Include="Review.cs" />
+    <Compile Include="Subscriber.cs" />
+    <Compile Include="PayPalTransaction.cs" />
+    <Compile Include="CostCalculator.cs" />
+    <Compile Include="PaymentProviderTypes.cs" />
+    <Compile Include="PaymentTransaction.cs" />
+    <Compile Include="Ticket.cs" />
+    <Compile Include="Cuisine.cs" />
+    <Compile Include="Diet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EmailTemplate.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="EventAttendee.cs" />
+    <Compile Include="EventCuisine.cs" />
+    <Compile Include="EventDiet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GeoLocation.cs" />
+    <Compile Include="Gmap.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Menu.cs" />
+    <Compile Include="PriceRange.cs" />
+    <Compile Include="Report.cs" />
+    <Compile Include="Repository\ISupperClubRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SC.cs" />
+    <Compile Include="Search.cs" />
+    <Compile Include="SupperClub.cs" />
+    <Compile Include="TicketBasket.cs" />
+    <Compile Include="UpdateTickets.cs" />
+    <Compile Include="UrlRewrite.cs" />
+    <Compile Include="UsageEventType.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="UserSearch.cs" />
+    <Compile Include="UserUsageStatistic.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SupperClub.Logger\SupperClub.Logger.csproj">
+      <Project>{A58B1694-67CE-4AA0-8240-252AE1416453}</Project>
+      <Name>SupperClub.Logger</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

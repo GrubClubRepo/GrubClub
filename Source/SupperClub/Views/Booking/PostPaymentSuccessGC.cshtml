@@ -1,0 +1,162 @@
+﻿@model SupperClub.Models.BookingSuccessModel
+
+@section PageSpecificScripts {
+  
+    <!-- Facebook Conversion Code for Bookings -->
+            <script>
+                (function() {
+                    var _fbq = window._fbq || (window._fbq = []);
+                    if (!_fbq.loaded) {
+                        var fbds = document.createElement('script');
+                        fbds.async = true;
+                        fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                        var s = document.getElementsByTagName('script')[0];
+                        s.parentNode.insertBefore(fbds, s);
+                        _fbq.loaded = true;
+                    }
+                })();
+                window._fbq = window._fbq || [];
+                window._fbq.push(['track', '6025249044298', { 'value': '@ViewBag.SaleValue', 'currency': 'GBP' }]);
+            </script>
+            <noscript>
+                <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6025249044298&amp;cd[value]=@ViewBag.SaleValue&amp;cd[currency]=GBP&amp;noscript=1" />
+            </noscript>
+       
+    }
+
+
+    @*<div class="container mb+">
+        <ul class="breadcrumbs list-inline list-inline--delimited pt-- mb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Chefs </a></li>
+            <li><a href="#">User Profile </a></li>
+            <li class="current"><a href="#">Adam Walden</a></li>
+        </ul>
+    </div>*@
+    <div class="container container--small">
+    <h1 class="type-light text-center medium-and-up-ph mt mb-">Thank you for buying a Gift Voucher.</h1>
+    <h2 class="h5 mb" style="text-align:center;">You will receive a confirmation email shortly, which you can forward to your friend. Please check your SPAM folder just in case.</h2>
+</div>
+    <br/>
+<br/>
+   
+    <div class="container text-center">
+        <h2 class="h5 type-bold mb">Tell Your Friends</h2>
+        <div class="social-large mb+">
+            <div class="social-large__item">
+                <a href="http://www.twitter.com/intent/tweet?url=@ViewBag.EventURL&text=@ViewBag.TwitterText" class="display-block bgr-twitter mb-" target="_blank">
+                    <div class="tableize tableize--middle tableize--full">
+                        <div class="tableize__cell">
+                            <div>
+
+                                <svg role="img" class="icon icon--44x35">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-twitter"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <p class="type-semibold type-small">Twitter</p>
+            </div>
+            <div class="social-large__item">
+                <a href="http://www.facebook.com/sharer/sharer.php?u=@ViewBag.EventURL" class="display-block bgr-facebook mb-" target="_blank">
+                    <div class="tableize tableize--middle tableize--full">
+                        <div class="tableize__cell">
+                            <div>
+
+                                <svg role="img" class="icon icon--26x45">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-facebook"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <p class="type-semibold type-small">Facebook</p>
+            </div>
+            @*<div class="social-large__item">
+                <a href="@ViewBag.EventURL" class="display-block bgr-gray-dark mb-">
+                    <div class="tableize tableize--middle tableize--full">
+                        <div class="tableize__cell">
+                            <div>
+
+                                <svg role="img" class="icon icon--42x30">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-mail-large"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <p class="type-semibold type-small">Email</p>
+            </div>
+            <div class="social-large__item">
+                <a href="" class="display-block bgr-gray-dark mb-">
+                    <div class="tableize tableize--middle tableize--full">
+                        <div class="tableize__cell">
+                            <div>
+
+                                <svg role="img" class="icon icon--50x25">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-chain"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <p class="type-semibold type-small">Copy link</p>
+            </div>*@
+        </div>
+    </div>
+@if (bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseMentionMeReferrer"]))
+ {
+ 
+    <script type="text/javascript" src="https://tag.mention-me.com/api/v2/referreroffer/mm11fc0d93?implementation=popup&email=@ViewBag.Email&order_number=@ViewBag.OrderId&order_total=@ViewBag.SaleValue&order_currency=gbp&situation=postpurchase&surname=@ViewBag.LastName&firstname=@ViewBag.FirstName&locale=en_gb"></script>
+    
+    }
+
+ @if (bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseGoogleAnalytics"]))
+ {
+        <!-- Google Code for Sales Conversion Page (must be within <body> tag) -->
+    @*<script type="text/javascript">
+            /* <![CDATA[ */
+            var google_conversion_id = 996816009;
+            var google_conversion_language = "en";
+            var google_conversion_format = "3";
+            var google_conversion_color = "ffffff";
+            var google_conversion_label = "HRh3CIfYpgQQiemo2wM";
+            var google_conversion_value = @ViewBag.SaleValue;
+            /* ]]> */
+        </script>
+
+        <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+        <noscript>
+            <div style="display:inline;">
+                <img height="1" width="1" style="border-style:none;" alt="" src="@("//www.googleadservices.com/pagead/conversion/996816009/?value=" + ViewBag.SaleValue + "&amp;label=HRh3CIfYpgQQiemo2wM&amp;guid=ON&amp;script=0")" />
+            </div>
+        </noscript>*@
+
+     <!-- Conversion Pixel - Grub Club WebAds bookings - DO NOT MODIFY -->
+    <img src="https://secure.adnxs.com/px?id=513865&t=2" width="1" height="1" />
+    <!-- End of Conversion Pixel -->
+     
+     <!-- Google Code for Bookings Conversion Page -->
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        var google_conversion_id = 958513555;
+        var google_conversion_language = "en";
+        var google_conversion_format = "3";
+        var google_conversion_color = "ffffff";
+        var google_conversion_label = "jb_UCN6x51oQk4OHyQM";
+        var google_remarketing_only = false;
+        var google_conversion_value = @ViewBag.SaleValue;
+        /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <noscript>
+        <div style="display:inline;">
+            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/958513555/?label=jb_UCN6x51oQk4OHyQM&amp;guid=ON&amp;script=0" />
+        </div>
+    </noscript>
+
+       
+ }
+ 

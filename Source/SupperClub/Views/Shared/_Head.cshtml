@@ -1,0 +1,115 @@
+﻿    <!-- Basic Page Needs
+     ================================================== -->
+    <meta charset="utf-8">
+    <title>@ViewBag.Title</title>
+    <meta name="description" content="@ViewBag.Description">
+
+    <!-- Mobile Specific
+     ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    
+    
+
+    <!-- CSS
+     ================================================== -->
+    @if ((HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "admin" 
+        && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "vouchers") 
+        || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" 
+            && (HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "index" 
+            || HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "emailsignup")) 
+        || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "host"
+            && (HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "welcome" 
+            || HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "welcomev2" 
+            || HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "welcomev3" 
+            || HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "tips"
+            || HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "details"            
+            || HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "vouchers")) 
+        || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "event" 
+            && (HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "marketingtips"
+            || HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "addreview"
+            || HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "editreview"
+            || HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "details")) 
+        || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" 
+            && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "postpaymentsuccess")
+        || HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "detailsbyname")
+    {
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/newstyle.css")" />
+    }    
+    else
+    {
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/style.css")" />
+    }
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/supperclubcustom.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/css.css")" />
+    
+<!-- Decibel Insight Pixel
+     ================================================== -->
+
+@if (bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseDecibalInsight"]).ToString().ToLower() == "true")
+{
+   <!-- Decibel Insight - grubclub.com -->
+        <script type="text/javascript">
+            // <![CDATA[
+            (function (d, e, c, i, b, el, it) {
+                d._da_ = d._da_ || []; _da_.oldErr = d.onerror; _da_.err = [];
+                d.onerror = function () { _da_.err.push(arguments); _da_.oldErr && _da_.oldErr.apply(d, Array.prototype.slice.call(arguments)); };
+                d.DecibelInsight = b; d[b] = d[b] || function () { (d[b].q = d[b].q || []).push(arguments); };
+                el = e.createElement(c), it = e.getElementsByTagName(c)[0]; el.async = 1; el.src = i; it.parentNode.insertBefore(el, it);
+            })(window, document, 'script', '//cdn.decibelinsight.net/i/21769/di.js', 'decibelInsight');
+            // ]]>
+        </script>
+}
+    
+    <!-- Java Script
+     ================================================== -->
+    <script src="@Url.Content("~/Scripts/jquery-1.9.1.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-migrate-1.2.1.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.10.4.min.js")" type="text/javascript"></script>   
+
+    <!-- Template HTML Scripts
+     ================================================== -->
+    <script src="@Url.Content("~/Content/js/flexslider.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/jquery.isotope.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/custom.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/ender.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/selectnav.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/imagebox.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/carousel.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/twitter.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/tooltip.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/popover.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/js/effects.js")" type="text/javascript"></script>
+
+    <!-- FB Advertising Pixel
+    ==================================================== -->
+    @if (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "postpaymentsuccess" && bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseFBAdvertising"]).ToString().ToLower() == "true")
+    {
+            <script type="text/javascript">
+                var fb_param = {};
+                fb_param.pixel_id = '6006317675302';
+                fb_param.value = '0.00';
+                fb_param.currency = 'GBP';
+                (function () {
+                    var fpw = document.createElement('script');
+                    fpw.async = true;
+                    fpw.src = '//connect.facebook.net/en_US/fp.js';
+                    var ref = document.getElementsByTagName('script')[0];
+                    ref.parentNode.insertBefore(fpw, ref);
+                })();
+            </script>
+        <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/offsite_event.php?id=6006317675302&amp;value=0&amp;currency=GBP"/></noscript>
+    }
+    @if (bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseSegment"]))
+    {
+        <script type="text/javascript">
+            !function () {
+                var analytics = window.analytics = window.analytics || []; if (!analytics.initialize) if (analytics.invoked) window.console && console.error && console.error("Segment snippet included twice."); else {
+                    analytics.invoked = !0; analytics.methods = ["trackSubmit", "trackClick", "trackLink", "trackForm", "pageview", "identify", "reset", "group", "track", "ready", "alias", "page", "once", "off", "on"]; analytics.factory = function (t) { return function () { var e = Array.prototype.slice.call(arguments); e.unshift(t); analytics.push(e); return analytics } }; for (var t = 0; t < analytics.methods.length; t++) { var e = analytics.methods[t]; analytics[e] = analytics.factory(e) } analytics.load = function (t) { var e = document.createElement("script"); e.type = "text/javascript"; e.async = !0; e.src = ("https:" === document.location.protocol ? "https://" : "http://") + "cdn.segment.com/analytics.js/v1/" + t + "/analytics.min.js"; var n = document.getElementsByTagName("script")[0]; n.parentNode.insertBefore(e, n) }; analytics.SNIPPET_VERSION = "3.1.0";
+                    analytics.load("@System.Web.Configuration.WebConfigurationManager.AppSettings["SegmentKey"]");
+                    analytics.page()
+                }
+            }();
+        </script>
+    }
+    

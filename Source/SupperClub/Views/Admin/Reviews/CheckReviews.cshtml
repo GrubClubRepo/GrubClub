@@ -1,0 +1,108 @@
+﻿@{
+    ViewBag.Title = "Check Reviews";
+}
+
+@section PageSpecificScripts {
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#SelectedEventId').change(function () {
+            window.location = '@Url.Action("CheckReviews","Admin")?eventsDaysOld=@ViewBag.EventsDaysOld&selectedEventId=' + $(this).val();
+        });
+
+    });
+
+</script>
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+        <h4 class="headline">Choose Event</h4>
+
+        <div class="field">
+            @Html.DropDownList("SelectedEventId", (SelectList)ViewBag.EventsList, "Select", new { @class = "custom_select" })
+        </div>
+
+        @if (ViewBag.SelectedEvent != null)
+        {
+            if (((SupperClub.Domain.Event)ViewBag.SelectedEvent).Reviews.Count > 0)
+            {
+            <br /><br />
+            <table class="standard-table" style="margin-bottom:0px;">
+                <tr>
+                    <th>
+                        Account
+                    </th>
+                    <th>
+                        Anonymous
+                    </th>
+                    <th>
+                        Published
+                    </th>
+                    <th>
+                        Rating
+                    </th>
+                    <th>
+                        Review
+                    </th>
+                </tr>
+
+                @foreach (SupperClub.Domain.Review review in ((SupperClub.Domain.Event)ViewBag.SelectedEvent).Reviews)
+                {
+                    <tr>
+                        <td>
+                            @if (review.UserId != null)
+                            {
+                                @review.User.Email
+                            }
+                            else
+                            {
+                                @:Guest
+                            }
+                        </td>
+                        <td>
+                            @review.Anonymous.ToString()
+                        </td>
+                        <td>
+                            @review.Publish.ToString()
+                        </td>
+                        <td>
+                            @((review.Rating == null) ? "None" : review.Rating.ToString())
+                        </td>
+                        <td>
+                            <a href="@Url.Action("CheckReview", "Admin", new { reviewId = review.Id })">Read Review</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            }
+            else
+            {
+                <p>No Reviews for this event</p>
+            }
+
+            <br /><br />
+            <div class="field">
+                <a class="button small green" href="@Url.Action("DetailsByIdWithName", "Event", new { eventId = ((SupperClub.Domain.Event)ViewBag.SelectedEvent).Id, eventSeoFriendlyName = ((SupperClub.Domain.Event)ViewBag.SelectedEvent).UrlFriendlyName })">Go to Event</a>
+            </div>
+        }
+
+	</div>
+</div>

@@ -1,0 +1,223 @@
+﻿@{
+    ViewBag.Title = "Everything you need to know about attending a Grub Club.";
+    ViewBag.Description = "Find out everything you need to know before you attend a Pop Up Restaurant or Supperclub Dining Experience.";
+}
+
+@section PageSpecificScripts {
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<div class="container sub-title2">
+    <h2>@ViewBag.Title</h2>
+</div>
+
+<!--  960 Container Start -->
+<div class="container">
+
+	<!-- Accordions
+	================================================== -->
+	<div class="sixteen columns">
+
+        <h4>About Us</h4>
+
+        <span class="acc-trigger"><a href="#">How do I join Grub Club?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Joining Grub Club is free and easy: just <a href="@Url.Action("FacebookLogin", "Account", new { returnUrl = "/what-you-need-to-know-about-attending-a-grub-club" })">Connect with Facebook</a> or fill out our <a href="@Url.Action("Register", "Account")">Registration Form</a>
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">Is there any cost to register/ join as a Guest?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                No. There are absolutely no sign up or monthly fees. You only pay for the events that you want to attend.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">How does GrubClub earn money?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                We charge a small transaction fee for pairing a Guest and Host.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">How do I book / make a reservation?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                You can book a Grub Club online simply by searching for and selecting the event of your choice, fill in your details, pay online and you’ll receive an email to confirm your place.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">How can I pay for the events?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                You can pay by credit card / debit card online. If you have any issues, you feel free to <a href="@Url.Action("ContactUs")">contact us</a> and we’ll be happy to help.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">What if I need to cancel my booking?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                <p>Meals are planned carefully around the number of guests booked in. So a cancellation has a big impact on the host: not only does this impact food buying, it also means someone else loses out on the place and someone at a table will be sitting next to an empty space. If you do need to cancel, please contact Grub Club as soon as possible: we will try to allocate your seat to someone else, but this cannot be guaranteed, especially at the last minute. If your seat cannot be reallocated, you may still need to be charged by the host who will have already bought the food for the night.</p>
+                <p>An alternative option is to transfer your ticket to someone else.  Simply forward them your confirmation email (with a unique booking reference) for them to bring on the night. This is strongly recommended as this can avoid the trouble of cancelling your booking.</p>
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">What can I do if I want to comment / give feedback to Grub Club?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                <p>Please post your feedback about your event directly in the feedback section of your host’s event page.</p>
+                <p>If you want to raise a specific point to our attention, feel free to <a href="@Url.Action("ContactUs")">contact us</a>.</p>
+                <p>Your contributions will help us to improve the quality of our service.</p>
+            </div>
+		</div>
+
+        <h4>Events</h4>
+
+		<span class="acc-trigger"><a href="#">What is a Grub Club?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                A Grub Club is a dinner party you book to attend, either at someone’s house or in another space, where you can meet like-minded people while eating specially cooked food.
+            </div>
+		</div>
+				
+		<span class="acc-trigger"><a href="#">Why do people organise or attend Grub Clubs?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Besides being able to enjoy a good meal in different, original settings which you cannot find on the high street, Grub Clubs are an informal, relaxed way to meet and socialise with new people. People come to meet people in their local community or with the same interest in a specific topic or type of food organised by the host.
+            </div>
+		</div>
+
+		<span class="acc-trigger"><a href="#">Who else will be there?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Grub Clubs can include anywhere between 4 and 100 people. Everyone has chosen the specific night to sign up to, so will have the same interests in the night as you.
+            </div>
+		</div>
+
+		<span class="acc-trigger"><a href="#">What time does an event normally take place?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                The date and time are up to the Hosts and will be posted on the event page; make sure the time fits in with your schedule before booking, as it would be very difficult to cancel a confirmed place.
+            </div>
+		</div>
+
+		<span class="acc-trigger"><a href="#">What will happen on the day of the event?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                <p>After booking your place, you will receive an email to confirm your place and with more information about the event (i.e. the location/ what time to arrive).</p>
+                <p>When arriving at the Grub Club, show the host your unique booking reference, then you will have some time to socialise or meet new people before the event. After everyone has had the chance to mingle food will be served, so just sit back and enjoy the good food.</p>
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">How do I find out about the location?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                You will receive an email shortly before the event, giving you the exact location (address and map will be provided) of the Grub Club you’ve signed up to.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">Can I bring my own alcohol?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                <p>This will be indicated in the description of the Grub Club you attend. Some hosts cook in their own houses, in which case they don’t tend to have a liquor licence and you can bring your own alcohol.</p>
+                <p>In other cases the event might be in a venue which has a licence and you can buy alcohol from them on the night.</p>
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">Is there a dress code?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Unless specified on the page of the specific Grub Club, people usually dress casually. However, there might be some themed events where you will have the chance to dress up.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">Can I come alone?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Absolutely! People sign up to Grub Clubs because they love both food and socialising, so everyone there is looking forward to meeting new people.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">Can I smoke?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                You usually can’t smoke at Grub Clubs, though ask your host in case there is a dedicated smoking area.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">Do I have to tip?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Although hosts do not expect this, these events are run on tight budgets and any extra contributions are always very much appreciated.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">What if I want to share my wonderful experiences with other members?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Please post your review/comments directly on our site (on the host’s page). You can also share your thoughts or photos on <a href="http://www.facebook.com/GrubClub1" target="_blank">Facebook</a> or <a href="http://www.twitter.com/Grub_Club" target="_blank">Twitter</a>.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">How do I know if there are newly added events?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                You can <a href="@Url.Action("Index")">subscribe</a> to our mailing list, search directly on <a href="@Url.Action("Index", "Search")">GrubClub</a> or follow us on <a href="http://www.facebook.com/GrubClub1" target="_blank">Facebook</a> or <a href="http://www.twitter.com/Grub_Club" target="_blank">Twitter</a> to see the latest updates. 
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">Can I book a private group dinner or birthday party etc.?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Yes you can. <a href="@Url.Action("ContactUs")">Contact us</a> and we can make every effort to arrange it for you. Please provide us with the group size, price range, area and food you are looking for or any special requirements so we can get an indication of your preferences.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">Am I allowed to be both a host and a guest?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Yes of course you are, just sign up and select each time whether you would like to attend or host an event.  
+            </div>
+		</div>
+
+        <h4>The Food</h4>
+
+        <span class="acc-trigger"><a href="#">What sort of food is it?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                All sorts of food from different countries can be found on our site, please click on the events that interests you. If you can’t find what you are looking for, let us know and we can try and find a solution for you.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">Who cooks the food?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                The hosts on our site are professional or amateur chefs who are passionate about food.
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">What if I have specific dietary requirements?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Please make sure you make any dietary requirements i.e. vegetarian, allergies, etc. known to your house before you book. <strong>Failure to do so means the host may not be able to provide for you, as he/she needs to prepare everything in advance.</strong>
+            </div>
+		</div>
+
+        <span class="acc-trigger"><a href="#">Can I suggest ideas for food or events?</a></span>
+		<div class="acc-container">
+			<div class="content">
+                Absolutely, you can create your own menu or suggest themed events by <a href="@Url.Action("ContactUs")">contacting us</a> and we will coordinate with our hosts to try and make it work for you.  
+            </div>
+		</div>
+	</div>
+
+</div>
+<!-- End 960 Container -->

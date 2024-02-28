@@ -1,0 +1,52 @@
+﻿@model SupperClub.Models.SendBookingEmailModel
+
+@{
+    ViewBag.Title = "Send Guest Booking Email";
+}
+
+<!--  Page Title -->
+<div class="pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+        
+        @using (Html.BeginForm("SendBookingEmail", "Event", FormMethod.Post))
+        {
+            <div class="tab-content">
+                @Html.HiddenFor(m => m.EventId)
+                @Html.HiddenFor(m => m.SeatingId)
+                @Html.HiddenFor(m => m.UserId)
+                @Html.HiddenFor(m => m.NumberOfTickets)
+                <div class="field">
+                    <label>Guest Email Id</label>
+                    @Html.TextBoxFor(m => m.EmailAddress)
+                </div>
+                <div class="field">
+                    <label>Additional Comments to add</label>
+                    @Html.TextBoxFor(m => m.Comments, new { style = "width:950px;" })
+                </div>
+                
+                @if (Model.ShowStatus)
+                {
+                    <p>@Model.SendStatus</p>                    
+                }
+                
+                <input type="submit" value="Send Email" class="button small green" style="margin-top:10px;"/>
+                
+            </div>
+        }
+	</div>
+</div>

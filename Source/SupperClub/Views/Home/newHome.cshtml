@@ -1,0 +1,726 @@
+﻿@model SupperClub.Models.NewHomePage
+@{
+    Layout = null;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+<title>GrubClub</title>
+
+<link rel="shortcut icon" href="@Url.Content("~/Content/image/fav_x2.png")" />
+
+<!-- v2 -->
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/Home/stackblur-d-min.js")"></script> 
+<script type="text/javascript" src="@Url.Content("~/Scripts/Home/jquery.imgpreloader.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Home/jquery.easing.1.3.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Home/jquery.dotdotdot.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Home/jquery.animate-colors-min.js")"></script>
+<!--[if lt IE 9]>
+<script src="@Url.Content("~/Scripts/Home/excanvas.min.js")" type="text/javascript"></script>
+<![endif]-->
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/Home/various.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Home/responsive.js")"></script>
+
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/style/date.css")" />
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/style/reset.css")" /> 
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/style/style.css")" />
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/style/responsive.css")" />
+
+</head>
+
+<body class="main-page">
+    <script type="text/javascript">
+        $(function () {
+            $("#formSubscribe").submit(function () {
+                Subscribe();
+                return false;
+            });
+            $('#SearchForm').submit(function () {
+                var sDate = $('.date-input').val();
+                var sKeyword = $('#txtKeyword').val();
+                if (sDate != 'Date')
+                    $("#HomeSearch_StartDate").val(sDate);
+                if (sKeyword != 'Keywords')
+                    $("#HomeSearch_Keyword").val(sKeyword);
+                return true;
+            });
+
+
+        });
+        function Subscribe() {
+            var email = $('#SubscribeEmailAddress').val();
+            if (email != '' && email != null) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Subscribe","Home")',
+                    data: { emailAddress: email },
+                    cache: false,
+                    dataType: 'json text',
+                    traditional: true,
+                    success: function (result) {
+                        if (result == "true") {
+                            $('#SubscribeEmailAddress').hide();
+                            $('#btnSubscribe').hide();
+                            $('#txtSubscribeError').hide();
+
+                            $('#hdrSubscribe').text('Welcome to the Club!');
+                            $('#txtSubscribe').text("We'll let you know about any new events and any other news!");
+                        }
+                        else {
+                            $('#txtSubscribeError').text("Please enter a valin email address!");
+                            $('#txtSubscribeError').show();
+                            $('#btnSubscribe').show();
+                        }
+                    },
+                    error: function () {
+                        alert("Could not save email address.");
+                        $('#btnSubscribe').show();
+                    }
+                });
+            }
+        }
+    </script>
+
+    <div class="all">
+        <div class="head">
+            <div class="logo"><a href="">Grubclub</a></div>
+
+            <div class="menu-button"></div>
+            <div class="menu-click-hide"></div>
+
+            <div class="menu">
+                <!-- v2: class -->
+                <!-- v2: new class: -->
+                <div class="menu-item">
+                    <div class="menu-item-link-block">
+                        <a class="menu-item-link" href="/what-is-a-grub-club">What is a Grub Club?</a>
+                    </div>
+                </div>
+
+                <div class="menu-item menu-sub">
+                    <!-- v2: menu-on -->
+                    <div class="menu-item-link-block">
+                        <a class="menu-item-link" href="@Url.Action("Index", "Search")">Find a Grub Club</a>
+                    </div>
+                    <div class="sub-menu">
+                        <div class="sub-item"><a href="/what-is-a-grub-club">What is a Grub Club?</a></div>
+                        <div class="sub-item"><a href="/how-to-find-and-book-a-grub-club">How It Works For Guests</a></div>
+                        <div class="sub-item"><a href="/what-you-need-to-know-about-attending-a-grub-club">Faqs for guests</a></div>
+                    </div>
+                </div>
+
+                <div class="menu-item menu-sub">
+                    <div class="menu-item-link-block">
+                        <a class="menu-item-link" href="@Url.Action("LogOn", "Account")?ReturnUrl=%2fcontact-us">Host a Grub Club</a>
+                    </div>
+                    <div class="sub-menu">
+                        <div class="sub-item"><a href="@Url.Action("LogOn", "Account")?ReturnUrl=%2fcontact-us">Host a Grub Club</a></div>
+                        <div class="sub-item"><a href="/how-to-set-up-a-grub-club">How It Works For Hosts</a></div>
+                        <div class="sub-item"><a href="/how-to-set-up-a-pop-up-restaurant">Faqs for Hosts</a></div>
+                        <div class="sub-item"><a href="/how-to-set-up-a-supperclub">How to host a Grub Club</a></div>
+                    </div>
+                </div>
+                <div class="menu-item" style="">
+                    <div class="menu-item-link-block">
+                        <a class="menu-item-link" href="@Url.Action("LogOn", "Account")"><!--Log On-->Log On</a>
+                    </div>
+                </div>
+
+                @if (SupperClub.Code.UserMethods.IsAdmin)
+                {
+                    <div class="menu-item menu-sub">
+                        <div class="menu-item-link-block">
+                            <a class="menu-item-link" href="#">Admin</a>
+                        </div>
+                        <div class="sub-menu">
+                            <div class="sub-item">
+                                <a href="@Url.Action("AllUsers", "Admin")">Users</a>
+                                <ul>
+                                    <li><a href="@Url.Action("UnlockUser", "Admin")">Unlock Specific User</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub-item"><a href="@Url.Action("AllSupperClubs", "Admin")">Grub Clubs</a></div>
+                            <div class="sub-item"><a href="@Url.Action("Reports", "Admin")">Reporting</a></div>
+                            <div class="sub-item"><a href="@Url.Action("SendGuestEmail", "Admin")">Booking Confirmation Email</a></div>
+                            <div class="sub-item">
+                                <a href="@Url.Action("CheckReviews", "Admin")">Reviews</a>
+                                <ul>
+                                    <li><a href="@Url.Action("CheckReviews", "Admin")">Check Reviews</a></li>
+                                    <li><a href="@Url.Action("GenerateReviewKeys", "Admin")">Generate Review Links</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub-item">
+                                <a href="#">Debug Tools</a>
+                                <ul>
+                                    <li><a href="@Url.Action("TestEmail", "Admin")">Test Email</a></li>
+                                    <li><a href="@Url.Action("DeviceInfo", "Admin")">Device Info</a></li>
+                                    <li><a href="@Url.Content("~/version.txt")">Version</a></li> <!-- Uses content to view this file -->
+                                </ul>
+                            </div>
+                            <div class="sub-item">
+                                <a href="#">System Tools</a>
+                                <ul>
+                                    <li><a href="@Url.Action("FlushExpiredTicketBaskets", "Admin")">Flush Expired Baskets</a></li>
+                                    <li><a href="@Url.Action("Log4Net", "Admin", new { days = 1 })">System Logs</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- v2: no button here -->
+
+            <div class="right-block">
+                <!-- v2: tw first, fb second -->
+                <div class="right-top-link tw-top">
+                    <a href="http://www.twitter.com/Grub_Club" target="_blank" rel="tooltip" title="Twitter"></a>
+                </div>
+                <div class="right-top-link fb-top">
+                    <a href="http://www.facebook.com/GrubClub1" target="_blank" rel="tooltip" title="Facebook"></a>
+                </div>
+                <div class="right-top-link mail">
+                    <a href="/contact-us" rel="tooltip" title="Contact"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="all-except-head">
+
+            <!-- Inner content begins: -->
+            <div class="tiles">
+
+                <!-- JS for flipping main tile -->
+                <script type="text/javascript" src="../Scripts/Home/jquery.flip.js"></script>
+
+                <div class="tile double-tile main-tile" id="flipbox">
+                    <div class="main-tile-front">
+                        <h1>Find Amazing Dining Experiences <span></span><!-- span = nowrap --></h1>
+                        <p>Hosted by Great People</p>
+                        <!--
+                        <div class="extra-bg"></div>
+                        -->
+                        <div class="read-more">
+                            <span rev="#FFFFFF">Find out More</span>
+                            <!-- v2 -->
+                        </div>
+                    </div>
+                    <div class="main-tile-back">
+                        <h2>Meet Great People & Discover Awesome Food for Less</h2>
+                        <p>
+                            Grub Clubs: like restaurants but more fun! Our hand-picked chefs serve up delicious food in cool spaces & we try to ensure a communal feel to the meal, so you get to meet some great people. Let us serve you up fine food in good company...
+                        </p>
+                        <div class="read-more">
+                            <span rev="#FFFFFF">Go back</span>
+                            <!-- v2 -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tile category-tile photo-tile">
+                    <!-- v2: new structure for every tile -->
+                    <div class="corners"><a href="@Url.Content(SupperClub.Code.ServerMethods.ServerUrl + @Model.TileCollection[0].Tag.UrlFriendlyName)"></a></div>
+                    <div class="canvas-box">
+                        <canvas class="photo-blur-canvas" id="canvas1"></canvas>
+                    </div>
+                    <div class="text-left"><a href="">@Model.TileCollection[0].Tag.Name</a></div>
+                    <div class="text-right"><span>from</span> <div>£@Decimal.Round((decimal)@Model.TileCollection[0].Tag.CostToGuest).ToString()</div></div>
+                    <div class="photo-darker"></div>
+                    <div class="photo-bg">
+                        <img id="srcimg1" src="../@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")@Model.TileCollection[0].Image.Url" class="thumb-img" alt="" /><!-- v2: x2 img size for Category tile: 420x446 -->
+                    </div>
+                </div>
+
+                <div class="tile category-tile photo-tile">
+                    <!-- v2: new structure for every tile -->
+                    <div class="corners"><a href="@Url.Content(SupperClub.Code.ServerMethods.ServerUrl + @Model.TileCollection[1].Tag.UrlFriendlyName)"></a></div>
+                    <div class="canvas-box">
+                        <canvas class="photo-blur-canvas" id="canvas2"></canvas>
+                    </div>
+                    <div class="text-left"><a href="">@Model.TileCollection[1].Tag.Name</a></div>
+                    <div class="text-right"><span>from</span> <div>£@Decimal.Round((decimal)@Model.TileCollection[1].Tag.CostToGuest).ToString()</div></div>
+                    <div class="photo-darker"></div>
+                    <div class="photo-bg">
+                        <img id="srcimg2" src="../@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")@Model.TileCollection[1].Image.Url" class="thumb-img" alt="" />
+                    </div>
+                </div>
+
+                <div class="tile border-tile y-tile">
+                    <!-- v2: new class -->
+                    @using (Html.BeginForm("HomeSearchResult", "Search", FormMethod.Post, new { id = "SearchForm", name = "SearchForm", @class = "tile-form" }))
+                    {
+                        <div class="text-block">
+                            <span>Search</span>
+                            @Html.HiddenFor(m => m.HomeSearch.Location)
+                            @Html.HiddenFor(m => m.HomeSearch.Guests)
+                            @Html.HiddenFor(m => m.HomeSearch.StartDate)
+                            @Html.HiddenFor(m => m.HomeSearch.Keyword)
+                            <input name="txtKeyword" id="txtKeyword" type="text" value="Keywords" onfocus="if (this.value=='Keywords') this.value='';"
+                                   onblur="this.value = this.value==''?'Keywords':this.value;" />
+
+                            <!-- v2: calendar -->
+                            @*<input class="date-input" name="" id="txtdatePicker" type="text" value="Date" />*@
+                            <input class="date-input" name="" id="" type="text" value="Date"
+                                   onfocus="if (this.value=='Date') this.value='';"
+                                   onblur="this.value = this.value==''?'Date':this.value;" />
+
+                            <!--
+                            <div class="cal-icon"></div>
+                            -->
+                            <input class="submit" name="Submit" type="submit" value="Go" />
+                        </div>
+                    }
+
+                    <a class="button-bottom" id="allGrubClub" href="@Url.Action("Index", "Search")">See all GrubClubs</a>
+                </div>
+
+                <!-- Second row (desktop) -->
+
+                <div class="tile category-tile photo-tile">
+                    <!-- v2: new structure for every tile -->
+                    <div class="corners"><a href="@Url.Content(SupperClub.Code.ServerMethods.ServerUrl + @Model.TileCollection[2].Tag.UrlFriendlyName)"></a></div>
+                    <div class="canvas-box">
+                        <canvas class="photo-blur-canvas" id="canvas3"></canvas>
+                    </div>
+                    <div class="text-left"><a href="">@Model.TileCollection[2].Tag.Name</a></div>
+                    <div class="text-right"><span>from</span> <div>£@Decimal.Round((decimal)@Model.TileCollection[2].Tag.CostToGuest).ToString()</div></div>
+                    <div class="photo-darker"></div>
+                    <div class="photo-bg">
+                        <img id="srcimg3" src="../@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")@Model.TileCollection[2].Image.Url" class="thumb-img" alt="" />)
+                    </div>
+                </div>
+
+                <div class="tile category-tile photo-tile">
+                    <!-- v2: new structure for every tile -->
+                    <div class="corners"><a href="@Url.Content(SupperClub.Code.ServerMethods.ServerUrl + @Model.TileCollection[3].Tag.UrlFriendlyName)"></a></div>
+                    <div class="canvas-box">
+                        <canvas class="photo-blur-canvas" id="canvas4"></canvas>
+                    </div>
+                    <div class="text-left"><a href="">@Model.TileCollection[3].Tag.Name</a></div>
+                    <div class="text-right"><span>from</span> <div>£@Decimal.Round((decimal)@Model.TileCollection[3].Tag.CostToGuest).ToString()</div></div>
+                    <div class="photo-darker"></div>
+                    <div class="photo-bg">
+                        <img id="srcimg4" src="../@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")@Model.TileCollection[3].Image.Url" class="thumb-img" alt="" />
+                    </div>
+                </div>
+
+                <div class="tile category-tile photo-tile">
+                    <!-- v2: new structure for every tile -->
+                    <div class="corners"><a href="@Url.Content(SupperClub.Code.ServerMethods.ServerUrl + @Model.TileCollection[4].Tag.UrlFriendlyName)"></a></div>
+                    <div class="canvas-box">
+                        <canvas class="photo-blur-canvas" id="canvas5"></canvas>
+                    </div>
+                    <div class="text-left"><a href="">@Model.TileCollection[4].Tag.Name</a></div>
+                    <div class="text-right"><span>from</span> <div>£@Decimal.Round((decimal)@Model.TileCollection[4].Tag.CostToGuest).ToString()</div></div>
+                    <div class="photo-darker"></div>
+                    <div class="photo-bg">
+                        <img id="srcimg5" src="../@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")@Model.TileCollection[4].Image.Url" class="thumb-img" alt="" />
+                    </div>
+                </div>
+
+                <div class="tile border-tile fb-tile">
+                    <!-- v2: new class -->
+                    <!-- v2: new structure -->
+                    <div class="text-block">
+                        <span>Facebook</span>
+
+                        <script type="text/javascript">
+                            (function (d, s, id) {
+                                var js, fjs = d.getElementsByTagName(s)[0];
+                                if (d.getElementById(id)) return;
+                                js = d.createElement(s); js.id = id;
+                                js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=175572952460685";
+                                fjs.parentNode.insertBefore(js, fjs);
+                            }(document, 'script', 'facebook-jssdk'));</script>
+
+                        <div class="fb-box">
+                            <div class="fb-like-box" data-href="http://www.facebook.com/GrubClub1"
+                                 data-width="165"
+                                 data-height="170"
+                                 data-colorscheme="light" data-show-faces="true"
+                                 data-header="false"
+                                 data-stream="false"
+                                 data-show-border="false">
+                            </div>
+                        </div>
+
+                    </div>
+                    <a class="button-bottom" href="https://www.facebook.com/grubclub1" target="_blank">Visit our page</a>
+                </div>
+
+                <div class="tile category-tile photo-tile">
+                    <!-- v2: new structure for every tile -->
+                    <div class="corners"><a href="@Url.Content(SupperClub.Code.ServerMethods.ServerUrl + @Model.TileCollection[5].Tag.UrlFriendlyName)"></a></div>
+                    <div class="canvas-box">
+                        <canvas class="photo-blur-canvas" id="canvas6"></canvas>
+                    </div>
+                    <div class="text-left"><a href="">@Model.TileCollection[5].Tag.Name</a></div>
+                    <div class="text-right"><span>from</span> <div>£@Decimal.Round((decimal)@Model.TileCollection[5].Tag.CostToGuest).ToString()</div></div>
+                    <div class="photo-darker"></div>
+                    <div class="photo-bg">
+                        <img id="srcimg6" src="../@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")@Model.TileCollection[5].Image.Url" class="thumb-img" alt="" />
+                    </div>
+                </div>
+
+                <!-- Third row (desktop) -->
+                <!-- Slides for Videos / Chefs / Testimonials -->
+                <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/style/bxslider.css")" />
+                <script type="text/javascript" src="@Url.Content("~/Scripts/Home/jquery.bxslider.js")"></script>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        // https://github.com/wandoledzep/bxslider-4
+                        // mode: 'horizontal', 'vertical', 'fade'
+
+                        //video
+                        $('.slider1').bxSlider({
+                            mode: 'horizontal',
+                            auto: false,
+                            infiniteLoop: false,
+                            hideControlOnEnd: true,
+                            autoControls: true,
+                            pause: 2000
+                        });
+
+                        // chefs
+                        $('.slider2').bxSlider({
+                            mode: 'horizontal',
+                            auto: false,
+                            infiniteLoop: false,
+                            hideControlOnEnd: true,
+                            adaptiveHeight: true,
+                            autoControls: true,
+                            pause: 2000
+                        });
+                    });
+
+                    // v2:
+                    // Preload images
+                    $(function loadingImages() {
+                        (function () {
+                            var startloading = function () {
+                                var tileImg1 = '../' + '@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")' + '@Model.TileCollection[0].Image.Url';
+                                var tileImg2 = '../' + '@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")' + '@Model.TileCollection[1].Image.Url';
+                                var tileImg3 = '../' + '@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")' + '@Model.TileCollection[2].Image.Url';
+                                var tileImg4 = '../' + '@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")' + '@Model.TileCollection[3].Image.Url';
+                                var tileImg5 = '../' + '@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")' + '@Model.TileCollection[4].Image.Url';
+                                var tileImg6 = '../' + '@SupperClub.Code.ServerMethods.ImageCollectionPath.Replace("~/", "")' + '@Model.TileCollection[5].Image.Url';
+                                $.imgpreloader({
+                                    paths: [
+                                    tileImg1,
+                                    tileImg2,
+                                    tileImg3,
+                                    tileImg4,
+                                    tileImg5,
+                                    tileImg6,
+
+                                    '../content/images/SupperClubs/5d37f947-452d-4d59-a847-365f02b17740.png',
+                                    '../content/images/SupperClubs/6bc1e751-c0ff-4a48-aaee-dd470fc11d62.png',
+                                    '../content/images/SupperClubs/9df4e5f3-b7b9-40ba-bcb7-701e2d14abe7.png'
+                                    ]
+
+                                }).done(function ($allImages) {
+                                    blurImg1();
+                                    $('.tile img').animate({ 'opacity': 1 }, 600);
+                                    setTimeout(function () {
+                                        $('.photo-blur-canvas').animate({ 'opacity': 1 }, 400);
+                                        $('.video-tile').animate({ 'backgroundColor': '#000000' }, 400);
+                                        $('.photo-darker').animate({ 'opacity': 0.1 }, 400);
+                                    }, 600);
+                                });
+                            };
+                            startloading();
+                        }());
+                    });
+                    function blurImg1() {
+                        stackBlurImage('srcimg1', 'canvas1', '8', false, '210', '223');
+                        stackBlurImage('srcimg2', 'canvas2', '8', false, '210', '223');
+                        stackBlurImage('srcimg3', 'canvas3', '8', false, '210', '223');
+                        stackBlurImage('srcimg4', 'canvas4', '8', false, '210', '223');
+                        stackBlurImage('srcimg5', 'canvas5', '8', false, '210', '223');
+                        stackBlurImage('srcimg6', 'canvas6', '8', false, '210', '223');
+
+                        //stackBlurImage( 'videoimg1', 'videocanvas1', '8', false, '420', '207.5');
+                        stackBlurImage('videoimg2', 'videocanvas2', '8', false, '420', '207.5');
+
+                        stackBlurImage('chefimg1', 'chefcanvas1', '8', false, '420', '207.5');
+                        stackBlurImage('chefimg2', 'chefcanvas2', '8', false, '420', '207.5');
+                        stackBlurImage('chefimg3', 'chefcanvas3', '8', false, '405', '200');
+                    };
+                </script>
+
+                <div class="tile double-tile video-tile">
+                    <!-- v2: new structure -->
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            // Video click
+
+                            /*$('.video-button1').click(videoShow1);
+                            function videoShow1() {
+                                $(this).parent().children('.video-box').load('video2.html');
+                            };*/
+                            /*
+                            var mobileSmallBreakpoint = 450;
+                            $(window).resize(function () {
+                                if ($(this).width() < mobileSmallBreakpoint) {
+                                    $('#largeVideo').hide();
+                                    $('#smallVideo').show();
+                                }
+                            });*/
+
+                            $('.video-button2').click(videoShow2);
+                            function videoShow2() {
+                              //  $(this).parent().children('.video-box').html();
+                                    
+                            };
+                        });
+                    </script>
+                    <div class="text-top text-big"><span>Videos</span></div>
+                    <div class="corners corners-top"></div>
+                    <div class="corners corners-bottom"></div>
+                    <ul class="slider slider1">
+
+                        <li>
+                            <div class="text-bottom text-name">See How It Works</div>
+                            <div class="video-x"></div>
+                            <div class="photo-darker"></div>
+                            <div class="canvas-box">
+                                <canvas class="photo-blur-canvas" id="videocanvas2"></canvas>
+                            </div>
+                            <div class="video-button video-button2"></div>
+                            <div class="video-box">
+                                <object id="largeVideo" width="405" height="200">
+                                    <param name="allowfullscreen" value="true" />
+                                    <param name="allowscriptaccess" value="always" />
+                                    <param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=65300127&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=1&amp;loop=0" />
+                                    <embed src="http://vimeo.com/moogaloop.swf?clip_id=65300127&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=1&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="405" height="200" />
+                                    </embed>
+                                </object>
+                                <object id="smallVideo" width="300" height="150">
+                                    <param name="allowfullscreen" value="true" />
+                                    <param name="allowscriptaccess" value="always" />
+                                    <param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=65300127&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=1&amp;loop=0" />
+                                    <embed src="http://vimeo.com/moogaloop.swf?clip_id=65300127&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=1&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="300" height="150" />
+                                    </embed>
+                                </object>
+                            </div>
+                            <img id="videoimg2" src="../content/images/collection/441177002_640.jpg" /><!-- v2: x2 img size: 840x415 -->
+                        </li>
+                        @*<li>
+                                <div class="text-bottom text-name"></div>
+                                <div class="video-x"></div>
+                                <div class="photo-darker"></div>
+                                <div class="canvas-box">
+                                     <canvas class="photo-blur-canvas" id="videocanvas1" ></canvas>
+                                </div>
+                                <div class="video-button video-button1"></div>
+                                <div class="video-box"></div>
+                                <img id="videoimg1" src="../content/images/collection/slide2.jpg" /><!-- v2: x2 img size: 840x415 -->
+                            </li>*@
+                    </ul>
+                </div>
+
+                <div class="tile double-tile photo-tile chefs-tile tiles2-single-tile">
+                    <!-- v2: new class -->
+                    <!-- v2: new structure -->
+                    <div class="text-top"><a href="">Our chefs</a></div>
+                    <div class="corners corners-top"></div>
+                    <div class="corners corners-bottom"></div>
+                    <ul class="slider slider2">
+                        <li>
+                            <div class="text text-name">Christabel's</div>
+                            <div class="photo-darker"></div>
+                            <div class="canvas-box">
+                                <canvas class="photo-blur-canvas" id="chefcanvas1"></canvas>
+                            </div>
+                            <a href="http://grubclub.com/christabels">
+                                <img id="chefimg1" src="../content/images/SupperClubs/Christabel doubletile.jpg" /><!-- v2: x2 img size: 840x415 -->
+                            </a>
+                        </li>
+                        <li>
+                            <div class="text-name">United Ramen</div>
+                            <div class="photo-darker"></div>
+                            <div class="canvas-box">
+                                <canvas class="photo-blur-canvas" id="chefcanvas2"></canvas>
+                            </div>
+                            <a href="http://grubclub.com/united-ramen">
+                                <img id="chefimg2" src="../content/images/SupperClubs/6bc1e751-c0ff-4a48-aaee-dd470fc11d62.png" /><!-- v2: x2 img size: 840x415 -->
+                            </a>
+                        </li>
+
+                        <li>
+                            <div class="text-name">A Little Lusciousness</div>
+                            <div class="photo-darker"></div>
+                            <div class="canvas-box">
+                                <canvas class="photo-blur-canvas" id="chefcanvas3"></canvas>
+                            </div>
+                            <a href="http://grubclub.com/a-little-lusciousness">
+                                <img id="chefimg3" src="../content/images/SupperClubs/9df4e5f3-b7b9-40ba-bcb7-701e2d14abe7.png" /><!-- v2: x2 img size: 840x415 -->
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tile border-tile g-tile newsl-tile last-tile tiles4-double-tile">
+                    <!-- v2: class -->
+                    <div class="text-block">
+                        <span id="hdrSubscribe">Be First to Know!</span>
+                        <div class="small-text">
+                            <p id="txtSubscribe">
+                                Find out about our New Events.
+                            </p>
+                        </div>
+                        <form id="formSubscribe" class="tile-form newsl-form" action="">
+                            <input name="" id="SubscribeEmailAddress" type="text" value="Your email"
+                                   onfocus="if (this.value=='Your email') this.value='';"
+                                   onblur="this.value = this.value==''?'Your email':this.value;" />
+                            <p id="txtSubscribeError" class="small-text" style="color: Red; display: none"></p>
+                            <input class="submit" name="Submit" type="submit" value="Add" id="btnSubscribe" />
+                        </form>
+
+                    </div>
+                </div>
+
+            </div><!-- /tiles -->
+
+            <div class="testimonials">
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        // testimonials - bottom
+                        $('.slider3').bxSlider({
+                            mode: 'horizontal',
+                            auto: true,
+                            randomStart: false,
+                            ticker: false,
+                            useCSS: true,
+                            infiniteLoop: true,
+                            hideControlOnEnd: true,
+                            autoControls: false,
+                            autoHover: true,
+                            pager: false,
+                            pause: 4000
+                        });
+                    });
+                </script>
+                @if (Model.PressReleases != null && Model.PressReleases.Count > 0)
+                {
+                    <ul class="slider slider3">
+                        @foreach (SupperClub.Domain.PressRelease pr in Model.PressReleases.Take(Model.PressReleases.Count >= 5 ? 5 : Model.PressReleases.Count))
+                        {
+                            <li>
+                                <div class="testim-wrapper">
+                                    <div class="testim-text">
+                                        @*<a href="@pr.Url">*@
+                                        ‘@pr.Content’
+                                        @*</a>*@
+                                    </div>
+                                    <div class="testim-logo-wrapper">
+                                        @*<a href="@pr.Url">*@
+                                        <img src="@Url.Content(SupperClub.Code.ServerMethods.PressReleaseImagePath + pr.LogoImageUrl)" alt="" class="testim-logo"/>
+                                        @*</a>*@
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+
+            <!-- Inner content ends. -->
+
+            <div class="footer">
+
+                <div class="footer-left">
+                    <div class="twitter-block">
+                        <div class="twitter-top">
+                            <!-- v2: less divs -->
+                            <h2><a href="https://twitter.com/grub_club">Twitter</a></h2>
+                            <a class="twitter-button" href="https://twitter.com/intent/follow?original_referer=&partner=undefined&region=follow_link&screen_name=grub_club&tw_p=followbutton&variant=2.0">Follow</a>
+                        </div>
+
+                        <!--data-tweet-limit="2"-->
+
+                        <a class="twitter-timeline" href="https://twitter.com/grub_club"
+                           data-widget-id="402960414964596736"
+                           data-border-color="#FFFFFF"
+                           data-chrome="nofooter noheader  transparent"></a>
+                        <script>    !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+                        <!--
+                        -->
+
+
+
+                    </div>
+                </div>
+                <div class="footer-right">
+                    <div class="footer-right-block">
+                        <div class="columns">
+                            
+                            <div class="column column-first">
+                                <h2>Useful Links</h2>
+                                <div class="link"><a href="http://www.grubclub.com/notes-from-a-pop-up-restaurant/">Notes from a Pop Up</a></div>
+                                @*<div class="link"><a href="">Links to Pop Out</a></div>*@
+                                <div class="link"><a href="/about-us">Read about us</a></div>
+                                @*<div class="link"><a href="">Our partners</a></div>*@
+                            </div>
+                        </div>
+                        <!-- Sid doesn't want this link back visible (or there at all?)
+                        <div class="author">
+                            <span>Design & Code</span>
+                            <a href="http://www.foxcreateur.com">Fox Créateur</a>
+                        </div> -->
+                    </div>
+                </div>
+                <div>
+                    <nav>
+                        <h2>Other Navigation:</h2>
+                        <div class="footerLink"><a href="/terms-and-conditions">Terms and Conditions</a></div>
+                        <div class="footerLink"><a href="@Url.Action("SiteMap","Home")">Site map</a></div>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            // Using YQL and JSONP
+            $.ajax({
+                url: "http://query.yahooapis.com/v1/public/yql",
+
+                // the name of the callback parameter, as specified by the YQL service
+                jsonp: "callback",
+
+                // tell jQuery we're expecting JSONP
+                dataType: "jsonp",
+                
+                // tell YQL what we want and that we want JSON
+                data: {
+                    q: "select * from json where url='http://grubclub.com//api/getEventDetails?eventId=692'",
+                    format: "json"
+                },
+
+                // work with the response
+                success: function (response) {
+                    //an assignment just because I am lazy
+                    var r = response.query.results;
+                    console.log(response.query.results.json); // server response check, comment out when putting live
+                    $(".data").html("<p>lol, here's a test: " + r.json.name + "</p>");
+                    $("#something").html("");
+                }
+            }); //END ajax
+        });
+    </script>
+
+    <div class="data" width="900px"> <br /> <p id="something"></p></div>
+</body>
+</html>

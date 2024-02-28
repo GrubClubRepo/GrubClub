@@ -1,0 +1,64 @@
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Data.dll.config
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Data.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Data.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\CodeFirstStoredProcs.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\EntityFramework.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\Facebook.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\log4net.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Domain.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Logger.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\DataAnnotationsExtensions.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Domain.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Logger.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\EntityFramework.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\log4net.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\bin\Debug\Facebook.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\obj\Debug\SupperClub.Data.csprojResolveAssemblyReference.cache
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\obj\Debug\SupperClub.Data.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Data\obj\Debug\SupperClub.Data.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\SupperClub.Data.dll.config
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\SupperClub.Data.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\SupperClub.Data.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\CodeFirstStoredProcs.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\EntityFramework.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\Facebook.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\log4net.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\SupperClub.Domain.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\SupperClub.Logger.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\DataAnnotationsExtensions.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\Microsoft.Web.Infrastructure.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\SupperClub.Domain.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\SupperClub.Logger.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\EntityFramework.xml
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\log4net.xml
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\Facebook.xml
+G:\Grubclub\try upgrade\Source\SupperClub.Data\obj\Debug\SupperClub.Data.csprojResolveAssemblyReference.cache
+G:\Grubclub\try upgrade\Source\SupperClub.Data\obj\Debug\SupperClub.Data.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\obj\Debug\SupperClub.Data.pdb
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\EntityFramework.SqlServer.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\WebActivatorEx.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\DataAnnotationsExtensions.ClientValidation.dll
+G:\Grubclub\try upgrade\Source\SupperClub.Data\bin\Debug\EntityFramework.SqlServer.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Data.dll.config
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Data.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Data.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\CodeFirstStoredProcs.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\EntityFramework.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\EntityFramework.SqlServer.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\Facebook.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\log4net.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Domain.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Logger.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\WebActivatorEx.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\DataAnnotationsExtensions.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\DataAnnotationsExtensions.ClientValidation.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\Microsoft.Web.Infrastructure.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Domain.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\SupperClub.Logger.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\EntityFramework.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\EntityFramework.SqlServer.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\Facebook.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\bin\Debug\log4net.xml
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\obj\Debug\SupperClub.Data.csprojResolveAssemblyReference.cache
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\obj\Debug\SupperClub.Data.dll
+G:\Grubclub\LatestLive\grub-club\Source\SupperClub.Data\obj\Debug\SupperClub.Data.pdb

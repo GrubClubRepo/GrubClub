@@ -1,0 +1,35 @@
+﻿@model List<SupperClub.Domain.SupperClub>
+
+@{
+    ViewBag.Title = "Our Chefs";
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+    <div class="container sub-title2">
+        <h2>@ViewBag.Title</h2>
+    </div>
+    
+    <div class="container">
+        <div class="sixteen columns">
+            @foreach (SupperClub.Domain.SupperClub sc in Model)
+            {
+                Html.RenderPartial("_Chef", sc);
+            }
+        </div>
+    </div>
+}

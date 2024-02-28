@@ -1,0 +1,38 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+ 
+@{
+    ViewBag.Title = "Page not found";
+    try
+    {
+        
+        Response.AddHeader("Status Code", "404"); 
+        
+        string uName = string.IsNullOrEmpty(SupperClub.Code.UserMethods.UserName) ? "Unknown" : SupperClub.Code.UserMethods.UserName;
+        SupperClub.Logger.SystemLogging.LogMessageDirect(string.Format("User: {0} - Landed at 404 Page.", uName), SupperClub.Logger.LogLevel.WARN);
+        
+    }
+    catch
+    {
+        // Just in case this block of code fails, do nothing so the page still renders
+    }
+}
+
+<!--  Page Title -->
+
+<div class="pattern-design2">
+    <div class="container">
+       <p></p>
+    </div>
+</div>
+<!-- Page Title End -->
+
+<!--  960 Container Start -->
+<div class="container sub-title2">
+    <h2>Uhoh!</h2>
+</div>
+
+<div class="container">
+	<div class="sixteen columns">
+        <p>We're sorry that page or resource wasn't found on this server.</p>
+	</div>
+</div>

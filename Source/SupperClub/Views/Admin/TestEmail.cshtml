@@ -1,0 +1,39 @@
+﻿@model SupperClub.Models.TestEmailModel
+
+@{
+    ViewBag.Title = "Test Email";
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+        <h4 class="headline">Choose Email Template to send</h4>
+        @using (Html.BeginForm())
+        {
+        <div class="field">
+            @Html.DropDownListFor(m => m.SelectedEmailTemplate, (IEnumerable<SelectListItem>)ViewBag.EmailTypes, "Select", new { @class = "custom_select" })
+        </div>
+
+        <div class="field">
+            <label>Email Address to send to</label>
+            @Html.TextBoxFor(m => m.EmailAddress)
+        </div>
+        <input type="submit" value="Send Email(s)" class="button small green" />
+        }
+	</div>
+</div>

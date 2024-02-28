@@ -1,0 +1,12 @@
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\bin\Release\SagePayMvc.XML
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\bin\Release\SagePayMvc.dll
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\bin\Release\SagePayMvc.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\bin\Release\log4net.dll
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\bin\Release\SupperClub.Logger.dll
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\bin\Release\System.Web.Mvc.dll
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\bin\Release\SupperClub.Logger.pdb
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\bin\Release\log4net.xml
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\bin\Release\System.Web.Mvc.xml
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\obj\Release\SagePayMvc.csprojResolveAssemblyReference.cache
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\obj\Release\SagePayMvc.dll
+G:\Grubclub\LatestLive\grub-club\Source\SagePayMvc\obj\Release\SagePayMvc.pdb

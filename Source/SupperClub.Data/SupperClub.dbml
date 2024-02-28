@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SupperClub" Class="SupperClubDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="dbo.Cuisine" Member="Cuisines">
+    <Type Name="Cuisine">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Association Name="Cuisine_EventCuisine" Member="EventCuisines" ThisKey="Id" OtherKey="CuisineId" Type="EventCuisine" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EmailTemplates" Member="EmailTemplates">
+    <Type Name="EmailTemplate">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Subject" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="Body" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Event" Member="Events">
+    <Type Name="Event">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Start" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="[End]" Member="End" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="SupperClubId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Guests" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Alcohol" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Charity" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Event_EventAttendee" Member="EventAttendee" ThisKey="Id" OtherKey="EventId" Type="EventAttendee" Cardinality="One" />
+      <Association Name="Event_EventCuisine" Member="EventCuisines" ThisKey="Id" OtherKey="EventId" Type="EventCuisine" />
+      <Association Name="Event_EventMenuOption" Member="EventMenuOptions" ThisKey="Id" OtherKey="EventId" Type="EventMenuOption" />
+      <Association Name="Event_EventSeating" Member="EventSeatings" ThisKey="Id" OtherKey="EventId" Type="EventSeating" />
+      <Association Name="SupperClub_Event" Member="SupperClub" ThisKey="SupperClubId" OtherKey="Id" Type="SupperClub" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EventAttendees" Member="EventAttendees">
+    <Type Name="EventAttendee">
+      <Column Name="EventId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="EventRanking" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="UserRanking" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="UserComment" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Event_EventAttendee" Member="Event" ThisKey="EventId" OtherKey="Id" Type="Event" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EventCuisines" Member="EventCuisines">
+    <Type Name="EventCuisine">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="EventId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CuisineId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Cuisine_EventCuisine" Member="Cuisine" ThisKey="CuisineId" OtherKey="Id" Type="Cuisine" IsForeignKey="true" />
+      <Association Name="Event_EventCuisine" Member="Event" ThisKey="EventId" OtherKey="Id" Type="Event" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SupperClub" Member="SupperClubs">
+    <Type Name="SupperClub">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="HostUserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="Blog" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="TradingName" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Address2" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="City" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Country" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="PostCode" Type="System.String" DbType="NVarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="ContactNumber" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="VATNumber" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="ChequeName" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="BankName" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="BankAddress" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="SortCode" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="AccountNumber" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CouncilRegistered" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="FoodHygieneCertificate" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IndemnityInsurace" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="AlcoholLicense" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Active" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="SupperClub_Event" Member="Events" ThisKey="Id" OtherKey="SupperClubId" Type="Event" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EventMenuOption" Member="EventMenuOptions">
+    <Type Name="EventMenuOption">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="EventId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Cost" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="DateCreated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="Event_EventMenuOption" Member="Event" ThisKey="EventId" OtherKey="Id" Type="Event" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EventSeating" Member="EventSeatings">
+    <Type Name="EventSeating">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="EventId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Start" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="[End]" Member="End" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Guests" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DateCreated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="ReservedSeats" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Event_EventSeating" Member="Event" ThisKey="EventId" OtherKey="Id" Type="Event" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

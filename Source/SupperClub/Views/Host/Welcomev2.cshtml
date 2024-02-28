@@ -1,0 +1,235 @@
+﻿@{
+    ViewBag.Title = "Create your Dining Experience with Grub Club";
+    ViewBag.Description = "Click here to find out everything you need to know to set up your first event with us.";
+}
+
+<script type="text/javascript">
+   
+
+     $(document).ready(function () {
+       
+        -       $("#btnSubmit").prop("disabled", true);
+                $(".tab-item1").hide();
+                $("#Tab1").show();
+        
+               $('input[type="checkbox"]').bind('click', function () {
+            
+                        var status = true;
+                       $('input[type=checkbox]').each(function () {
+                               if (!this.checked) {
+                                        status = false;
+                                   }
+                           });
+                        if (status == true) {
+                               $("#btnSubmit").prop("disabled", false);
+                           } else {
+                          $("#btnSubmit").prop("disabled", true);
+                       }
+       
+               });
+    
+       });
+    
+    </script>
+
+    <div class="container">
+        <div class="layout">
+            @Html.Partial("_HostFAQsLeftNavigation")
+            <!-- Tabs Content -->
+            <div class="layout__item large-and-up-3/4">
+                <div class="tabs">
+                        <div id="host-grub-club" class="bgr-gray magnific-content max-width-580">
+
+                            @if (!SupperClub.Code.UserMethods.IsLoggedIn)
+                        {
+                            <p style="font-size:larger;">
+
+                                    Already a member, Please <a href="/Host/WelComeHost" style="color: #f47400 !important;">Login</a>
+                                </p>
+                        }<br />
+
+                            <h2 class="type-light text-center h1 mb">JOIN US in our Dining Revolution!</h2>
+                            @*<p class="mb ">Whoa there cowboy – not so fast!</p>
+                            <p class="mb ">
+                                Did you know, less than 60% of event submissions are approved on Grub Club.
+
+                                Be a Wise Wizard and read how you can improve your chances with the tips on the left or by taking inspiration from other successful hosts' profiles, such as <a target="_blank" href=" http://grubclub.com/the-story-tellers"> <span class="text-underline"> THIS ONE </span></a>
+                            </p>*@
+                            
+                            <p class="mb-">
+                                We're on a mission...to revolutionise the dining out industry. To take the reins away from cookie cutter restaurants and fill the streets with unique dining experiences!
+                            </p>
+                            <p class="mb-">
+                                ...but we can't do this alone.
+                            </p>
+                            <p class="mb-">
+                                We're looking for the most ambitious, talented & entrepreneurial chefs to host amazing events where unique menus, chef-diner interaction and fun communal tables are the name of the game.
+                            </p>
+
+                            <p class="mb-">Read our 3-part 101 series on what makes a perfect event: </p>
+                            <p class="mb-">1. <a target="_blank" href="https://grubclub.com/blog/set-up-your-own-supper-club-part-1/">Planning</a></p>
+                            <p class="mb-">2. <a target="_blank" href="https://grubclub.com/blog/how-to-set-up-your-own-supper-club-part-2/">Marketing</a></p>
+                            <p class="mb-">3. <a target="_blank" href="https://grubclub.com/blog/how-to-set-up-your-own-supper-club-part-3/">Hosting</a></p>
+                            <p class="mb-">
+                                Think you have what it takes to join us in our mission? Check out what we list to the left, get inspiration like <a target="_blank" href="https://grubclub.com/the-literary-hour"> <span class="text-underline color-orange"> this</span></a>  and then submit your event below for approval! 
+                            </p>
+                            <img src="@Url.Content("~/Content/images/")conflict_cafe.jpg" alt="" class="border-width-5 border-white mb">
+                            <div class="mb-">
+                                <label class="chooser ">
+                                    <div class="flag flag--flush flag--fix">
+                                        <div class="flag__body">
+                                            <span class="chooser__label" style="color:#575756 !important;">Before submitting, please ensure you comply with the below and tick the check boxes in order to proceed.</span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                             
+                                <div class="mb-">
+                                    <label class="chooser ">
+                                        <div class="flag flag--flush flag--fix">
+                                            <div class="flag__img">
+                                                <input class="chooser__input" type="checkbox" name="chooser-11" value="">
+                                                <span class="chooser__icon">
+
+                                                    <svg role="img" class="icon ">
+                                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                           
+                                                <div class="flag__body">
+                                                    <span class="chooser__label  ml-">Is your event a communal dining experience? i.e. Can diners feel welcome even if they come on their own? </span>
+                                                </div>
+</div>
+                                    </label>
+                                </div>
+                                <div class="mb-">
+                                    <label class="chooser ">
+                                        <div class="flag flag--flush flag--fix">
+                                            <div class="flag__img">
+                                                <input class="chooser__input" type="checkbox" name="chooser-11" value="">
+                                                <span class="chooser__icon">
+
+                                                    <svg role="img" class="icon ">
+                                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                            <div class="flag__body">
+                                                <span class="chooser__label  ml-"> Is your event at least 4 weeks away? </span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                @if ((!(SupperClub.Code.UserMethods.IsLoggedIn)) || ((SupperClub.Code.UserMethods.IsLoggedIn) && (SupperClub.Code.UserMethods.CurrentUser.SupperClubs.Count < 1)))
+                                {
+
+
+                                    @*<div class="terms-wrapper mb-">
+                    <label class="chooser ">
+                        <div class="flag flag--flush flag--fix">
+                            <div class="flag__img">
+
+                                <input class="chooser__input" id="cbPublicLiability" type="checkbox" name="chooser-11"  />
+                                <span class="chooser__icon">
+
+                                    <svg role="img" class="icon ">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="flag__body">
+                                <span class="chooser__label color-gray-7 inline-block align-middle ml-"> Do you have Public Liability Insurance?  </span>
+                            </div>
+                        </div>
+                    </label>
+                </div>*@
+
+                                    <div class="terms-wrapper mb-">
+                                        <label class="chooser ">
+                                            <div class="flag flag--flush flag--fix">
+                                                <div class="flag__img">
+
+                                                    <input class="chooser__input" id="cbFoodHygiene" type="checkbox" name="chooser-11">
+                                                    <span class="chooser__icon">
+
+                                                        <svg role="img" class="icon ">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                                <div class="flag__body">
+                                                    <span class="chooser__label color-gray-7 inline-block align-middle ml-"> Do you have a Food Hygiene certificate?  </span>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                }
+                                @*<div class="mb-">
+                <label class="chooser ">
+                    <div class="flag flag--flush flag--fix">
+                        <div class="flag__img">
+                            <input class="chooser__input" type="checkbox" id="chooser-11" name="chooser-11" value="">
+                            <span class="chooser__icon">
+
+                                <svg role="img" class="icon ">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="flag__body">
+                            <span class="chooser__label  ml-"> Do you have the culinary skills required? </span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+            <div class="mb-">
+                <label class="chooser ">
+                    <div class="flag flag--flush flag--fix">
+                        <div class="flag__img">
+                            <input class="chooser__input" type="checkbox" id="chooser-11" name="chooser-11" value="">
+                            <span class="chooser__icon">
+
+                                <svg role="img" class="icon ">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="flag__body">
+                            <span class="chooser__label  ml-"> Do you have space for your Grub Club? </span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+            <div class="mb+">
+                <label class="chooser ">
+                    <div class="flag flag--flush flag--fix">
+                        <div class="flag__img">
+                            <input class="chooser__input" type="checkbox" id="chooser-11" name="chooser-11" value="">
+                            <span class="chooser__icon">
+
+                                <svg role="img" class="icon ">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="flag__body">
+                            <span class="chooser__label  ml-"> Do you have time to promote the event? </span>
+                        </div>
+                    </div>
+                </label>
+            </div>*@
+                                <a href="@Url.Action("registersupperclub", "host")" class="no-underline">
+                                    <button id="btnSubmit" class="btn btn--primary btn--full btn--wrap-normal btn--large type-huge btn--w380 block-center mb no-underline">Ready? Submit your Grub Club</button>
+                                </a>
+
+</div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>

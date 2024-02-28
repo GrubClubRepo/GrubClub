@@ -1,0 +1,83 @@
+﻿@if ((HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "event" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "detailsbyidwithname")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "search" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "index")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "index")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "chefs")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "host" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "detailsbyname")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "account" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "myprofile")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "aboutus")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "contactus")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "hometest")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "faqs")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "gallery")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "howitworks")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "partners")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "vouchers")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "news")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "becomeahost")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "choosetickets")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "postpaymentsuccessnew")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "whatpeoplearesaying")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "viewquicklink")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "fourohfour")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "account" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "logon")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "account" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "newlogin")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "account" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "newregister")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "sessionexpired")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "booktickets")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "creditcarddetails")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "threedsecure")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "postpaymentfailure")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "booking" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "prepostpayment")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "account" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "userdetails")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "search" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "tagsearchresult")
+    
+    
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "search" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "categorysearchresult")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "search" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "categorydetailsbyname")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "search" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "searchcityarearesult")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "search" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "searchcityresult")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "search" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "tagcitysearchresult")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "search" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "tagcityareasearchresult")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "event" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "masterdetailsbyname")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "referafriend")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "host" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "details")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "host" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "details1")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "admin" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "cms")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "admin" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "home")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "home" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "foodies")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "admin" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "foodies")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "admin" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "populargrubclubs")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "host" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "welcome")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "account" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "logonhost")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "host" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "faqs")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "event" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "thankyou")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "account" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "chefprofile")
+    || (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "host" && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "hostprofile")
+    )
+{
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+else
+{ 
+    if (SupperClub.Code.UserMethods.IsLoggedIn)
+    {
+        if (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower() == "image")
+        {
+            Layout = "~/Views/Shared/_LayoutIframe.cshtml";
+        }
+        else if (HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower() == "threedsecureiframe")
+        {
+            Layout = "~/Views/Shared/_LayoutThreeDSecureIframe.cshtml";
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_LayoutLoggedIn.cshtml";
+            //Layout = "~/Views/Shared/_LayoutNew.cshtml";
+        }
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+        //Layout = "~/Views/Shared/_LayoutNew.cshtml";
+    }
+}

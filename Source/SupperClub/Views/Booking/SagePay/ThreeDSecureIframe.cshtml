@@ -1,0 +1,18 @@
+﻿@model SupperClub.Models.ThreeDSecureModel
+@{
+    ViewBag.Title = "3DSecure";
+}
+<html>
+<head runat="server">
+    <title>3D Secure Redirect</title>
+    <script type="text/javascript">        function OnLoadEvent() { document.form.submit(); } </script>
+</head>
+<body onload="OnLoadEvent();">
+    <form name="form" action="@Model.ACSURL" method="post">
+    <input type="hidden" name="PaReq" value="@Model.PAReq" />
+    <input type="hidden" name="TermUrl" value="@Model.TermUrl" />
+    <input type="hidden" name="MD" value="@Model.MD" />
+    <input type="submit" value="Please click to Authenticate your card" />
+    </form>
+</body>
+</html>

@@ -1,0 +1,129 @@
+﻿@model SupperClub.Domain.Event
+<!-- 960 Container Start -->
+<div class="row">
+    <div class="col-sm-3" >
+        @if (Model.TotalNumberOfAvailableSeats == 0)
+        {
+            <div class="soldout-label-test"></div>
+        }
+        <a href="@Url.Action("DetailsByIdWithName", "Event", new { eventId = Model.Id, eventSeoFriendlyName = Model.UrlFriendlyName })">
+            <img src="@Url.Content(SupperClub.Code.ServerMethods.EventImagePath + Model.ImagePath)" alt="@Model.Name | GrubClub" class="EventImage">
+        </a>
+    </div>
+    <div class="col-sm-7" >
+        <h4>
+            <a href="@Url.Action("DetailsByIdWithName", "Event", new { eventId = Model.Id, eventSeoFriendlyName = Model.UrlFriendlyName })">@Model.Name</a>
+        </h4>
+        <p class="Summary">
+        @if (Model.EventDescription.Length > 270)
+        {
+            if(@Model.EventDescription.Substring(0, 270).IndexOf("<strong>") == -1 || (System.Text.RegularExpressions.Regex.Matches(@Model.EventDescription.Substring(0, 270), "<strong>").Count == System.Text.RegularExpressions.Regex.Matches(@Model.EventDescription.Substring(0, 270), "</strong>").Count))
+            {
+                @Html.Raw(@Model.EventDescription.Substring(0, 270) + "...")
+            }
+            else
+            {
+                @Html.Raw(@Model.EventDescription.Substring(0, 270) + "</strong>...")      
+            }
+        }
+        else
+        {
+            @Html.Raw(@Model.EventDescription)            
+        }   
+        </p>
+        
+               @if (Model.MultiSeating)
+               {
+                   <span class="timings">
+                        <span>
+                        @Model.Start.ToString("ddd, d MMM yyyy")
+                        </span>  
+                        <span>
+                        @Model.MinSeatingTime.ToShortTimeString()
+                        @Html.Raw(" Onwards ") 
+                        </span>     
+                        @if (Model.TotalNumberOfAvailableSeats == 0)
+                            {
+                            <p style="color:#CB0019;font-family:'Lobster', Cursive;font-size:17px;display:inline;margin-right:38px;margin-left:38px;">    SoldOut    </p>
+                            } 
+                        @if (Model.SupperClub.UserId == SupperClub.Code.UserMethods.UserId || SupperClub.Code.UserMethods.IsAdmin)
+                        {
+                            <span>                
+                            @(Model.TotalEventReservedSeats + Model.TotalNumberOfAttendeeGuests)   
+                            @Html.Raw(" / ")
+                            @Model.TotalEventGuests.ToString()    
+                            </span>      
+                        }
+                    </span>    
+               }
+               else
+               {
+                    <span class="timings">
+                    <span>
+                        @Model.Start.ToString("ddd, d MMM yyyy")
+                    </span>  
+                    <span>
+                    @Model.Start.ToShortTimeString()
+                    @Html.Raw(" - ")
+                    @Model.End.ToShortTimeString()   
+                    </span>
+                    @if (Model.TotalNumberOfAvailableSeats == 0)
+                            {
+                            <p style="color:#CB0019;font-family:'Lobster', Cursive;font-size:17px;display:inline;margin-right:38px;margin-left:38px;">    SoldOut    </p>
+                            }
+                    @if (Model.SupperClub.UserId == SupperClub.Code.UserMethods.UserId || SupperClub.Code.UserMethods.IsAdmin)
+                    {
+                        <span>
+                        @(Model.ReservedSeats + Model.TotalNumberOfAttendeeGuests)   
+                        @Html.Raw(" / ")
+                        @Model.Guests.ToString() 
+                        </span>
+                    }
+                    </span>
+               }                 
+              
+    </div>
+    <div class="col-sm-2 rating-box" style="margin-left:0; ">
+        @if (Model.SupperClub.UserId == SupperClub.Code.UserMethods.UserId)
+        {
+            if (Model.Status == (int)SupperClub.Domain.EventStatus.Cancelled)
+            {
+                @:Cancelled
+            }
+            else if (Model.Start < DateTime.Now)
+            {
+                @Html.Raw("You Hosted")
+            }
+            else
+            {
+                @Html.Raw("You're Hosting")
+                @:<a href="@Url.Action("DetailsByIdWithName", "Event", new { eventId = Model.Id, eventSeoFriendlyName = Model.UrlFriendlyName, edit = true })" class="button medium yellow" style="font-style:normal">Edit</a>
+            }
+        }
+        else if (Model.NumberOfAttendeeGuests(SupperClub.Code.UserMethods.UserId) > 0)
+        {
+            if (Model.Status == (int)SupperClub.Domain.EventStatus.Cancelled)
+            {
+                @:Cancelled
+            }
+            else if (Model.Start < DateTime.Now)
+            {
+                @Html.Raw("You Attended")
+            }
+            else
+            {
+                @Html.Raw("You're Attending")
+            }
+        }
+    </div>
+</div>
+
+@*
+<!-- Event Border -->
+<div class="container">
+    <div class="fourteen columns" style="border-bottom: 1px solid #E7E7E7;">
+        <p>
+        </p>
+    </div>
+</div>
+*@

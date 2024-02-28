@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 12.125" name="SupperClub">
+  <DataContextMoniker Name="/SupperClubDataContext" />
+  <nestedChildShapes>
+    <classShape Id="59c7ce14-4433-4a23-90cd-07bb37deefd6" absoluteBounds="3.5, 2.5, 2, 1.1939925130208335">
+      <DataClassMoniker Name="/SupperClubDataContext/Cuisine" />
+      <nestedChildShapes>
+        <elementListCompartment Id="9f3eaacb-539b-4fa5-b664-bea9f846f16c" absoluteBounds="3.515, 2.96, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="3e3ec7ac-810c-4f57-a79d-353895032507" absoluteBounds="8.75, 0.75, 2, 1.3862939453124987">
+      <DataClassMoniker Name="/SupperClubDataContext/EmailTemplate" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ae5acb60-ca02-43c7-b24c-d0dbf08d0d0d" absoluteBounds="8.765, 1.2100000000000009, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="95979e10-4b97-48c9-a1b8-8ff4dff30727" absoluteBounds="3.5, 4.875, 2, 2.3478011067708326">
+      <DataClassMoniker Name="/SupperClubDataContext/Event" />
+      <nestedChildShapes>
+        <elementListCompartment Id="f9afd25a-039b-4bb4-9a29-3f77468afc8a" absoluteBounds="3.515, 5.335, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="a10ca328-5fa9-45b9-b2d2-7ead55c004d7" absoluteBounds="6.25, 4.5, 2, 1.7708968098958327">
+      <DataClassMoniker Name="/SupperClubDataContext/EventAttendee" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b20830d0-73f9-4520-8776-37c1e26e7225" absoluteBounds="6.265, 4.96, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="6c4f7943-5f81-4a6d-b16f-9cf27f891dad" absoluteBounds="6.25, 2.375, 2, 1.3862939453124996">
+      <DataClassMoniker Name="/SupperClubDataContext/EventCuisine" />
+      <nestedChildShapes>
+        <elementListCompartment Id="dc879cbe-d22b-483c-9f2f-24a1ce1bc32c" absoluteBounds="6.265, 2.835, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="63e932a2-3ebe-45f0-b82f-d478aa4349a5" absoluteBounds="0.75, 3.5, 2, 5.0400211588541675">
+      <DataClassMoniker Name="/SupperClubDataContext/SupperClub" />
+      <nestedChildShapes>
+        <elementListCompartment Id="35d72cdf-e728-4ce9-b6c7-197e8d8b43ff" absoluteBounds="0.765, 3.96, 1.9700000000000002, 4.4800211588541661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.5 : 5.57294840494792); (6.25 : 5.57294840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SupperClubDataContext/Event/Event_EventAttendee" />
+      <nodes>
+        <classShapeMoniker Id="95979e10-4b97-48c9-a1b8-8ff4dff30727" />
+        <classShapeMoniker Id="a10ca328-5fa9-45b9-b2d2-7ead55c004d7" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 3.09699625651042); (5.79166666666667 : 3.09699625651042 : JumpStart); (5.95833333333333 : 3.09699625651042 : JumpEnd); (6.25 : 3.09699625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SupperClubDataContext/Cuisine/Cuisine_EventCuisine" />
+      <nodes>
+        <classShapeMoniker Id="59c7ce14-4433-4a23-90cd-07bb37deefd6" />
+        <classShapeMoniker Id="6c4f7943-5f81-4a6d-b16f-9cf27f891dad" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 4.875); (5.875 : 4.5); (5.875 : 2.70474612825521); (6.25 : 2.70474612825521)]" fixedFrom="NotFixed" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SupperClubDataContext/Event/Event_EventCuisine" />
+      <nodes>
+        <classShapeMoniker Id="95979e10-4b97-48c9-a1b8-8ff4dff30727" />
+        <classShapeMoniker Id="6c4f7943-5f81-4a6d-b16f-9cf27f891dad" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 6.04890055338542); (3.5 : 6.04890055338542)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SupperClubDataContext/SupperClub/SupperClub_Event" />
+      <nodes>
+        <classShapeMoniker Id="63e932a2-3ebe-45f0-b82f-d478aa4349a5" />
+        <classShapeMoniker Id="95979e10-4b97-48c9-a1b8-8ff4dff30727" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="a0cfd8df-4966-4849-a334-5bf4a10ab560" absoluteBounds="6.25, 7, 2, 1.9631982421874987">
+      <DataClassMoniker Name="/SupperClubDataContext/EventMenuOption" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c2cf774f-58c2-41f5-9ec0-597a9b09890b" absoluteBounds="6.2650000000000006, 7.46, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(4.70443315826862 : 7.22280110677083); (4.70443315826862 : 8.09300017447917); (6.25 : 8.09300017447917)]" fixedFrom="Caller" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SupperClubDataContext/Event/Event_EventMenuOption" />
+      <nodes>
+        <classShapeMoniker Id="95979e10-4b97-48c9-a1b8-8ff4dff30727" />
+        <classShapeMoniker Id="a0cfd8df-4966-4849-a334-5bf4a10ab560" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="b0650ccf-1aee-46dc-94ac-c76254e75262" absoluteBounds="6.25, 9.75, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/SupperClubDataContext/EventSeating" />
+      <nestedChildShapes>
+        <elementListCompartment Id="dd0857c7-5057-46c6-877d-0d54478bacce" absoluteBounds="6.2650000000000006, 10.21, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(4.07096407913431 : 7.22280110677083); (4.07096407913431 : 10.8277498372396); (6.25 : 10.8277498372396)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SupperClubDataContext/Event/Event_EventSeating" />
+      <nodes>
+        <classShapeMoniker Id="95979e10-4b97-48c9-a1b8-8ff4dff30727" />
+        <classShapeMoniker Id="b0650ccf-1aee-46dc-94ac-c76254e75262" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

@@ -1,0 +1,852 @@
+﻿@model SupperClub.Models.ChefsModel
+@{
+    ViewBag.Title = "Supper Club Hosts | Grub Club";
+    ViewBag.Description = "From Michelin-trained chefs to home cooks, here's our list of supper clubs in London. Italian or Burmese, 5* favourites or newbie chefs on the block, you'll find all of our chefs here!";
+}
+@section PageSpecificScripts {
+    <script src="@Url.Content("~/Scripts/jquery.tmpl.js")" type="text/javascript"></script>
+<style>
+    .hidden {
+        display: none;
+    }
+
+    .shown {
+        display: block;
+    }
+</style>
+
+    <script type="text/javascript">
+
+    var pageNumber = 1;
+    var pageSize = 4;
+    var isInt = false;
+    var _inProcessChefID = 0;
+    var _inProcessElement=null;
+    function followChef(SupperClubId,element) {
+
+        _inProcessElement = element;
+        _inProcessChefID = SupperClubId;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("FollowChef", "Host")',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({ supperClubId: SupperClubId }),
+            success: function (response) {
+
+                //alert(response.message);
+                var unfollow = "#btnUnFollowChef_" + _inProcessChefID;
+                var follow = "#btnFollowChef_" + _inProcessChefID;
+
+                $(unfollow).addClass('btn');
+                $(unfollow).removeClass('hidden');
+                $(follow).removeClass('btn');
+                $(follow).addClass('hidden');
+                processTogglingElements();
+                $(".message-popup-wraper .messages-popup").addClass("is-hidden"), $(".messages-popup--added").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(3100).queue(function () { $(this).remove() }), $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") });
+
+            },
+            error: function (response) {
+                alert(response.status);
+
+
+            }
+        });
+    }
+
+    function unfollowChef(SupperClubId,element) {
+        _inProcessChefID = SupperClubId;
+        _inProcessElement = element;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UnfollowChef", "Host")',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({ supperClubId: SupperClubId }),
+            success: function (response) {
+
+                //alert(response.message);
+                var unfollow = "#btnUnFollowChef_" + _inProcessChefID;
+                var follow = "#btnFollowChef_" + _inProcessChefID;
+
+                $(unfollow).removeClass('btn');
+                $(unfollow).addClass('hidden');
+                $(follow).addClass('btn');
+                $(follow).removeClass('hidden');
+
+                processTogglingElements();
+                $(".messages-popup--removed").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(3100).queue(function () {
+                    $(this).remove()
+                }),
+    $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") });
+
+            },
+            error: function (response) {
+                alert(response.status);
+            }
+        });
+        }
+        function processTogglingElements() {
+            if ($(_inProcessElement) != null) {
+                $(_inProcessElement).removeClass('btn');
+                $(_inProcessElement).addClass('hidden');
+
+                var neighbourAnchor = getNeighbourAnchor(_inProcessElement);
+                if (neighbourAnchor != null) {
+                    $(neighbourAnchor).addClass('btn');
+                    $(neighbourAnchor).removeClass('hidden');
+                }
+
+            }
+        }
+        function getNeighbourAnchor(element) {
+            if (element && element.nextSibling && element.nextSibling.tagName && element.nextSibling.tagName == "A")
+                return element.nextSibling;
+            if (element && element.nextSibling && element.nextSibling.nextSibling &&
+                element.nextSibling.nextSibling.tagName && element.nextSibling.nextSibling.tagName == "A")
+                return element.nextSibling.nextSibling;
+            if (element && element.previousSibling && element.previousSibling.tagName
+                && element.previousSibling.tagName == "A")
+                return element.previousSibling;
+            if (element && element.previousSibling && element.previousSibling.previousSibling &&
+                element.previousSibling.previousSibling.tagName && element.previousSibling.previousSibling.tagName == "A")
+                return element.previousSibling.previousSibling;
+
+            return null;
+        }
+    $(document).ready(function () {
+
+
+        $('#PageNo').val("1");
+        if (isInt) return;
+        isInt = true;
+        // showLoadMore();
+
+        LoadsortedData();
+
+        $("#btnSearch").click(function () {
+
+            LoadsortedData();
+        });
+
+
+        $("#SortOption").change(function () {
+
+            LoadsortedData();
+        });
+
+         $('#SearchCriteriaForm').submit(function () {
+             
+            var OptionVal = $("#SortOption").val();
+            var SearchKeyword = $("#txtKeyWord").val();
+
+            $.ajax({
+                url: "@Url.Action("Chefs_Init", "Home")",
+                type: "POST",
+            dataType: "json",
+            data: ({ Option: OptionVal, Keyword: SearchKeyword }),
+
+            success: function (result) {
+                //debugger;;
+                renderResults(result);
+            },
+
+            error: function () {
+                alert("There was a problem with Search.");
+            }
+
+            });
+            return false;
+        });
+
+        function LoadsortedData() {
+
+            var OptionVal = $("#SortOption").val();
+            var SearchKeyword = $("#txtKeyWord").val();
+
+            $.ajax({
+                url: "@Url.Action("Chefs_Init", "Home")",
+                type: "POST",
+                dataType: "json",
+                data: ({ Option: OptionVal, Keyword: SearchKeyword }),
+
+                success: function (result) {
+                    //debugger;;
+                    renderResults(result);
+                },
+
+                error: function () {
+                    alert("There was a problem with Search.");
+                }
+
+            });
+        }
+
+
+
+        $(window).scroll(function () {
+            renderPagedResults();
+        });
+
+
+        $("#btnLoadMore").click(function () {
+            renderPagedResults();
+        });
+
+        function renderResults(result) {
+            debugger;
+            if (result != null && result.length > 0)
+            {
+                pageNumber = 1;
+                $('#ResultCount').val(result.length)
+                //  $("#divTopChef").empty(); 		 // Remove current
+                $("#divChef").empty();
+                results = result; 
+                renderPagedResults();
+            }
+            else {
+                $("#divChef").empty();
+                $("#divChef").append("<div class='layout__item text-center'>No results to display </div>  ");
+                $('#ResultCount').val(0);
+                showLoadMore();
+            }
+
+        }
+
+
+        var inActive = 0;
+
+        function renderPagedResults() {
+            debugger;
+            var currPage = pageNumber;
+            var startIndex = (currPage - 1) * pageSize;
+            var targetNum = (currPage) * pageSize;
+            var toBeRenderedresult = [];
+            for (var i = startIndex; i < targetNum && i < results.length; i++) {
+                toBeRenderedresult.push(results[i]);
+            }
+            //var toBeRenderedInactiveresult = [];
+            //if (inActive == 0) {
+            //    for (var i = startIndex; i < targetNum && i < results.length; i++) {
+            //        if (results[i].GrubClubName == "NewLine") {
+            //            inActive = 1;
+            //        }
+            //        else {
+            //            if (inActive == 0) {
+            //                toBeRenderedresult.push(results[i]);
+            //            }
+            //            else {
+            //                toBeRenderedInactiveresult.push(results[i]);
+            //            }
+            //        }
+
+            //    }
+
+            //}
+            //else {
+            //    for (var i = startIndex; i < targetNum && i < results.length; i++) {
+
+            //        toBeRenderedInactiveresult.push(results[i]);
+
+            //    }
+            //}
+
+            $('#ChefTemplate').tmpl(toBeRenderedresult).appendTo('#divChef');
+           // $('#ChefTemplate').tmpl(toBeRenderedInactiveresult).appendTo('#divInactiveChef');
+
+            showLoadMore();
+            ++pageNumber;
+        }
+
+        function showLoadMore() {
+
+            var count = $('#ResultCount').val();
+            var page = pageNumber;
+
+            if (count > page * pageSize) {
+
+                $("#btnLoadMorediv").css("display", "block");
+            }
+            else {
+
+                $("#btnLoadMorediv").css("display", "none");
+            }
+
+        }
+
+    });
+
+    @*$("#btnLoginSideBarBottom").click(function (e) {
+
+        e.preventDefault();
+        var _rurl = "@(SupperClub.Code.ServerMethods.ServerUrl +"home"+"Chefs")";
+        var tem = "@Url.Action("FollowChef","Host")";
+
+            $("#RedirectURL").val(_url);
+            $("#RedirectURL").val(_url); $('#login-dialog').load("@Url.Action("loginRegister", "account", new {})"+ "?returnUrl=" + _url);
+        $("#btnLoginSideBarBottom_hid").click();
+        //            $( $(this).attr("href") ).show();
+
+    });*@
+    function onFollowChefLoginButtonClick(e,chefID) {
+
+        // e.preventDefault();
+        var _rurl = "@(SupperClub.Code.ServerMethods.ServerUrl +"home/"+"Chefs")";
+        var tem = "@Url.Action("FollowChef","Host")";
+        var _url = encodeURIComponent(tem + "?supperClubId=" + chefID + "&rurl=" + _rurl);
+        $("#RedirectURL").val(_url);
+        $('#login-dialog').load("@Url.Action("loginRegister", "account", new {})" + "?returnUrl=" + _url);
+        return false;
+    }
+    </script>
+    }
+
+
+    <input type="text" id="ResultCount" style="display:none;">
+
+
+    @*<div class="container mb">
+        <ul class="breadcrumbs list-inline list-inline--delimited pt-- mb">
+            <li><a href="">Home</a></li>
+            <li><a href="/Chefs">Chefs </a></li>
+      
+        </ul>
+    </div>*@
+    <div class="container">
+    <h1 class="type-light color-dark extralarge-and-up-mb extralarge-and-up-pb0 mb+ pb">Grub Club Hosts</h1>
+    <div class="owl-carousel owl-carousel--img-with-content" id="divTopChef">
+        @{int i=0;}
+        @foreach(var chef in @Model.SupperClubs)
+            {
+                if(i++<4){
+                    <div class="bgr-white p">
+                        <div class="layout">
+                            <div class="layout__item large-and-up-5/9">
+                                @*<div class="embedded embedded--16by9">
+                                    <a href="/@chef.GrubClubUrlFriendlyName">
+                                       
+                                        <iframe frameborder="0" class="embedded embedded--16by9" style="overflow:hidden;" allowfullscreen src="@Url.Content("~/Content/images/SupperClubs/")@chef.ImagePath" allowfullscreen>
+                                           
+                                        </iframe>
+                                    </a>
+                                </div>*@
+                                
+                                    <a href="/@chef.GrubClubUrlFriendlyName">
+                                        <img src="@Url.Content("~/Content/images/SupperClubs/")@chef.ImagePath" alt="" style="width:485px;height:400px;">                                        
+                                    </a>
+                                      
+                            </div>
+                            <div class="layout__item large-and-up-4/9 relative">
+                                @*<a href="" class="btn follow-button btn--primary btn--small type-small type-uppercase type-semibold">Follow</a>*@
+                                @if (SupperClub.Code.UserMethods.IsLoggedIn)
+                        {
+                            string unFollowid = "btnUnFollowChef_" + chef.SupperclubId;
+                            string followid = "btnFollowChef_" + chef.SupperclubId;
+                            string login = "btnLoginSideBarBottom_" + chef.SupperclubId;
+                            if (@chef.FollowChef == 1)
+                            {
+                                <a id="@unFollowid" onclick="unfollowChef(@chef.SupperclubId,this);" href="#" class="btn follow-button btn--primary btn--small type-small type-uppercase type-semibold btn--unfollow ">Unfollow</a>
+                                    <a id="@followid" onclick="followChef(@chef.SupperclubId,this);" href="#" class="btn follow-button btn--primary btn--small type-small type-uppercase type-semibold hidden">Follow</a>
+                            }
+                            else
+                            {
+                                <a id="@unFollowid" onclick="unfollowChef(@chef.SupperclubId,this);" href="#" class="btn follow-button btn--primary btn--small type-small type-uppercase type-semibold hidden btn--unfollow">Unfollow</a>
+                                    <a id="@followid" onclick="followChef(@chef.SupperclubId,this);" href="#" class="btn follow-button btn--primary btn--small type-small type-uppercase type-semibold">Follow</a>
+                            }
+                        }
+                        else
+                        {
+                                    <a href="#login-dialog" id="btnLoginSideBarBottom" onclick="onFollowChefLoginButtonClick(this,@chef.SupperclubId)" class="btn follow-button btn--primary btn--small type-small type-uppercase type-semibold type-small  open-popup">Follow</a>
+                         }
+                                <p class="type-small type-uppercase type-semibold mb-">Featured Host</p>
+                                <h2 class="h3 mb--"><a href="/@chef.GrubClubUrlFriendlyName">@chef.FirstName  @chef.LastName  </a></h2>
+                                <hr class="hr hr--dots mb--">
+                                <div class="mb- pb--">
+                                    <a href="/@chef.GrubClubUrlFriendlyName/#reviews" class="no-underline mr--">
+                                        @if(@chef.Rating== 5){
+                                            <ul class="rating inline-block">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                               }
+                                        @if(@chef.Rating== 4){
+                                            <ul class="rating inline-block">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                }
+                                        @if(@chef.Rating== 3)
+                                {
+                                            <ul class="rating inline-block">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                }
+                                        @if(@chef.Rating== 2){
+                                            <ul class="rating inline-block">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                }
+                                        @if(@chef.Rating== 1){
+                                            <ul class="rating inline-block">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                }
+                                        @if(@chef.Rating== 0){
+                                            <ul class="rating inline-block">
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                }
+                                    </a>
+                                    <a href="/@chef.GrubClubUrlFriendlyName/#reviews" class="no-underline ml-">
+                                        <span class="color-gray">
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-bubble_icon"></use>
+                                            </svg>
+                                            @chef.ReviewCount Reviews
+                                        </span>
+                                    </a>
+                                    <span class="color-gray">|</span>
+                                    <a href="" class="no-underline"><span class="color-gray">@chef.Followers Followers</span></a>
+                                </div>
+                                <p class="mb">
+                                    @Html.Raw("<p><span itemprop=\"Summary\">" + @chef.Summary.Replace("\r\n", "<br />").Replace("\n", "<br />") + "</span></p>")
+                                </p>
+                                <a href="/@chef.GrubClubUrlFriendlyName" class="btn btn--primary btn--huge btn--full">View More</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+    </div>
+    <div class="container">
+        <div class="main-search layout layout--left" style="margin-left:-50px;">
+            <div class="layout__item large-and-up-3/4">
+                <div class="layout layout--tiny">
+                    <form method="post" class="text-center" id="SearchCriteriaForm" name="SearchCriteriaForm">
+                        @*<div class="layout__item large-and-up-4/7">*@
+                        <div class="layout__item large-and-up-3/4">
+                            <input type="text" id="txtKeyWord" class="input--primary input--h42 text-center full-width" placeholder="">
+                        </div>
+                        @*<div class="layout__item large-and-up-3/7">*@
+                        <div class="layout__item large-and-up-1/4">
+                            <button type="button" class=" btn--primary btn--radius ml--" id="btnSearch">Search</button>
+
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-right mb+" style="margin-top:-85px; margin-right:-55px;">
+
+            <div class="large-and-up-inline-block large-and-up-mr large-and-up-pr- mb large-and-up-mb0">
+                <span class='type-small type-bold type-uppercase align-middle mr--'>sort</span>
+                <div class="select select--large inline-block">
+                    <select id="SortOption" class="select__item type-uppercase opacity-7">
+                        <option value="0">Rating (High - Low)</option>
+                        <option value="1">Names in Ascending</option>
+                        <option value="2" selected>Future Events</option>
+
+
+                    </select>
+                    <div class="select__icon">
+                        <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+                        <!-- <svg class="icon"><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-email-arrow"/></svg> -->
+                    </div>
+                </div>
+            </div>
+            <!--   <div class="large-and-up-inline-block">
+                   <span class='type-small type-bold type-uppercase align-middle mr--'>show</span><div class="select select--mediu
+                   <div class="select select--medium inline-block">
+                       <select class="select__item type-uppercase opacity-7">
+                           <option value="">popular</option>
+                           <option value="">option 2</option>
+                           <option value="">option 3</option>
+                           <option value="">option 4</option>
+                       </select>
+                       <div class="select__icon">
+                           <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+
+                       </div>
+                   </div>
+               </div>-->
+        </div>
+        </div>
+        <div class="layout layout--small mb+" id="divChef">
+
+
+        </div>
+
+        <div class="layout layout--small mb+" id="divInactiveChef">
+
+
+        </div>
+
+        <div class="text-center" id="btnLoadMorediv">
+            <button type="button" id="btnLoadMore" class="btn btn--primary btn--white btn--radius">Load More</button>
+        </div>
+    </div>
+
+
+
+    <div id="login-register" class="mfp-hide magnific-content max-width-820 bgr-gray border-width-3 border-black">
+        <div class="layout">
+            <div class="layout__item large-and-up-1/2">
+                <div class="ph-">
+                    <h1 class="type-light h2 mb-">Login</h1>
+                    <p class="mb type-small semibold color-dark">Please log in to account to continue with your booking</p>
+                    @using (Html.BeginForm("LogIn", "Account", new { returnUrl = Url.Action("Chefs", "Home") }, FormMethod.Post, new { id = "loginForm" }))
+                    {
+
+                        <div>
+                            <label>Your Email Address</label>
+                            @Html.ValidationMessageFor(m => m.LogOnModel.UserName)
+                            @Html.EditorFor(m => m.LogOnModel.UserName, new { @class = "input input--large input--primary mb--" })
+                        </div>
+
+
+                        <div>
+                            @Html.LabelFor(m => m.LogOnModel.Password)
+                            @Html.ValidationMessageFor(m => m.LogOnModel.Password)
+                            @Html.PasswordFor(m => m.LogOnModel.Password, new { @class = "input input--large input--primary mb-" })
+                        </div>
+                        <input type="submit" class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+" id="btnLogin" value="Login" />
+
+                        @*<form action="" class="pt-">
+                                <input type="email" placeholder="Your Email Address" class="input input--large input--primary mb--">
+                                <input type="password" placeholder="Password" class="input input--large input--primary mb-">
+                                <button class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+">Login</button>
+                            </form>*@
+                    }
+                </div>
+            </div>
+            <div class="layout__item large-and-up-1/2">
+                <div class="ph-">
+                    <h1 class="type-light h2 mb-">Register</h1>
+                    <p class="mb type-small semibold color-dark">Not a Grub Club member yet? Register your details below.</p>
+                    @using (Html.BeginForm("Register", "Account", new { returnUrl = Url.Action("Chefs", "Home") }, FormMethod.Post, new { id = "RegisterForm" }))
+                    {
+                        @*<form action="" class="pt-">
+                                <input type="text" placeholder="Full Name" class="input input--large input--primary mb">
+                                <hr class="hr hr--dots mb">
+                                <input type="email" placeholder="Your Email Address" class="input input--large input--primary mb--">
+                                <input type="email" placeholder="Confirm Your Email Address" class="input input--large input--primary mb">
+                                <hr class="hr hr--dots mb">
+                                <input type="password" placeholder="Password" class="input input--large input--primary mb--">
+                                <input type="password" placeholder="Confirm Your Password" class="input input--large input--primary mb-">
+                                <button class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+">Register</button>
+                            </form>*@
+
+                        <div class="pl-">
+                            <h1 class="type-light mb-">Register</h1>
+                            <p class="mb h6 semibold color-dark">Not a Grub Club member yet? Register your details below.</p>
+
+                            <div>
+                                <label>First Name</label>
+                                @Html.ValidationMessageFor(m => m.RegisterModel.FirstName)
+                                @Html.EditorFor(m => m.RegisterModel.FirstName, new { @class = "input input--large input--primary mb" })
+                            </div>
+                            <div>
+                                <label>Last Name</label>
+                                @Html.ValidationMessageFor(m => m.RegisterModel.LastName)
+                                @Html.EditorFor(m => m.RegisterModel.LastName, new { @class = "input input--large input--primary mb" })
+                            </div>
+                            <hr class="hr hr--dots mb">
+                            <div>
+                                <label>Your Email Address</label>
+                                @Html.ValidationMessageFor(m => m.RegisterModel.Email)
+                                @Html.EditorFor(m => m.RegisterModel.Email, new { @class = "input input--large input--primary mb" })
+                            </div>
+                            <div>
+                                <label>Confirm Your Email Address</label>
+                                @Html.ValidationMessageFor(m => m.RegisterModel.ConfirmEmail)
+                                @Html.EditorFor(m => m.RegisterModel.ConfirmEmail, new { @class = "input input--large input--primary mb" })
+                            </div>
+                            <hr class="hr hr--dots mb">
+                            <div>
+                                <label>Password</label>
+                                @Html.ValidationMessageFor(m => m.RegisterModel.Password)
+                                @Html.PasswordFor(m => m.RegisterModel.Password, new { @class = "input input--large input--primary mb" })
+                            </div>
+                            <div>
+                                <label>Confirm Your Password</label>
+                                @Html.ValidationMessageFor(m => m.RegisterModel.ConfirmPassword)
+                                @Html.PasswordFor(m => m.RegisterModel.ConfirmPassword, new { @class = "input input--large input--primary mb" })
+                            </div>
+                            <input type="submit" class="btn btn--primary btn--large btn--h54 large-and-up-float-right mb+" id="btnRegister" value="Register" />
+
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="newsletter">
+        <a href="javascript:;" class="newsletter__button">
+            <div class="tableize tableize--full tableize--middle">
+                <div class="tableize__cell">
+                    <div>
+                        <span>Newsletter</span>
+
+                        <svg role="img" class="icon icon-18x10">
+                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <span class="newsletter__content">
+            <form action="" class="full-height">
+                <div class="close-btn type-small color-white">Close <span class="type-bold">X</span></div>
+                <div class="tableize tableize--full tableize--middle">
+                    <div class="tableize__cell">
+                        <div>
+                            <p class="type-small type-bold color-white mb--">Find out of best Grub Clubs</p>
+                            <input type="email" class="input input--primary" placeholder="Email address">
+                            <button class="btn type-uppercase type-small type-bold">ok</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </span>
+    </div>
+    <!-- Top chef Template -->
+    <script id="TopChefTemplate" type="text/x-jquery-tmpl">
+
+        <div class="bgr-white p">
+            <div class="layout">
+                <div class="layout__item large-and-up-5/9">
+                    <div class="embedded embedded--16by9">
+                        <iframe src="//www.youtube.com/embed/dmKYTQoKjM0" frameborder="0" allowfullscreen></iframe>
+                        @*<iframe  frameborder="0" allowfullscreen>*@
+                        @*<img src="@Url.Content("~/Content/images/SupperClubs/")${ImagePath}" alt="">*@
+                        @*</iframe>*@
+                    </div>
+                </div>
+                <div class="layout__item large-and-up-4/9 relative">
+                    <a href="" class="btn follow-button btn--primary btn--small type-small type-uppercase type-semibold">Follow</a>
+                    <p class="type-small type-uppercase type-semibold mb-">featured chef</p>
+                    <h2 class="h3 mb--">${FirstName}  ${LastName}</h2>
+                    <hr class="hr hr--dots mb--">
+                    <div class="mb- pb--">
+                        <a href="/${GrubClubUrlFriendlyName}/#reviews" class="no-underline mr--">
+                            {{if Rating== 5}}
+                            <ul class="rating inline-block">
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                            </ul>
+                            {{/if}}
+                            {{if Rating== 4}}
+                            <ul class="rating inline-block">
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                            </ul>
+                            {{/if}}
+                            {{if Rating== 3}}
+                            <ul class="rating inline-block">
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                            </ul>
+                            {{/if}}
+                            {{if Rating== 2}}
+                            <ul class="rating inline-block">
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                            </ul>
+                            {{/if}}
+                            {{if Rating== 1}}
+                            <ul class="rating inline-block">
+                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                            </ul>
+                            {{/if}}
+                            {{if Rating== 0}}
+                            <ul class="rating inline-block">
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                            </ul>
+                            {{/if}}
+                        </a>
+                        <a href="" class="no-underline ml-">
+                            <span class="color-gray">
+                                <svg role="img" class="icon ">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-bubble_icon"></use>
+                                </svg>
+                                ${ReviewCount} Reviews
+                            </span>
+                        </a>
+                        <span class="color-gray">|</span>
+                        <a href="" class="no-underline"><span class="color-gray">10 Followers</span></a>
+                    </div>
+                    <p class="mb">${Summary}</p>
+                    <a href="/${GrubClubUrlFriendlyName}" class="btn btn--primary btn--huge btn--full">View More</a>
+                </div>
+            </div>
+        </div>
+
+
+    </script>
+
+    <script id="ChefTemplate" type="text/x-jquery-tmpl">
+        <div class="layout__item medium-1/2 large-and-up-1/4">
+            <div class="search-result search-result--grid">
+                <div class="search-result__box">                   
+                        <figure style="vertical-align:middle">
+                            @if (HttpContext.Current.Request.QueryString["t"] == "test")
+                            { 
+                            <a href="/${GrubClubUrlFriendlyName}">
+                                <img src="@Url.Content("~/Content/images/SupperClubs/")${ImagePath}" alt="" style="width:220px;height:220px;" />                                
+                            </a>
+                            }
+                            else
+                            {
+                                <a href="/${GrubClubUrlFriendlyName}">
+                                    <img src="@Url.Content("~/Content/images/SupperClubs/")${ImagePath}" alt="" style="width:220px;height:153px;" />
+                                </a>
+                            }
+                            {{if BrandNew=="1"}}
+                            <div class="figure__img-marker figure__img-marker--alternative">New chef</div>
+                            {{/if}}
+</figure>
+                    
+                    <header class='mb--'>
+                        <div style="height:40px; overflow:hidden;">
+                            <a href="/${GrubClubUrlFriendlyName}">
+                                <h2 class="color-darken type-semibold">${FirstName}  ${LastName}  </h2>
+                                <h3 class="color-darken type-small"> ${GrubClubName} </h3>
+                            </a>
+
+
+                        </div>
+                        <div class="justifize">
+                            <div class="justifize__box">
+                                <span>
+                                    <a href="/${GrubClubUrlFriendlyName}/#reviews">
+                                        {{if Rating== 5}}
+                                        <ul class="rating ">
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        </ul>
+                                        {{/if}}
+                                        {{if Rating== 4}}
+                                        <ul class="rating ">
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        </ul>
+                                        {{/if}}
+                                        {{if Rating== 3}}
+                                        <ul class="rating ">
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        </ul>
+                                        {{/if}}
+                                        {{if Rating== 2}}
+                                        <ul class="rating ">
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        </ul>
+                                        {{/if}}
+                                        {{if Rating== 1}}
+                                        <ul class="rating ">
+                                            <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        </ul>
+                                        {{/if}}
+                                        {{if Rating== 0}}
+                                        <ul class="rating ">
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        </ul>
+                                        {{/if}}
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="justifize__box">
+                                <a href="/${GrubClubUrlFriendlyName}/#reviews">
+                                    <span class="color-gray">
+                                        <svg role="img" class="icon ">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-bubble_icon"></use>
+                                        </svg>
+                                        ${ReviewCount} Reviews
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+            </div>
+        </div>
+    </script>
+
+<div class="message-popup-wraper text-center"></div>
+<span class="messages-popup messages-popup--added">
+
+    You are now following this chef!
+</span>
+<span class="messages-popup messages-popup--removed">
+
+    You have stopped following this chef!
+</span>
+

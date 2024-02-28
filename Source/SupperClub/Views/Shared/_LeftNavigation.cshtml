@@ -1,0 +1,42 @@
+﻿<script type="text/javascript">
+    $(function () {
+        var _url = window.location.href;
+        $(".list-bare").each(function () {
+            $(this).removeClass("is-active");
+        });
+        if (_url.toLowerCase().indexOf("refer-a-friend") >= 0) {
+            $("#refer-a-friend").addClass("is-active");
+        }
+        else if (_url.toLowerCase().indexOf("how-it-works") >= 0) {
+            $("#how-it-works").addClass("is-active");
+        }
+        else if (_url.toLowerCase().indexOf("faqs") >= 0) {
+            $("#faqs").addClass("is-active");
+        }
+        else if (_url.toLowerCase().indexOf("contact") >= 0) {
+            $("#contact-us").addClass("is-active");
+        }
+        else if (_url.toLowerCase().indexOf("vouchers") >= 0) {
+            $("#vouchers").addClass("is-active");
+        }
+        else {
+            $("#about-us").addClass("is-active");
+        }
+    });
+</script>
+
+<aside class="layout__item large-and-up-1/4 medium-1/2">
+    <nav class='nav-about mb'>
+        <ul class="list-bare">
+            <li><a href="/about-us" id="about-us">About Us</a></li>
+            <li><a href="/how-it-works" id="how-it-works">How It Works</a></li>
+            <li><a href="/faqs" id="faqs">FAQs</a></li>
+            <li><a href="/contact-us" id="contact-us">Contact Us</a></li>
+
+            <li><a href="/vouchers" id="vouchers">Vouchers</a></li>
+            <li><a href="/refer-a-friend" id="refer-a-friend">Refer A Friend</a></li>
+
+        </ul>
+    </nav>
+
+</aside>

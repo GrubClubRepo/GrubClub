@@ -1,0 +1,1643 @@
+﻿@model SupperClub.Models.SearchViewModel
+@{
+    ViewBag.Title = "Find Supper Clubs and Pop Up Dining Experiences | Grub Club";
+    ViewBag.Description = "Search for London’s Best Social Dining Experiences. Meet new people and dine in exciting new spaces while discovering the next Top Chef.";
+}
+
+@section PageSpecificScripts {
+
+    <script src="@Url.Content("~/Scripts/jquery.tmpl.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.lazyload.js")" type="text/javascript"></script>
+
+    <style>
+          .hidden {
+              display: none;
+          }
+
+          .shown {
+              display: block;
+          }
+
+          .overlayNew {
+              height: 100%;
+              left: 0;
+              position: absolute;
+              top: 0px;
+              width: 100%;
+              z-index: 10000;
+              opacity: 0;
+              -moz-opacity: 0;
+              filter: alpha(opacity=0);
+              -webkit-transition: opacity 180ms ease-in-out;
+              -moz-transition: opacity 180ms ease-in-out;
+              -o-transition: opacity 180ms ease-in-out;
+              transition: opacity 180ms ease-in-out;
+          }
+
+              .overlayNew.zoom {
+                  background: url(@Url.Content("~/Content/images/")overlay.png) no-repeat center center, url(@Url.Content("~/Content/images/")overlay_bg.png) center center;
+              }
+</style>
+
+    <script type="text/javascript">
+    function resizeMap(m) {
+        google.maps.event.trigger(m, 'resize');
+    };
+
+    function getDate(dateString) {
+        var startDate = dateString;
+        if (startDate != null) {
+            //startDate = startDate.replace(' ', '-');
+            var monthSplit = startDate.split(" ");
+            var monthName = monthSplit[1];
+            var months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+            if (monthName) {
+                monthName = monthName.toLowerCase();
+                var monthNumber = months.indexOf(monthName);
+                return new Date('20' + monthSplit[2], monthNumber, monthSplit[0]);
+            }
+        }
+        return null;
+    }
+
+    var map;
+    var results;
+    var centrePointLat;
+    var centrePointLng;
+
+    var arrMarkers = [];
+    var infoWindow = null;
+    var pageNumber = 1;
+    var pageSize=2;
+    var lstcuisine;
+    var cuisinepage=2;
+    var lstcuisinelength;
+    function getSearchCriteria(loadMore) {
+
+        var PriceRangeVals = [];
+        var DietVals = [];
+        var CuisineVals = [];
+        var TagVals=[];
+        var SelDiets = '';
+        var SelCuisines = '';
+        var SelTags='';
+
+        var tmpPriceRangeVals = $(".range-slider").val();
+        debugger;
+        if (tmpPriceRangeVals != null && tmpPriceRangeVals.length && tmpPriceRangeVals.length > 0) {
+            for (var i = 0; i < tmpPriceRangeVals.length; i++) {
+                PriceRangeVals.push(parseInt(tmpPriceRangeVals[i]));
+            }
+        }
+        
+        //$('input[name="PriceRangeOptions"]:checked').each(function () {
+        //    //alert($(this).val());
+        //    PriceRangeVals.push($(this).val());
+        //});
+
+
+        $('input[name="DietOptions"]:checked').each(function () {
+            //alert($(this).val());
+            DietVals.push($(this).val());
+            SelDiets += $(this).attr('id') + ',';
+        });
+        $('input[name="CuisineOptions"]:checked').each(function () {
+            //alert($(this).val());
+            CuisineVals.push($(this).val());
+            SelCuisines += $(this).attr('id') + ',';
+        });
+
+        $('input[name="TagOptions"]:checked').each(function () {
+            //alert($(this).val());
+            TagVals.push($(this).val());
+            SelTags += $(this).attr('id') + ',';
+        });
+
+        if (loadMore)
+            pageNumber++;
+        else
+            pageNumber = 1;
+        debugger;
+        var startDate = $('#StartDate').val();
+
+
+        var start = getDate(startDate);
+        var end = getDate($('#EndDate').val());
+
+        // end - start returns difference in milliseconds
+        var diff = end - start;
+
+        // get days
+        var days = 0;
+        if(end == null && start == null)
+        {
+            days = 150;
+        }
+        else
+        {
+            days = diff / 1000 / 60 / 60 / 24;
+        }
+        
+        var searchModel = {
+            Location: $("#SearchCriteria_Location").val(),
+            Guests: $("#SearchCriteria_Guests").val(),
+            StartDate: $("#StartDate").val(),
+            Distance: $("#Distance").find('option:selected').text(),
+            EndDateOffset: days+1,
+            FoodKeyword: $("#FoodKeyword").val(),
+            Charity: $('#SearchCriteria_Charity').is(':checked') ? true : null,
+            Alcohol: $('#BYOB').is(':checked') ? true : null,
+            NewChef: $('#SearchCriteria_NewChef').is(':checked') ? 1 : 0,
+            PriceRangeOptions: PriceRangeVals,
+            DietOptions: DietVals,
+            CuisineOptions: CuisineVals,
+            TagOptions:TagVals,
+            SelectedDiets: SelDiets,
+            SelectedCuisines: SelCuisines,
+            SelectedTags:SelTags,
+            AllergyFriendly: $('#SearchCriteria_AllergyFriendly').is(':checked') ? true : false,
+            SourcePageTypeId: $('#SearchCriteria_SourcePageTypeId').val(),
+            QueryCity:  $('#SearchCriteria_QueryCity').val(),
+            QueryArea:  $('#SearchCriteria_QueryArea').val(),
+            PageNumber: pageNumber
+        };
+        // track the search submit keyword
+        //_gaq.push(['_trackEvent', 'Event Search', 'Search', $("#SearchCriteria_Keyword").val()]);
+        return searchModel;
+    }
+
+    //(function ($) {
+    //    $.extend(jQuery.tmpl.tag, {
+    //        "for": {
+    //            _default: { $2: "var i=1;i<=1;i++" },
+    //            open: 'for ($2){',
+    //            close: '};'
+    //        }
+    //    });
+    //})(jQuery);
+    var isInt = false;
+
+    function cuisineLoadMore()
+    {
+
+        // $("#ulCuisine").css("max-height","none !important;");
+        $(".chooser-list.is-active").css("max-height","none");
+
+
+    }
+
+    function UnRegisteredUserWaitListLink(eventid)
+    {
+        
+        $("#txtEventId").val(eventid);
+        $("#txtAddWaitlistEmail").val("");
+        $("#lblStatus").text("");
+        $("#wlDialog").load();
+    }
+
+    function AddWaitListRegistered(eventid){
+       
+        var _eId = eventid;
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("AddToWaitListRegisteredUser", "Search")',
+            contentType: "application/json",
+            dataType: "json",
+            data: {eventId: _eId, source: "event" },
+            success: function(success) {
+                if(success)
+                {
+                    alert("You have been added to the wait list.")
+                }
+                else
+                {alert("Sorry, some error occured while processing your request. Please try again!");}
+            },
+            error: function(success) {
+                alert("Sorry, some error occured while processing your request. Please try again!");
+            }
+        });
+    }
+    function IsEmail(email) {
+        var regex1 = /^([a-zA-Z0-9_\.\-])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex1.test(email);
+    }
+    function AddWaitListNew () {
+        var emailId = $("#txtAddWaitlistEmail").val();
+        var _eventId = $("#txtEventId").val();
+        if(!IsEmail(emailId))
+        {
+            $("input.txtAddWaitlistEmail").focus();
+            $("#lblStatus").text("E-mail address entered is not valid. Please check and enter a valid e-mail address!");
+            $("#lblStatus").css("color", 'red');
+            $("#lblStatus").show();
+        }
+        else
+        {
+            if(_eventId != null || _eventId == 0)
+            {
+                $.getJSON('@Url.Action("AddToWaitList", "Search")', { eventId: _eventId, email: emailId, source: "Event" }, function (actionStatus) {
+                    $("#lblStatus").text(actionStatus.NotificationMessage);
+                    if(actionStatus.Success)
+                        $("#lblStatus").css("color", 'green');
+                    else
+                        $("#lblStatus").css("color", 'red');
+                    $("#lblStatus").show();
+                });
+            }
+            else
+            {
+                $("#lblStatus").text("There was a problem adding to waiting list, please try again or contact an Administrator.");
+                $("#lblStatus").css("color", 'red');
+                $("#lblStatus").show();
+            }
+        }
+    }
+        
+
+    function  waitlist_login(eventId)
+    {
+        waitEvent= eventId;
+        $("#commonwl").click();
+    }
+
+
+   
+    $(document).ready(function () {
+
+        $(".chooser-list.is-active").css("max-height","200px;");
+
+        $(".loginWaitList").click(function (e) {
+            UnRegisteredUserWaitListLink(waitEvent)
+        });
+
+        @*$(".btnOtherDates").click(function () {
+            debugger;
+            var href = $(this).attr('href');
+            analytics.track('Clicked View Other Dates on Event Listing', {
+                SoldoutEvent: '@Model.CategoryName',
+                subCategory: '@Model.SubCategoryName'
+            });
+            window.location.href = href;
+        });*@
+
+        $('#PageNo').val("1");
+        if (isInt) return;
+        isInt = true;
+        // showLoadMore();
+     //   debugger;
+
+        var keyword=$('#FoodKeyword').val();
+        if(keyword != null && keyword !="")
+        {
+            var searchModel = getSearchCriteria(false);
+
+            $.ajax({
+                url: "@Url.Action("searchresult1", "search")",
+                type: "POST",
+                data: searchModel,
+                dataType: "json",
+                traditional: true,
+                success: function (result) {
+
+                    renderResults(result);
+                },
+
+                error: function ()
+                {
+                    //alert("There was a problem with Search.");
+                }
+
+
+            });
+        }
+        else
+        {
+            var _sTag = $('#SearchCriteria_QueryTag').val();
+            var _sCity = $('#SearchCriteria_QueryCity').val();
+            var _sArea = $('#SearchCriteria_QueryArea').val();
+            $.ajax({
+
+                url: "@Url.Action("searchresult1_Init", "search")",
+                type: "POST",
+                data: {tag : _sTag, city : _sCity, area: _sArea},
+                dataType: "json",
+                traditional: true,
+                success: function (result) {
+                    
+                    renderResults(result);
+                },
+
+                error: function ()
+                {
+                    //alert("There was a problem with Search.");
+                }
+
+
+            });
+        }
+
+        @*$.ajax({
+            url: "@Url.Action("GeAlltCusines", "search")",
+            type: "POST",
+        dataType: "json",
+        traditional: true,
+        success: function (result) {
+           // debugger;
+            lstcuisine=result;
+            lstcuisinelength=result.length;
+           // showCuisineLoadMore();
+        },
+
+        error: function () {
+
+            alert("There was a problem in loading cuisines.");
+        }   });*@
+
+
+        $('#btnCusineLoadMore').click(function () {
+           // debugger;
+            if(lstcuisine != null)
+            {
+                var currPage = cuisinepage;
+                var startIndex=(currPage-1)*pageSize;
+                var targetNum = (currPage) * pageSize;
+                var toBeRenderedresult = [];
+                for (var i = startIndex; i < targetNum && i< lstcuisine.length; i++) {
+                    toBeRenderedresult.push(lstcuisine[i]);
+                }
+                $('#cuisineTemplate').tmpl(toBeRenderedresult).appendTo('#ulCuisine');
+
+                showCuisineLoadMore();
+                ++cuisinepage;
+            }
+
+        });
+
+     
+      
+        $('#SearchCriteriaForm').submit(function () {
+
+
+            $("#List-results1").empty();
+            //  $('#grid-results').empty();
+
+            var keyword = $('#FoodKeyword').val();
+
+            //var searchModel = {
+            //    FoodKeyword: keyword
+            //};
+            //debugger;
+            var searchModel = getSearchCriteria(false);
+
+            $.ajax({
+                url: "@Url.Action("searchresult1", "search")",
+                type: "POST",
+                data: searchModel,
+                dataType: "json",
+                traditional: true,
+                success: function (result) {
+                    debugger;
+                    renderResults(result);
+                },
+                
+                error: function () {
+                    debugger;
+                   // alert("There was a problem with Search.");
+                }
+
+            });
+            return false;
+        });
+
+       
+
+        function renderPagedResults() {
+            if (results != null && results.length > 0) {
+                var currPage = pageNumber;
+                var startIndex=(currPage-1)*pageSize;
+                var targetNum = (currPage) * pageSize;
+                var toBeRenderedresult = [];
+                for (var i = startIndex; i < targetNum && i< results.length; i++) {
+                    toBeRenderedresult.push(results[i]);
+                }
+                $('#eventsListTemplate1').tmpl(toBeRenderedresult).appendTo('#List-results1');
+                //  $('#eventsListTemplate1').tmpl(results).appendTo('#List-results1');
+
+                showLoadMore();
+                ++pageNumber;
+            }
+        }
+        function renderResults(result) {
+            pageNumber=1;
+            debugger;
+            $("#List-results1").empty(); 		 // Remove current
+            if (result.SearchResults.length > 0) {
+                $('#ResultCount').val(result.SearchResultCount)
+                //$("#eventsListTemplate1").tmpl(result.SearchResults).appendTo("#List-results1");
+                //showLoadMore();
+
+                //$("#totalResult").text(" ("+result.SearchResults.length+")");
+                results = result.SearchResults;
+                
+                renderPagedResults();
+                if (result.SearchLocation != null && result.SearchLocation.Latitude != null && result.SearchLocation.Longitude != null) {
+
+                    centrePointLat = result.SearchLocation.Latitude;
+                    centrePointLng = result.SearchLocation.Longitude;
+                }
+                else {
+                    centrePointLat = 51.534377;
+                    centrePointLng = -0.119691;
+
+                    var geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ 'address': "London, UK" }, function (results, status) {
+
+                        if (results != null) {
+                            var location = results[0].geometry.location;
+                            centrePointLat = location.lat();
+                            centrePointLng = location.lng();
+                        }
+                        //else {
+                        //    centrePointLat = 51.534377;
+                        //    centrePointLng = -0.119691;
+                        //}
+                    });
+                }
+                initialize(result.SearchResults, centrePointLat, centrePointLng);
+            }
+            else {
+                debugger;
+                results=null;
+                $("#List-results1").empty();
+                $("#List-results1").append("<p>No results to display <b> <a  color='blue' href='/pop-up-restaurants'>search for all</a> </b></p>  ");
+
+
+            }
+
+
+        }
+
+        @*$("#SearchCriteria_Location").change(function () {
+
+            $("#List-results1").empty();
+            var searchModel = getSearchCriteria(false);
+
+            $.ajax({
+                url: "@Url.Action("searchresult1", "search")",
+                type: "POST",
+            data: searchModel,
+            dataType: "json",
+            traditional: true,
+            success: function (result) {
+
+                renderResults(result);
+            },
+
+            error: function () {
+
+                alert("There was a problem with Search.");
+            }
+
+        });
+
+        });*@
+
+        $(".range-slider").click(function ()
+        {
+            var PriceRangeVals =$(this).val();
+            $('#slider2').val([PriceRangeVals[0], PriceRangeVals[1]]);
+            $('#slider1').val([PriceRangeVals[0], PriceRangeVals[1]]);
+
+            
+            $("#List-results1").empty();
+
+
+            var keyword = $('#FoodKeyword').val();
+
+            var searchModel = getSearchCriteria(false);
+
+            $.ajax({
+                url: "@Url.Action("searchresult1", "search")",
+                type: "POST",
+                data: searchModel,
+                dataType: "json",
+                traditional: true,
+                success: function (result) {
+
+                    renderResults(result);
+                },
+
+                error: function () {
+
+                   // alert("There was a problem with Search.");
+                }
+
+            });
+        });
+        $('#btnSearch').click(function () {
+            //debugger;
+            $("#List-results1").empty();
+            //  $('#grid-results').empty();
+
+            $('#SearchCriteria_SourcePageTypeId').val("1");
+            var keyword = $('#FoodKeyword').val();
+
+            //var searchModel = {
+            //    FoodKeyword: keyword
+            //};
+            var searchModel = getSearchCriteria(false);
+
+            $.ajax({
+                url: "@Url.Action("searchresult1", "search")",
+                type: "POST",
+                data: searchModel,
+                dataType: "json",
+                traditional: true,
+                success: function (result) {
+
+                    renderResults(result);
+                },
+
+                error: function () {
+
+                   // alert("There was a problem with Search.");
+                }
+
+            });
+        });
+        $( window ).scroll(function() {
+            renderPagedResults();
+        });
+        $("#btnLoadMore").click(function () {
+
+            renderPagedResults();
+
+            @*var searchModel = getSearchCriteria(true);
+
+            $.ajax({
+                url: "@Url.Action("searchresult1", "search")",
+                type: "POST",
+                data: searchModel,
+                dataType: "json",
+                traditional: true,
+                success: function (result) {
+
+                    renderResults(result);
+                } ,
+
+                error: function () {
+
+                    alert("There was a problem with Search.");
+                }
+
+            });*@
+        });
+
+        //$(function () {
+        $('input[type="checkbox"]').bind('click', function () {
+            
+            $("#List-results1").empty();
+            var ElementName = $(this)[0].name;
+            var ElementID = $(this)[0].value;
+            var ischecked=$(this)[0].checked;
+            if (ElementName.indexOf("map_") >= 0) {
+                var ename = document.getElementsByName(ElementName.substring(4));
+
+
+                $(ename).each(function (index) {
+
+                    if ($(this).attr("value") == ElementID) { $(this)[0].checked = ischecked; }
+                });
+
+            }
+            else {
+
+                var ename = document.getElementsByName("map_" + ElementName);
+
+                $(ename).each(function (index) {
+
+                    if ($(this).attr("value") == ElementID) { $(this)[0].checked = ischecked; }
+                });
+            }
+
+
+            //debugger;
+            var searchModel = getSearchCriteria(false);
+
+            $.ajax({
+                url: "@Url.Action("searchresult1", "search")",
+                type: "POST",
+                data: searchModel,
+                dataType: "json",
+                traditional: true,
+                success: function (result) {
+
+                    renderResults(result);
+                },
+
+                error: function () {
+
+                  //  alert("There was a problem with Search.");
+                }
+
+            });
+        });
+
+        //});
+
+        $('input[type="select"],select').bind('change',function(){
+             debugger;
+            $("#List-results1").empty();
+            var ElementID=$(this)[0].id;
+            var ElementValue = $(this)[0].value;
+            //debugger;
+            //$('.select').val(ElementValue-1);
+            if(ElementID.indexOf("map_")>=0)
+            {
+                var ename = document.getElementById(ElementID.substring(4));
+                $(ename).val=ElementValue;
+                $(ename)[0][ElementValue-1].selected=true
+
+            }
+
+            else
+            {
+                var ename = document.getElementById("map_"+ElementID);
+                $(ename).val=ElementValue;
+                $(ename)[0][ElementValue-1].selected=true
+            }
+
+            var searchModel = getSearchCriteria(false);
+
+            $.ajax({
+                url: "@Url.Action("searchresult1", "search")",
+                type: "POST",
+                data: searchModel,
+                dataType: "json",
+                traditional: true,
+                success: function (result) {
+
+                    renderResults(result);
+                },
+
+                error: function () {
+
+                   // alert("There was a problem with Search.");
+                }
+
+            });
+        });
+
+        $("input[type='text']").bind('change', function () {
+            
+            $("#List-results1").empty();
+            var ElementName = $(this)[0].name;
+            var ElementID = $(this)[0].id;
+            var ElementValue=$(this)[0].value;
+
+            if (ElementID.indexOf("map_") >= 0)
+            {
+                var ename = document.getElementById(ElementID.substring(4));
+                $(ename).val(ElementValue);
+            }
+            else
+            {
+                var ename = document.getElementById("map_"+ElementID);
+                $(ename).val(ElementValue);
+            }
+
+           var searchModel = getSearchCriteria(false);
+
+            $.ajax({
+                url: "@Url.Action("searchresult1", "search")",
+                type: "POST",
+                data: searchModel,
+                dataType: "json",
+                traditional: true,
+                success: function (result) {
+
+                    renderResults(result);
+                },
+
+                error: function () {
+
+                   // alert("There was a problem with Search.");
+                }
+
+            });
+        });
+
+        $("input[type='search']").bind('change', function () {
+            
+            $("#List-results1").empty();
+            var ElementName = $(this)[0].name;
+            var ElementID = $(this)[0].id;
+            var ElementValue=$(this)[0].value;
+
+            if (ElementID.indexOf("map_") >= 0)
+            {
+                var ename = document.getElementById(ElementID.substring(4));
+                $(ename).val(ElementValue);
+            }
+            else
+            {
+                var ename = document.getElementById("map_"+ElementID);
+                $(ename).val(ElementValue);
+            }
+
+
+            
+            var searchModel = getSearchCriteria(false);
+
+            $.ajax({
+                url: "@Url.Action("searchresult1", "search")",
+                type: "POST",
+            data: searchModel,
+            dataType: "json",
+            traditional: true,
+            success: function (result) {
+
+                renderResults(result);
+            },
+
+            error: function () {
+
+               // alert("There was a problem with Search.");
+            }
+
+        });
+    });
+
+    });
+
+        function showCuisineLoadMore() {
+
+            var count = lstcuisinelength;
+            var page = cuisinepage;
+
+            if (count > page * 5) {
+
+                $("#btnCusineLoadMore").css("display", "block");
+            }
+            else {
+
+                $("#btnCusineLoadMore").css("display", "none");
+            }
+
+        }
+
+    function showLoadMore() {
+
+        var count = $('#ResultCount').val();
+        var page = pageNumber;
+
+        if (count > page * 5) {
+
+            $("#btnLoadMorediv").css("display", "block");
+        }
+        else {
+
+            $("#btnLoadMorediv").css("display", "none");
+        }
+
+    }
+
+    //map functionality related script added here
+    function doMarker(inlatlng) {
+        var marker = new google.maps.Marker({ map: map, position: inlatlng, clickable: true });
+        return marker;
+    };
+    function onBoundsChanged() {
+        initialize(results, centrePointLat, centrePointLng);
+    }
+    var boundsListener = null;
+    // initialize Map
+    function initialize(results, centrePointLat, centrePointLng) {
+
+        var centreLatlng = new google.maps.LatLng(centrePointLat, centrePointLng);
+
+        var mapOptions = {
+            zoom: 10,
+            maxZoom: 15,
+            scrollwheel: false,
+            zoomControl: true,
+            streetViewControl: false,
+            disableDefaultUI: false,
+            panControl: false,
+            center: centreLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+
+        map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        if (boundsListener != null)
+            google.maps.event.removeListener(boundsListener);
+
+
+        var bounds = new google.maps.LatLngBounds();
+        //alert(results);
+        for (var i = 0; i < results.length; i++) {
+
+            var latlng = new google.maps.LatLng(results[i].lat, results[i].lng);
+            var name = results[i].EventName;
+            var teaser = results[i].EventDescription;
+            var thumbsrc = results[i].EventImage;
+            var link = '/' + results[i].EventUrlFriendlyName + '/' + results[i].EventId;
+            //var desc = '<div id="myInfoWindow" style="width: 300px;"><h3><a href="' + link + '">' + name + '</a></h3><img src="/content/images/events/' + thumbsrc + '" title="' + name + '" style="max-width:200px" /><p>' + teaser + '</p></div>';
+            var desc = '<div id="myInfoWindow" style=""><h3><a href="' + link + '">' + name + '</a></h3><p>' + teaser + '</p></div>';
+            var byob = results[i].Byob;
+            var marker = new google.maps.Marker({
+                position: latlng,
+                map: map
+            });
+            marker.Content = desc;
+            arrMarkers[i] = marker;
+
+            google.maps.event.addListener(marker, 'click', function () {
+                map.panTo(this.getPosition());
+                if (infoWindow != null) {
+                    infoWindow.close();
+                }
+                infoWindow = new google.maps.InfoWindow({
+                    maxWidth: 300,
+                    content: this.Content,
+                    disableAutoPan: false
+                });
+                infoWindow.open(map, this);
+            });
+
+            bounds.extend(latlng);
+        }
+
+        if (results.length > 0) {
+            map.fitBounds(bounds);
+
+        }
+        $('#PageNo').val("1");
+
+        //boundsListener = google.maps.event.addListener(map, 'bounds_changed', onBoundsChanged);
+    };
+
+    // Function added to help reset map and container boundaries
+    //$("#anchor_map-results").click(function () {
+    //    $("#map-results").css({ 'display': 'block' });
+    //    $("#map").css({ 'width': '100%', 'height': '400px' });
+    //    initialize(results, centrePointLat, centrePointLng);
+    //    //alert('showMap Clicked!');
+    //});
+    //map functionality related script addition ended here
+
+
+    @*$(document).ready(function () {
+
+
+
+            $('#btnSearch').click(function () {
+                //   alert('123');
+                //debugger;
+                var keyword = $('#txtSearch').val();
+                var searchModel = {
+                    FoodKeyword: keyword
+                };
+                $.ajax({
+                    url: "@Url.Action("searchresult1", "search")",
+                    type: "POST",
+                data: searchModel,
+                success: function (result) {
+
+                    //debugger;
+                    if (result == true) {
+
+
+                        //  $('#divrefer').hide();
+                        //  $('#divThankyou').show();
+                    }
+
+                },
+
+                error: function () {
+                    //debugger;
+                    alert("There was a problem with Search.");
+                }
+
+            });
+        });
+        });*@
+
+
+    </script>
+}
+<a id='commonwl' class="loginWaitList open-popup" href="#wlDialog" style="display:none;"> test </a>
+
+    <input type="text" id="PageNo" value="1" style="display:none;">
+    @*<input type="text" id="ResultCount" value="@HttpContext.Current.Session["SearchResultCount"].ToString()" style="display:block;">*@
+    <input type="text" id="ResultCount"  style="display:none;">
+    
+    @Html.HiddenFor(m => m.SearchCriteria.SourcePageTypeId)
+    @Html.HiddenFor(m => m.SearchCriteria.QueryTag)
+    @Html.HiddenFor(m => m.SearchCriteria.QueryCity)
+    @Html.HiddenFor(m => m.SearchCriteria.QueryArea)
+    @*<section class="mb+">
+        <div class="container">
+            <ul class="breadcrumbs list-inline list-inline--delimited pt--">
+                <li><a href="http://testnew.test.grubclub.com">Home</a></li>
+                <li><a href="./searchresult1">Search </a></li>
+
+            </ul>
+
+        </div>
+    </section>*@
+
+    <section>
+
+            <div class="container pb+">
+                <h1 class="type-light mb+">Check Out these Amazing Experiences</h1>
+
+                <div class="layout mb+">
+                    <div class="layout__item">
+                        <form method="post" class="text-center" id="SearchCriteriaForm" name="SearchCriteriaForm">
+                            @*<input type="text" value="@Model.SearchCriteria.FoodKeyword" class="input--primary input--medium text-center" placeholder="Search by event, location, cuisine or chef…" id="FoodKeyword">*@
+                            @Html.TextBoxFor(m => m.SearchCriteria.FoodKeyword, new { @class = "input--primary input--medium text-center", placeholder = "Search by event, location, cuisine or chef…", type = "search", id = "FoodKeyword" })
+                        <button type="button" class="btn btn--primary btn--radius ml--" id="btnSearch">Search</button>
+
+                        </form>
+                    </div>
+                </div>
+
+                <div class="layout mb+">
+                    <div class="layout__item clearfix">
+                        <div class="view-filters float-right">
+                            <h6 class="type-semibold opacity-7 mb--">View Experiences By</h6>
+
+                            <a href="#List-results" class="swicher swicher__list is-active">
+                                <svg role="img" class="icon icon--26x23">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-list_view"></use>
+                                </svg>
+                                <span class='color-gray'>list</span>
+                            </a>
+                            <a href="#map-results" class="swicher swicher__map">
+                                <svg role="img" class="icon icon--23x27">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-map_view"></use>
+                                </svg>
+                                <span class='color-gray'>map</span>
+                            </a>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <article class='search-result-wrapper is-active' id="article_List-results1">
+                    <div class="layout mb+" id="List-results">
+                        <div class="layout__item large-and-up-1/4 medium-1/2">
+                            <div class="vertical-filters">
+                                <h6 class="type-semibold opacity-7 mb--">Find the Perfect One</h6>
+                                <p class="type-uppercase type-small type-bold color-dark mb--">How Much? - in pounds</p>
+                                <div class="range-slider mb--" id="slider1"></div>
+                                <div class="justifize mb">
+                                    <div class="justifize__box">
+                                        <p class="type-uppercase type-small type-bold color-dark">Free!</p>
+                                    </div>
+                                    <div class="justifize__box">
+                                        <p class="type-uppercase type-small type-bold color-dark">£100</p>
+                                    </div>
+                                </div>
+                                <h6 class="type-semibold opacity-7 mb-- pt--" style="display:none;">Where?</h6>
+                                <div class="justifize" style="display:none;">
+                                    <div class="justifize__box">
+                                        <p class="type-uppercase type-small type-bold color-dark mb--">within</p>
+                                    </div>
+                                    <div class="justifize__box">
+                                        <p class="type-uppercase type-small type-bold color-dark mb--">of postcode</p>
+                                    </div>
+                                </div>
+
+                                <div class="justifize mb" style="display:none;">
+                                    <div class="justifize__box">
+                                        <div class="select select--small">
+                                            <select class="select__item" id="Distance">
+                                                <option value="1">1 mile</option>
+                                                <option value="2">2 mile</option>
+                                                <option value="3">3 mile</option>
+                                                <option value="4">4 mile</option>
+                                                <option value="5">5 mile</option>
+                                            </select>
+                                            <div class="select__icon">
+                                                <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+                                                <!-- <svg class="icon"><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-email-arrow"/></svg> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="justifize__box">
+                                        <input type="text" class="input--primary text-center input--small" id="SearchCriteria_Location">
+                                    </div>
+                                </div>
+                                <h6 class="type-semibold opacity-7 mb--">When?</h6>
+                                <div class="justifize mb">
+                                    <div class="justifize__box"
+                                        <div class="justifize__box">
+                                            <label class="relative datepicker-wrap">
+
+                                                <svg role="img" class="icon icon--20x20">
+                                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-medium_calendar"></use>
+                                                </svg>
+
+                                                @*<input type="text" class="datepicker picker__input input--primary input--small text-center" placeholder="FROM" id="StartDate">*@
+                                                <input type="text" class="js__datepicker datepicker11 picker__input input--primary input--small text-center" placeholder="FROM" id="StartDate">
+                                            </label>
+                                        </div>
+                                        <div class="justifize__box">
+                                            <label class="relative datepicker-wrap">
+
+                                                <svg role="img" class="icon icon--20x20">
+                                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-medium_calendar"></use>
+                                                </svg>
+
+                                                @*<input type="text" class="datepicker picker__input input--primary input--small text-center" placeholder="TO" id="EndDate">*@
+                                                <input type="text" class="js__datepicker datepicker12 picker__input input--primary input--small text-center" placeholder="TO" id="EndDate">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <h6 class="type-semibold opacity-7 mb--">What Do You Fancy?</h6>
+                                    <div class="mb" >
+                                        <ul class="list-bare chooser-list" id="ulCuisine" >
+                                            @{int i = 0;}
+                                            @foreach (var cuisine in Model.SearchCriteria.Cuisine)
+                                            { 
+                                                if (i++ == 5)
+                                                {
+                                                     <li class="mb+" onclick="javascript:cuisineLoadMore();"><a href="" class="load-more">Load more</a></li>
+                                                  }
+                                            
+                                               
+                                                <li>
+
+                                                    <label class="chooser mb-">
+
+                                                        <input class="chooser__input" type="checkbox" id="@cuisine.Name" name="CuisineOptions" value="@cuisine.Id">
+                                                        <span class="chooser__icon">
+
+                                                            <svg role="img" class="icon ">
+                                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                            </svg>
+
+                                                        </span>
+                                                        <span class="chooser__label">@cuisine.Name</span>
+                                                    </label>
+
+                                                </li>
+                                            
+                                            }
+                                        </ul>
+                                        <button type="button" id="btnCusineLoadMore" style="display:none;" class="load-more"> Load More</button>
+                                    </div>
+
+                                    <h6 class="type-semibold opacity-7 mb--">Diet</h6>
+                                    <ul class="list-bare mb chooser-list">
+                                        @foreach (var diet in Model.SearchCriteria.Diet)
+                                        {
+                                            <li>
+
+                                                <label class="chooser mb-">
+                                                    <input class="chooser__input" type="checkbox" id="@diet.Name" name="DietOptions" value="@diet.Id">
+                                                    <span class="chooser__icon">
+
+                                                        <svg role="img" class="icon ">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                        </svg>
+
+                                                    </span>
+                                                    <span class="chooser__label">@diet.Name Friendly</span>
+                                                </label>
+                                            </li>
+                                        }
+                                    </ul>
+
+                                    <h6 class="type-semibold opacity-7 mb--">Extras</h6>
+                                    <ul class="list-bare chooser-list">
+                                        <li>
+
+                                            <label class="chooser mb-">
+                                                <input class="chooser__input" type="checkbox" id="BYOB" name="Extras" value="BYOB">
+                                                <span class="chooser__icon">
+
+                                                    <svg role="img" class="icon ">
+                                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                    </svg>
+
+                                                </span>
+                                                <span class="chooser__label">BYOB</span>
+                                            </label>
+                                        </li>
+                                        <li>
+
+                                            <label class="chooser ">
+                                                <input class="chooser__input" type="checkbox" id="SearchCriteria_Charity" name="Extras" value="Charity">
+                                                <span class="chooser__icon">
+
+                                                    <svg role="img" class="icon ">
+                                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                    </svg>
+
+                                                </span>
+                                                <span class="chooser__label">Charity</span>
+                                            </label>
+                                        </li>
+                                        <li>
+
+                                            <label class="chooser ">
+                                                <input class="chooser__input" type="checkbox" id="SearchCriteria_NewChef" name="Extras" value="NewChef">
+                                                <span class="chooser__icon">
+
+                                                    <svg role="img" class="icon ">
+                                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                    </svg>
+
+                                                </span>
+                                                <span class="chooser__label">New Chef</span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                    <p>
+                                        &nbsp;
+                                    </p>
+                                    
+                                        <h6 class="type-semibold opacity-7 mb--">Tags</h6>
+                                        <div class="mb">
+                                            <ul class="list-bare chooser-list" id="ulCuisine">
+                                                @{int k = 0;}
+                                                @foreach (var tag in Model.SearchCriteria.Tag)
+                                            {
+
+                                                if (k++ == 5)
+                                                {
+                                                    <li class="mb+" onclick="javascript:cuisineLoadMore();"><a href="" class="load-more">Load more</a></li>
+                                                  }
+
+
+                                                <li>
+
+                                                    <label class="chooser mb-">
+
+                                                        <input class="chooser__input" type="checkbox" id="@tag.Name" name="TagOptions" value="@tag.Id">
+                                                        <span class="chooser__icon">
+
+                                                            <svg role="img" class="icon ">
+                                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                            </svg>
+
+                                                        </span>
+                                                        <span class="chooser__label">@tag.Name</span>
+                                                    </label>
+
+                                                </li>
+
+                                            }
+                                            </ul>
+
+                                        </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="layout__item large-and-up-3/4" id="List-results1">
+
+                                @*@Html.Partial("EventSearchResultsList")*@
+                            </div>
+
+                        </div>
+                        <div class="text-center" id="btnLoadMorediv">
+
+                            @*<button type="button" id="btnLoadMore" class="btn btn--primary btn--white btn--radius">Load More</button>*@
+                        </div>
+</article>
+
+                <article class="search-result-wrapper">
+                    <div class="layout" id="map-results">
+                        <div class="layout__item large-and-up-1/4 medium-1/2">
+                            <div class="vertical-filters">
+                                <h6 class="type-semibold opacity-7 mb--">Find the Perfect One</h6>
+                                <p class="type-uppercase type-small type-bold color-dark mb--">How Much? - in pounds</p>
+                                <div class="range-slider mb--" id="slider2"></div>
+                                <div class="justifize mb">
+                                    <div class="justifize__box">
+                                        <p class="type-uppercase type-small type-bold color-dark">Free!</p>
+                                    </div>
+                                    <div class="justifize__box">
+                                        <p class="type-uppercase type-small type-bold color-dark">£100</p>
+                                    </div>
+                                </div>
+                                <h6 class="type-semibold opacity-7 mb-- pt--" style="display:none;">Where?</h6>
+                                <div class="justifize distance-filters" style="display:none;">
+                                    <div class="justifize__box">
+                                        <p class="type-uppercase type-small type-bold color-dark mb--">within</p>
+                                        <div class="select select--small">
+                                            <select class="select__item" id="map_Distance">
+                                                <option value="1">1 mile</option>
+                                                <option value="2">2 miles</option>
+                                                <option value="3">3 miles</option>
+                                                <option value="4">4 miles</option>
+                                                <option value="5">5 miles</option>
+                                            </select>
+                                            <div class="select__icon">
+                                                <span class="triangle triangle--down triangle--center triangle--absolute"></span>
+                                                <!-- <svg class="icon"><use xlink:href="icons/icons.svg#icon-email-arrow"/></svg> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="justifize__box">
+                                        <p class="type-uppercase type-small type-bold color-dark mb--">of postcode</p>
+                                        <input type="text" class="input--primary text-center input--small" id="map_SearchCriteria_Location"
+                                               onkeydown="return ( event.ctrlKey || event.altKey
+                    || (47<event.keyCode &amp;&amp; event.keyCode<58 &amp;&amp; event.shiftKey==false)
+                    || (95<event.keyCode &amp;&amp; event.keyCode<106)
+                    || (event.keyCode==8) || (event.keyCode==9)
+                    || (event.keyCode>34 &amp;&amp; event.keyCode<40)
+                    || (event.keyCode==46) )">
+                                    </div>
+                                </div>
+    <h6 class="type-semibold opacity-7 mb--">When?</h6>
+    <div class="justifize datepicker-wrap mb">
+        <div class="justifize__box">
+            <label class="relative datepicker-wrap">
+
+                <svg role="img" class="icon icon--20x20">
+                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-medium_calendar"></use>
+                </svg>
+
+                <input type="text" class="js__datepicker datepicker11 picker__input input--primary input--small text-center" placeholder="FROM" id="map_StartDate">
+            </label>
+        </div>
+        <div class="justifize__box">
+            <label class="relative datepicker-wrap">
+
+                <svg role="img" class="icon icon--20x20">
+                    <use xlink:href="@Url.Content("/Content/images/")icons.svg#icon-medium_calendar"></use>
+                </svg>
+
+                <input type="text" class="js__datepicker datepicker11 picker__input input--primary input--small text-center" placeholder="TO" id="map_EndDate">
+            </label>
+        </div>
+    </div>
+    <h6 class="type-semibold opacity-7 mb--">What Do You Fancy?</h6>
+    <div class="mb">
+        <ul class="list-bare chooser-list">
+            @foreach (var cuisine in Model.SearchCriteria.Cuisine)
+                                        {
+                                        <li>
+                <label class="chooser mb-">
+                    <input class="chooser__input" type="checkbox" id="map_ @cuisine.Id" name="map_CuisineOptions" value="@cuisine.Id">
+                    <span class="chooser__icon">
+
+                        <svg role="img" class="icon ">
+                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                        </svg>
+                    </span>
+                    <span class="chooser__label">@cuisine.Name</span>
+                </label>
+            </li>
+                                        }
+        </ul>
+    </div>
+    <h6 class="type-semibold opacity-7 mb--">Diet</h6>
+    <ul class="list-bare mb chooser-list">
+        @foreach (var diet in Model.SearchCriteria.Diet)
+                                    {
+                                    <li>
+            <label class="chooser mb-">
+                <input class="chooser__input" type="checkbox" id="map_ @diet.Id" name="map_DietOptions" value="@diet.Id">
+                <span class="chooser__icon">
+
+                    <svg role="img" class="icon ">
+                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                    </svg>
+                </span>
+                <span class="chooser__label">@diet.Name Friendly</span>
+            </label>
+        </li>
+                                    }
+
+    </ul>
+    <h6 class="type-semibold opacity-7 mb--">Extras</h6>
+    <ul class="list-bare chooser-list">
+        <li>
+            <label class="chooser mb-">
+                <input class="chooser__input" type="checkbox" id="map_BYOB" name="map_Extras" value="BYOB">
+                <span class="chooser__icon">
+
+                    <svg role="img" class="icon ">
+                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                    </svg>
+                </span>
+                <span class="chooser__label">BYOB</span>
+            </label>
+        </li>
+        <li>
+            <label class="chooser ">
+                <input class="chooser__input" type="checkbox" id="map_SearchCriteria_Charity" name="map_Extras" value="Charity">
+                <span class="chooser__icon">
+
+                    <svg role="img" class="icon ">
+                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                    </svg>
+                </span>
+                <span class="chooser__label">Charity</span>
+            </label>
+        </li>
+    </ul>
+
+                                <h6 class="type-semibold opacity-7 mb--">Tags</h6>
+                                <div class="mb">
+                                    <ul class="list-bare chooser-list" >
+
+                                        @foreach (var tag in Model.SearchCriteria.Tag)
+                                        {
+
+                                            <li>
+
+                                                <label class="chooser mb-">
+
+                                                    <input class="chooser__input" type="checkbox" id="@tag.Id" name="map_TagOptions" value="@tag.Id">
+                                                    <span class="chooser__icon">
+
+                                                        <svg role="img" class="icon ">
+                                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                                                        </svg>
+
+                                                    </span>
+                                                    <span class="chooser__label">@tag.Name</span>
+                                                </label>
+
+                                            </li>
+
+                                        }
+                                    </ul>
+
+                                </div>
+
+</div>
+
+
+
+
+
+</div>
+<div class="layout__item large-and-up-3/4">
+    <div id="map" class="map"></div>
+</div>
+</div>
+</article>
+
+
+
+</div>
+
+</section>
+
+<div id="wlDialog" class="mfp-hide magnific-content max-width-820 bgr-gray border-width-3 border-black">
+    <div class="pt-">
+        <div style="margin-left:20px;">
+            <label>Email address</label>
+            <input type="text" id="txtEventId" style="display:none;" />
+            <input type="text" value="" id="txtAddWaitlistEmail" class="input input--large input--primary mb--" />
+            <br />
+            <input type="button" value="Add to Waiting List" id="btnAddWaitListNew" onclick="AddWaitListNew();" class=" large-and-up-float-left mb+" />
+            <br /><br />
+            <label id="lblStatus" title="" style="font-weight:bold;" />
+        </div>
+    </div>
+    <button title="Close (Esc)" type="button" class="mfp-close">
+        <span>
+            <svg role="img" class="icon">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/content/images/icons/icons.svg#icon-X-close"></use>
+            </svg>
+        </span>
+    </button>
+</div>
+    
+<script id="cuisineTemplate" type="text/x-jquery-tmpl">
+    <li>
+
+        <label class="chooser mb-">
+
+            <input class="chooser__input" type="checkbox" id="${id}" name="CuisineOptions" value="${id}">
+            <span class="chooser__icon">
+
+                <svg role="img" class="icon ">
+                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-check_box"></use>
+                </svg>
+
+            </span>
+            <span class="chooser__label">${Name}</span>
+        </label>
+
+    </li>
+    </script>
+    <!-- template definition started here-->
+    <script id="eventsListTemplate1" type="text/x-jquery-tmpl">
+        <div class="search-result search-result--list mb">
+            <div class="search-result__box">
+                <div class="flag flag--responsive">
+                    <a href="/${GrubClubUrlFriendlyName}/${EventUrlFriendlyName}/${EventId}" class="flag__img">
+                        <img class="lazy" src="@Url.Content("~/Content/images/Events/")${EventImage}" alt="" style="width:274px;height:190px;">
+
+                        {{if GuestsAttending >= TotalSeats}}
+
+                        <div style="margin-top:30px;" class="figure__img-marker">Sold Out</div>
+
+                        {{else (TotalSeats-GuestsAttending) <= 5}}
+
+                        <div style="margin-top:20px;" class="figure__img-marker">Last seats</div>
+
+
+                        {{else (EarlyBird>0  && GuestsAttending >= EarlyBird)}}
+
+                        <div style="margin-top:30px;" class="figure__img-marker">Early Bird</div>
+
+                        {{else BrandNew=="1"}}
+
+                        <div style="margin-top:30px;" class="figure__img-marker">New Chef</div>
+                        {{/if}}
+
+
+
+
+
+                    </a>
+                    <div class="flag__body">
+                        <header class='mb-'>
+                            <a href="/${GrubClubUrlFriendlyName}/${EventUrlFriendlyName}/${EventId}">
+                                <h2 class="color-darken">
+                                    ${EventName}
+                                    {{if Byob}}
+                                    <span class="heading-icon">
+                                        <div class="tableize tableize--middle">
+                                            <div class="tableize_cell">
+                                                <div class="tooltip-wrap">
+                                                    <svg role="img" class="icon ">
+                                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-large_botles"></use>
+                                                    </svg>
+                                                    <div class="tooltip">Bring your own bottle</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </span>
+                                    {{/if}}
+                                </h2>
+                            </a>
+                            <a href="/${GrubClubUrlFriendlyName}">
+                                <p class="color-orange">
+                                    By ${GrubClubName}
+
+                                </p>
+                            </a>
+                            <a href="/${GrubClubUrlFriendlyName}/#reviews">
+                                <span class='mr' style="margin-top:-35px;">
+                                    {{if Rating== 5}}
+                                    <ul class="rating ">
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                    </ul>
+                                    {{/if}}
+                                    {{if Rating== 4}}
+                                    <ul class="rating ">
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                    </ul>
+                                    {{/if}}
+                                    {{if Rating== 3}}
+                                    <ul class="rating ">
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                    </ul>
+                                    {{/if}}
+                                    {{if Rating== 2}}
+                                    <ul class="rating ">
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                    </ul>
+                                    {{/if}}
+                                    {{if Rating== 1}}
+                                    <ul class="rating ">
+                                        <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                    </ul>
+                                    {{/if}}
+                                    {{if Rating== 0}}
+                                    <ul class="rating ">
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                        <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                    </ul>
+                                    {{/if}}
+
+                                </span>
+                            </a>
+                            <a href="/${GrubClubUrlFriendlyName}/#reviews">
+                                <span class="color-gray">
+
+                                    <svg role="img" class="icon ">
+                                        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-bubble_icon"></use>
+                                    </svg>
+                                    ${ReviewCount}  Reviews
+
+                                </span>
+                            </a>
+                            <svg role="img" class="icon color-blue icon--14x14 ml-">
+                                <use xlink:href="@Url.Content("~/Content/images/")icons/icons.svg#icon-smallest_pin"></use>
+                            </svg>
+                            <span>${EventPostCode}</span>
+                        </header>
+                        <p class="search-result__content">
+
+
+                            {{html EventDescription}}
+                        </p>
+                        <footer>
+                            <div class="tableize tableize--bottom">
+                                <div class="tableize__cell">
+                                    <div>
+                                        <span class="price mr-">
+                                            {{if Cost == "£0.00"}}
+                                            Free
+                                            {{else}}
+
+                                            ${Cost}
+                                            {{/if}}
+                                        </span>
+                                        <time>
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-large_calendar"></use>
+                                            </svg>
+                                            ${EventDate}
+                                            <svg role="img" class="icon ml-">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-small_clock"></use>
+                                            </svg>
+                                            ${EventStart}
+                                        </time>
+                                        
+                                        {{if GuestsAttending >= TotalSeats    }}
+
+                                        {{if EventCount > 1   && SeatsAvailable}}
+
+<a href="/${GrubClubUrlFriendlyName}/${EventUrlFriendlyName}" class="btn btn--primary btn--orange btn--extra-small btnOtherDates" style="width:120px;padding:0px !important; float:right;">
+    View Other Dates
+    <svg role="img" class="icon icon--8x14">
+        <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_8x14"></use>
+    </svg>
+</a>
+                                        {{else}}
+                                        @if (SupperClub.Code.UserMethods.IsLoggedIn)
+                                        {
+                                            <a href="#!" class="btn btn--primary btn--orange btn--extra-small" id="btnAddWaitList" onclick="AddWaitListRegistered(${EventId});">Add me to waitlist</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#wlDialog" id="UnRegisteredUserWaitListLink" class="btn btn--primary btn--orange btn--extra-small open-popup" onclick="waitlist_login(${EventId});">Add me to waitlist</a>
+                                        }
+                                        {{/if}}
+
+
+{{else}}
+                                        <a href="/${GrubClubUrlFriendlyName}/${EventUrlFriendlyName}/${EventId}" class="btn btn--primary btn--orange btn--extra-small float-right">
+                                            View
+                                            <svg role="img" class="icon icon--8x14">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_8x14"></use>
+                                            </svg>
+                                        </a>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                            @if (SupperClub.Code.UserMethods.IsAdmin)
+                            {
+                                <p style="margin-top:10px;">
+                                    <span style="font-weight:bold;color:red;">${TicketsSold} sold - ${TotalSeats - GuestsAttending}/${TotalSeats} available</span>
+                                </p>
+                            }
+                            
+</footer>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </script>
+
+    <!-- template definition ended here-->

@@ -1,0 +1,25 @@
+{
+  "name": "inuit-print",
+  "authors": [
+    "Harry Roberts <harry@csswizardry.com>"
+  ],
+  "description": "Simple, reset-like print styles.",
+  "main": "_trumps.print.scss",
+  "keywords": [
+    "css",
+    "oocss",
+    "inuitcss",
+    "print"
+  ],
+  "license": "Apache 2",
+  "homepage": "https://github.com/inuitcss/trumps.print",
+  "_release": "d48d4c296c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d48d4c296c39d679507e4ccda56503f3e20a7a1a"
+  },
+  "_source": "git://github.com/inuitcss/trumps.print.git",
+  "_target": "*",
+  "_originalSource": "inuit-print"
+}

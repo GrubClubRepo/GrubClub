@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    @Html.Partial("_Head")
+    <!-- Page Specific Java Script -->
+    @RenderSection("PageSpecificScripts", false)
+</head>
+
+<body>
+<!-- Header -->
+<div id="header">
+
+	<!-- 960 Container Start -->
+	<div class="container ie-dropdown-fix" style="width:2000px !important; max-width:2000px !important;">
+	
+		<!-- Logo -->
+		<div class="four columns">
+			<a href="@Url.Action("Index", "Home")"><img src="@Url.Content("~/Content/images/logo.png")" alt=""/></a>
+		</div>
+		
+		<!-- Main Navigation Start -->
+		<div class="twelve columns" style="width:900px;">
+			<div id="navigation">
+				<ul id="nav">
+
+
+                    @*<li style="margin-top:-30px;">
+                        <a style="background:none" href="http://grubclub.myinstapage.com/"><a style="background:none" href="http://grubclub.myinstapage.com/"><img style="height:32px;" src="@Url.Content("~/Content/images/Crowdfunding_button1.png")" alt="" /></a>
+                        <a style="background:none" href="http://grubclub.com/crowdfunding"><img style="height:32px;" src="@Url.Content("~/Content/images/Crowdfunding_button1.png")" alt="" /></a>
+                    </li>*@
+					<li class="toplevel"><a class="current" href="@Url.Action("Index", "Search")" >Find a Grub Club</a>
+                        <ul>
+                            <li><a href="@Url.Action("Index", "Search")" >Find a Grub Club</a></li>
+                             <li><a href="/how-to-find-and-book-a-grub-club">How It Works For Guests</a></li>
+                            <li><a href="/what-you-need-to-know-about-attending-a-grub-club">FAQs for Guests</a></li>   
+                        </ul>
+                    </li>
+                    @if (!SupperClub.Code.UserMethods.IsHost)
+                    {
+                       @:  <li><a href="@Url.Action("welcome", "host")">Host a Grub Club</a>
+                       @:       <ul>
+                      @* @:          <li><a href="@Url.Action("welcome", "host")">Host a Grub Club</a></li>*@
+                    }
+                    else
+                    {
+                      @:<li><a href="@Url.Action("welcome", "host")">Host New Event</a>
+                        @:       <ul>
+                    @* @:          <li><a href="@Url.Action("welcome", "host")">Host New Event</a></li>*@
+                    }
+<li><a href="/how-to-set-up-a-grub-club">How It Works For Hosts</a></li>
+<li><a href="/how-to-set-up-a-pop-up-restaurant">FAQs for Hosts</a></li>
+<li><a href="/how-to-set-up-a-supperclub">How To Host a Grub Club</a></li>
+</ul>
+</li>
+                    @if (SupperClub.Code.UserMethods.IsHost)
+                    {
+                        @: <li class="toplevel"><a href="@Url.Action("myhostedevents", "event")" >My Events</a>
+                    }
+                    else
+                    {
+                        @: <li class="toplevel"><a href="@Url.Action("myevents", "event")" >My Events</a>
+                    }
+                        <ul>
+                            <li><a href="@Url.Action("myevents", "event")" >My Events - Attending</a></li>
+                        @if (SupperClub.Code.UserMethods.IsHost)
+                        {
+                            <li><a href="@Url.Action("myhostedevents", "event")">My Events - Hosting</a></li>
+                        }
+                        </ul>
+                    </li>
+                    
+                    
+                    <li class="toplevel"><a href="@Url.Action("userdetails", "account")">My Account</a>
+						<ul>
+                            <li><a href="@Url.Action("userdetails", "account")">My Account Details</a></li>
+                            @if (SupperClub.Code.UserMethods.IsHost)
+                            {
+                            <li><a href="@Url.Action("details", "host", new { supperClubId = SupperClub.Code.UserMethods.SupperClubId })">My Grub Club Details</a></li>
+                            }
+                            <li><a href="@Url.Action("changepassword", "account")">Change Password</a></li>
+							<li><a href="@Url.Action("logoff", "account")">Log Off</a></li>
+						</ul>
+					</li>
+
+                    @if (SupperClub.Code.UserMethods.IsAdmin)
+                    {
+                    <li class="toplevel"><a href="#">Admin</a>
+                        <ul>
+                            <li><a href="@Url.Action("AllUsers", "Admin")">Users</a>
+                                <ul>
+                                    <li><a href="@Url.Action("UnlockUser", "Admin")">Unlock Specific User</a></li>
+                                    <li><a href="@Url.Action("UserRoleInfo", "Admin")">Check Host Profile</a></li>
+                                </ul>
+                            </li>
+							<li><a href="@Url.Action("AllSupperClubs", "Admin")">Grub Clubs</a></li>
+                            <li><a href="@Url.Action("NewEvents", "Admin")">New Events</a></li>
+                            <li><a href="@Url.Action("Reports", "Admin")">Reporting</a></li>                            
+                            <li><a href="@Url.Action("SendGuestEmail", "Admin")">Booking Confirmation Email</a></li>
+                            <li><a href="@Url.Action("CheckReviews", "Admin")">Reviews</a>
+                                <ul>
+                                    <li><a href="@Url.Action("CheckReviews", "Admin")">Check Reviews</a></li>
+                                    <li><a href="@Url.Action("GenerateReviewKeys", "Admin")">Generate Review Links</a></li>    
+                                </ul>
+                            </li>
+                            <li><a href="#">Vouchers</a>
+                                <ul>
+                                    <li><a href="@Url.Action("AllActiveVouchers", "Admin")">Vouchers</a></li> 
+                                    <li><a href="@Url.Action("CreateVoucher", "Admin")">Create Voucher</a></li>                                          
+                                </ul>
+                            </li>
+                             <li><a href="#">Tags</a>
+                                <ul>
+                                    <li><a href="@Url.Action("CreateTag", "Admin")">Create Tag</a></li>
+                                    <li><a href="@Url.Action("EditTag", "Admin")">Edit Tag</a></li> 
+                                    <li><a href="@Url.Action("SupperClubTag", "Admin")">SupperClub Tag</a></li>      
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Category</a>
+                                <ul>
+                                    <li><a href="@Url.Action("CreateCategory", "Admin")">Create Category</a></li>
+                                    <li><a href="@Url.Action("EditCategory", "Admin")">Edit Category</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Debug Tools</a>
+                                <ul>
+                                    <li><a href="@Url.Action("TestEmail", "Admin")">Test Email</a></li>
+                                    <li><a href="@Url.Action("DeviceInfo", "Admin")">Device Info</a></li>
+                                    <li><a href="@Url.Content("~/version.txt")">Version</a></li> <!-- Uses content to view this file -->      
+                                    <li><a href="@Url.Action("ShowCookie", "Admin")">Check Cookie</a></li>      
+                                </ul>
+                            </li>
+                            <li><a href="#">System Tools</a>
+                                <ul>
+                                    <li><a href="@Url.Action("FlushCache", "Admin")">Flush Cache</a></li>  
+                                    <li><a href="@Url.Action("FlushExpiredTicketBaskets", "Admin")">Flush Expired Baskets</a></li>        
+                                    <li><a href="@Url.Action("Log4Net", "Admin", new { days = 1 })">System Logs</a></li>   
+                                       
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    }
+				</ul>
+			</div>
+		</div>
+		<!-- Main Navigation End -->
+		
+	</div>
+	<!-- 960 Container End -->
+
+</div>
+<!-- End Header -->
+
+@RenderBody()
+
+@Html.Partial("_Footer")
+@if (Request.Cookies["SetTag"] != null)
+{
+    if (Request.Cookies["SetTag"].Value == "1" && bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseAppNexusPixel"]))
+    {
+    <!-- Conversion Pixel - Grub Club Registrations - DO NOT MODIFY -->
+        <img src="https://secure.adnxs.com/px?id=515616&t=2" width="1" height="1" />
+    <!-- End of Conversion Pixel -->
+        var c = new HttpCookie("SetTag");
+        c.Expires = DateTime.Now.AddDays(-1);
+        Response.Cookies.Add(c);
+    }
+}
+
+</body>
+</html>

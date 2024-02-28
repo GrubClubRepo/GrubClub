@@ -1,0 +1,220 @@
+﻿@{
+
+}
+@section PageSpecificScripts {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/bootstrap.min.css")" />
+    <script src="@Url.Content("~/Scripts/home/bootstrap.min.js")" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/vouchers.css")" />
+    <script src="@Url.Content("~/Scripts/jquery.multiselect.min.js")" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/jquery.multiselect.css")" />
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+}
+<script>
+    $(document).ready(function () {
+        $("#startDate").datepicker({
+            dateFormat: "dd/mm/yy",
+            minDate: new Date(@DateTime.Now.Year, @DateTime.Now.Month - 1, @DateTime.Now.Day),
+        }).datepicker("setDate", new Date());
+        $("#endDate").datepicker({
+            dateFormat: "dd/mm/yy",
+            minDate: new Date(@DateTime.Now.Year, @DateTime.Now.Month - 1, @DateTime.Now.Day),
+            });
+        $("select").multiselect({
+            close: function (event, ui) {
+                $('#voucherForm').valid();
+            }
+        });
+        // radio conditional messaging
+        $('#type-0').bind('click', function(e){              
+            $("#value-help-block").html("<p>the voucher money off value: enter an a whole number. E.g 30 = a £30 off voucher</p>");          
+        });
+        $('#type-1').bind('click', function(e){
+            $("#value-help-block").html("<p>the voucher % off value: enter an a whole number between 1 & 100. E.g 30 = a 30% discount voucher</p>");          
+        });
+        // check box conditional selection; note I don't disable on select because admin might want to select all hosts (except 1 or 2) and all their events
+        $('#allHosts').bind('click', function(e){  
+            if($('#allHosts').is(':checked')) {
+                $("#multipleHosts").multiselect("checkAll");
+                $("#multipleEvents").multiselect("checkAll");
+
+            } else {
+                $("#multipleHosts").multiselect("uncheckAll");
+                $("#multipleEvents").multiselect("uncheckAll");
+            }
+            });
+        // adding validation to form
+        $('#voucherForm').validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3
+                },
+                type: {
+                    required: true
+                },
+                value: {
+                    required: true,
+                    digits: true
+                },
+                multipleEvents: {
+                    required: true
+                },
+                multipleHosts: {
+                    required: true
+                }
+            },
+            ignore: ':hidden:not("#multipleEvents")',
+            ignore: ':hidden:not("#multipleHosts")',
+            highlight: function (element) {
+                $(element).closest('.control-group').removeClass('has-success').addClass('has-error');
+            },
+            success: function (element) {
+                $(element).closest('.control-group').removeClass('has-error').addClass('has-success');
+            },
+            errorClass: 'help-block'
+        });
+        //some user feedback before form submit for number only input
+        $('input[type="number"]').keyup(function () {     
+            this.value = this.value.replace(/[^0-9\.]/g,'');
+        });
+        // in case you want to do some other checking or prevent default and server-side check before form submit...
+        var formResult = {
+            Name: $("#name").val(),
+            StartDate: $("#startDate").val(),
+            EndDate: $("#endDate").val(),
+            Value: $("#value").val(),
+            MinOrder: $("#minOrder").val(),
+            Limit: $("#quantity").val(),
+            Events: $("#multipleEvents").val(),
+            MoneyOff: $('#type-0').is(':checked') ? true : null,
+            PercentOff: $('#type-1').is(':checked') ? true : null
+        };
+
+    });
+</script>
+
+<div class="container">
+    <h2 id="voucherhead">Use the following form to create vouchers for guests to use:</h2>
+    <form class="form-horizontal" id="voucherForm">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Voucher Creation Form </legend>
+
+            <div class="col-sm-6">
+                <!-- Text input-->
+                <div class="control-group">
+                    <label class="control-label" for="name">Voucher description<span style="color: #ff0000">*</span></label>
+                    <div class="controls">
+                        <input id="name" name="name" type="text" placeholder="some name here..." class="input-xlarge" required="required">
+                        <p class="help-block">the voucher description, a short description of the voucher for guests and host</p>
+                    </div>
+                </div>
+                <!-- Text input-->
+                <div class="control-group">
+                    <label class="control-label" for="voucherId">Voucher code partial<span style="color: #ff0000">*</span></label>
+                    <div class="controls">
+                        <input id="voucherId" name="voucherId" type="text" placeholder="e.g MARCHPERCENT" class="input-xlarge" maxlength="10" required="required">
+                        <p class="help-block">N.B we append a 3 letter id code, e.g MARCHPERCENT-<span style="font-style: italic">ad3</span>. We will show you the final code after form submission </p>
+                    </div>
+                </div>
+                <!-- Multiple Radios -->
+                <div class="control-group">
+                    <label class="control-label" for="type">Voucher type<span style="color: #ff0000">*</span></label>
+                    <div class="controls">
+                        <label class="radio" for="type-0">
+                            <input type="radio" name="type" id="type-0" value="£ money off" checked="checked" required="required">
+                            £ money off
+                        </label>
+                        <label class="radio" for="type-1">
+                            <input type="radio" name="type" id="type-1" value="% off" required="required">
+                            % off
+                        </label>
+                    </div>
+                </div>
+
+                
+                <!-- Select Multiple hosts -->
+                <div class="control-group">
+                    <label class="control-label" for="multipleHosts">Apply to one or more hosts<span style="color: #ff0000">*</span></label>
+                    <div class="controls">
+                        <div class="inline">
+                            <label class="checkbox " for="allHosts">
+                                <input type="checkbox" name="allHosts" id="allHosts" value="All?">
+                                Check this to quick select all hosts &amp all hosts' events
+                            </label>
+                        </div>
+                        <select id="multipleHosts" name="multipleHosts" class="input-xlarge" multiple="multiple" required="required">
+                            <!--here's where all the hosts go, each wrapped in a option tag-->
+                            <option value="1">Option one</option>
+                            <option value="2">Option two</option>
+                            <option value="3">Option three</option>
+                        </select>
+                        <p class="help-block"> Select at least one host whose events will be made available below</p>
+                    </div>
+                </div>
+                <!-- Select Multiple -->
+                <div class="control-group">
+                    <label class="control-label" for="multipleEvents">Apply to one or more events<span style="color: #ff0000">*</span></label>
+                    <div class="controls">
+                        <select id="multipleEvents" name="multipleEvents" class="input-xlarge" multiple="multiple" required="required">
+                            <!--here's where all the events go, each wrapped in a option tag-->
+                            <option value="1">Option one</option>
+                            <option value="2">Option two</option>
+                            <option value="3">Option three</option>
+                        </select>
+                        <p class="help-block"> Select at least one event for which the voucher may be used</p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-sm-6">
+                <!-- date input-->
+                <div class="control-group">
+                    <label class="control-label" for="startDate">Start date</label>
+                    <div class="controls">
+                        <input id="startDate" name="startDate" type="text" placeholder="" class="input-xlarge">
+                        <p class="help-block">the date from when the voucher is valid</p>
+                    </div>
+                </div>
+                <!-- date input-->
+                <div class="control-group">
+                    <label class="control-label" for="endDate">End date</label>
+                    <div class="controls">
+                        <input id="endDate" name="endDate" type="text" placeholder="" class="input-xlarge">
+                        <p class="help-block">the date when the voucher expires</p>
+                    </div>
+                </div>
+
+                <!-- Number input-->
+                <div class="control-group">
+                    <label class="control-label" for="quantity">Qty. of uses</label>
+                    <div class="controls">
+                        <input id="quantity" name="quantity" type="number" placeholder="" class="input-xlarge" min="1">
+                        <p class="help-block">Limit this voucher to the specified no. of uses, e.g 10 = can be used by 10 people only</p>
+                    </div>
+                </div>
+                <!-- Number input-->
+                <div class="control-group">
+                    <label class="control-label" for="minOrder">Min. required order value</label>
+                    <div class="controls">
+                        <input id="minOrder" name="minOrder" type="number" placeholder="0" class="input-xlarge" min="0">
+                        <p class="help-block">Min. required expenditure in order for the voucher to qualify</p>
+                    </div>
+                </div>
+                <!-- Number input-->
+                <div class="control-group">
+                    <label class="control-label" for="value">voucher value<span style="color: #ff0000">*</span></label>
+                    <div class="controls">
+                        <input id="value" name="value" type="number" placeholder="0" class="input-xlarge" required="required" min="1" max="100">
+                        <p class="help-block" id="value-help-block">the voucher money off value: enter an a whole number. E.g 30 = a £30 off voucher</p>
+                    </div>
+                </div>
+                
+                <div class="col-sm-4 col-sm-offset-4"><button type="submit" class="btn btn-lg btn-default">Submit</button></div> <br />
+            </div>
+        </fieldset>
+
+    </form>
+</div>

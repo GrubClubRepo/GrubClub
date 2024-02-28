@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SupperClubModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="aspnet_Membership" EntityType="SupperClubModel.aspnet_Membership" />
+    <EntitySet Name="aspnet_Users" EntityType="SupperClubModel.aspnet_Users" />
+    <AssociationSet Name="FK__aspnet_Me__UserI__160F4887" Association="SupperClubModel.FK__aspnet_Me__UserI__160F4887">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="aspnet_Membership" EntitySet="aspnet_Membership" />
+    </AssociationSet>
+    <EntitySet Name="Users" EntityType="SupperClubModel.User" />
+    <AssociationSet Name="FK_User_aspnet_Users" Association="SupperClubModel.FK_User_aspnet_Users">
+      <End Role="aspnet_Users" EntitySet="aspnet_Users" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="aspnet_Membership">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordFormat" Type="Int32" Nullable="false" />
+    <Property Name="PasswordSalt" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="MobilePIN" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+    <Property Name="Email" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredEmail" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordQuestion" Type="String" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="PasswordAnswer" Type="String" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+    <Property Name="IsLockedOut" Type="Boolean" Nullable="false" />
+    <Property Name="CreateDate" Type="DateTime" Nullable="false" />
+    <Property Name="LastLoginDate" Type="DateTime" Nullable="false" />
+    <Property Name="LastPasswordChangedDate" Type="DateTime" Nullable="false" />
+    <Property Name="LastLockoutDate" Type="DateTime" Nullable="false" />
+    <Property Name="FailedPasswordAttemptCount" Type="Int32" Nullable="false" />
+    <Property Name="FailedPasswordAttemptWindowStart" Type="DateTime" Nullable="false" />
+    <Property Name="FailedPasswordAnswerAttemptCount" Type="Int32" Nullable="false" />
+    <Property Name="FailedPasswordAnswerAttemptWindowStart" Type="DateTime" Nullable="false" />
+    <Property Name="Comment" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="aspnet_Users" Relationship="SupperClubModel.FK__aspnet_Me__UserI__160F4887" FromRole="aspnet_Membership" ToRole="aspnet_Users" />
+  </EntityType>
+  <EntityType Name="aspnet_Users">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="ApplicationId" Type="Guid" Nullable="false" />
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="LoweredUserName" Type="String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+    <Property Name="MobileAlias" Type="String" MaxLength="16" Unicode="true" FixedLength="false" />
+    <Property Name="IsAnonymous" Type="Boolean" Nullable="false" />
+    <Property Name="LastActivityDate" Type="DateTime" Nullable="false" />
+    <NavigationProperty Name="aspnet_Membership" Relationship="SupperClubModel.FK__aspnet_Me__UserI__160F4887" FromRole="aspnet_Users" ToRole="aspnet_Membership" />
+    <NavigationProperty Name="User" Relationship="SupperClubModel.FK_User_aspnet_Users" FromRole="aspnet_Users" ToRole="User" />
+  </EntityType>
+  <Association Name="FK__aspnet_Me__UserI__160F4887">
+    <End Role="aspnet_Users" Type="SupperClubModel.aspnet_Users" Multiplicity="1" />
+    <End Role="aspnet_Membership" Type="SupperClubModel.aspnet_Membership" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="aspnet_Membership">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Guid" Name="Id" Nullable="false" />
+    <Property Type="String" Name="FirstName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="LastName" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="DateTime" Name="DateOfBirth" />
+    <Property Type="String" Name="Address" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Country" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="PostCode" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Type="String" Name="Gender" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="aspnet_Users" Relationship="SupperClubModel.FK_User_aspnet_Users" FromRole="User" ToRole="aspnet_Users" />
+  </EntityType>
+  <Association Name="FK_User_aspnet_Users">
+    <End Type="SupperClubModel.aspnet_Users" Role="aspnet_Users" Multiplicity="1" />
+    <End Type="SupperClubModel.User" Role="User" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="aspnet_Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

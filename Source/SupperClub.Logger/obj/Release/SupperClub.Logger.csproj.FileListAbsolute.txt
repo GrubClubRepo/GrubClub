@@ -1,0 +1,6 @@
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Logger\bin\Release\SupperClub.Logger.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Logger\bin\Release\SupperClub.Logger.pdb
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Logger\bin\Release\log4net.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Logger\bin\Release\log4net.xml
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Logger\obj\Release\SupperClub.Logger.dll
+G:\Grubclub\LatestCode\grub-club\Source\SupperClub.Logger\obj\Release\SupperClub.Logger.pdb

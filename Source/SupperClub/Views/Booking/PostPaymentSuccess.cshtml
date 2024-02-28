@@ -1,0 +1,260 @@
+﻿
+@{
+    if( HttpContext.Current.Session["GiftVoucher"]== null || string.IsNullOrEmpty(HttpContext.Current.Session["GiftVoucher"].ToString()) )
+        {
+    ViewBag.Title = "You're Booked!";
+    }
+    else
+    {
+        ViewBag.Title = "Thank You!";
+    }
+}
+
+@section PageSpecificScripts {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/bootstrap.min.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/postpayment.css")" />
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/home/bootstrap.min.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#addCompanion").click(function () {
+                if ($("#tblCompanionInfo").length > 0) {
+                    var row_content = "";
+                    var cntr = 0;
+                    $('tr.trGuestEmail').each(function () {
+                        $this = $(this);
+                        var firstName = $.trim($this.find("input.firstName").val());
+                        var lastName = $.trim($this.find("input.lastName").val());
+                        var email = $.trim($this.find("input.guestEmail").val());
+                        cntr = cntr + 1;
+                        if (email.length != 0) {
+                            if (email.length > 0 && !IsEmail(email)) {
+                                $this.find("input.guestEmail").focus();
+                                alert("E-mail address entered for Friend-" + cntr + " is invalid. Please check and enter a valid e-mail address!");
+                                return;
+                            }
+                            row_content = row_content + firstName + "|" + lastName + "|" + email + ",";
+                        }
+                    });
+                    if (row_content.length > 0) {
+                        $.getJSON('@Url.Action("SaveGuestEmail", "Booking")', { companionInfo: row_content, eventId : @ViewBag.EventId, numOfTickets: @ViewBag.TotalTickets, seatingId: @ViewBag.SeatingId }, function (success) {
+                            if (!success)
+                                alert("Sorry! There was some problem sending e-mail. Please try again.");
+                            else
+                                alert("Invitation sent successfully.");
+                        });
+                    }
+                    else {
+                        alert("Please add an e-mail address for sending e-mail!");
+                    }
+                }
+            });
+
+            $("#addFriends").click(function () {
+                $("#tblCompanionInfo tbody").append("<tr class=\"trGuestEmail\">" +
+                            "<td><input type=\"text\" class=\"firstName\" name=\"fname\" /></td>" +
+                            "<td><input type=\"text\" class=\"lastName\" name=\"lname\"  /></td>" +
+                            "<td><input type=\"text\" class=\"guestEmail\" name=\"email\" /></td></tr>");
+
+            });
+
+            function IsEmail(email) {
+                var regex = /^([a-zA-Z0-9_\.\-])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                return regex.test(email);
+            }
+        });
+      </script>
+
+
+       <!-- Facebook Conversion Code for Bookings -->
+        <script>
+        (function() {
+            var _fbq = window._fbq || (window._fbq = []);
+            if (!_fbq.loaded) {
+                var fbds = document.createElement('script');
+                fbds.async = true;
+                fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(fbds, s);
+                _fbq.loaded = true;
+            }
+        })();
+            window._fbq = window._fbq || [];
+            window._fbq.push(['track', '6025249044298', {'value':'0.01','currency':'GBP'}]);
+        </script>
+        <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6025249044298&amp;cd[value]=0.01&amp;cd[currency]=GBP&amp;noscript=1" /></noscript>
+    }
+    
+<!--  Page Title -->
+<!--<div class="pagcontainer">
+    <div id="breadcrumbs">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div> -->
+<!-- Page Title End -->
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+@if (ViewBag.HideMainContainer == null || ViewBag.HideMainContainer == false)
+{
+<div class="pagecontainer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                
+                    <div class="innerstripe">
+                        @if (HttpContext.Current.Session["GiftVoucher"] == null || string.IsNullOrEmpty(HttpContext.Current.Session["GiftVoucher"].ToString()))
+                        {
+                        <h2>Awesome! You're on your way.</h2>
+                        }
+                        else
+                        {
+                          <h2>Thanks for buying gift voucher.</h2>
+
+                        }
+
+                    </div>
+                
+            </div>
+        </div>
+        <div>
+            <p class="postpaydetails">
+                You will receive a confirmation email shortly, if you haven't already. <br />
+                <em>Please check your SPAM folder just in case</em>
+            </p>
+        </div>
+		@if (HttpContext.Current.Session["GiftVoucher"] == null || string.IsNullOrEmpty(HttpContext.Current.Session["GiftVoucher"].ToString()))
+        {
+          
+        <div class="col-sm-8 col-sm-offset-2">
+            <div class="row panel panel-default">
+                <div class="col-sm-6">
+                    <h1>Tell your Mates<br />which Grub Club<br />you are off to!</h1>
+
+                    <div>
+                        <div class="btnBold">
+                            <a href="http://www.facebook.com/sharer/sharer.php?u=@ViewBag.EventURL" target="_blank">
+                                <p>Click here to share<br />on facebook</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <img src="@Url.Content("~/Content/images/laughing girl.jpg")" alt=" friends having fun at a grub club" />
+                </div>
+            </div>
+        </div>
+        }
+        else
+        {
+            <div style=" height:226px;"></div>
+            HttpContext.Current.Session["GiftVoucher"] = string.Empty;
+        }
+   </div>
+    @if (ViewBag.TotalTickets > 1)
+    {
+        <br />
+        <div class="container">
+            <div class="col-sm-12">
+                <h5 id="sendemails">Shall we email your guests the details for this event?</h5>
+                <table class="panel" id="tblCompanionInfo">
+                    <tbody>
+                        <tr >
+                            <th style ="text-align: center">Friend's First Name</th>
+                            <th style="text-align: center">Friend's Last Name</th>
+                            <th style="text-align: center">Friend's E-mail</th>
+                        </tr>
+
+                        @for (int i = 0; i < 3; i++)
+                        {
+		                                    <tr class="trGuestEmail">
+                            <td><input type="text" class="firstName" name="fname" /></td>
+                            <td><input type="text" class="lastName" name="lname" /></td>
+                            <td><input type="text" class="guestEmail" name="email" /></td>
+                        </tr>
+                        }
+                   </tbody>
+                </table>
+                <br />
+			</div>
+            <div class="row">
+ 			    <div class="col-sm-6 col-sm-offset-4">
+                    @if (ViewBag.TotalTickets > 4)
+                    {
+                        <input type="button" id="addFriends" class="btnNormal" value="Add More Friends" />
+                    }
+                    <input type="button" id="addCompanion" class="btnNormal" value="Send E-mail" />
+                </div>
+            </div>
+        </div>            
+    }
+        
+    <!-- 960 Container End -->
+    
+    @if (bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseGoogleAnalytics"]))
+    {       
+        @*<script type="text/javascript">
+            /* <![CDATA[ */
+            var google_conversion_id = 996816009;
+            var google_conversion_language = "en";
+            var google_conversion_format = "3";
+            var google_conversion_color = "ffffff";
+            var google_conversion_label = "HRh3CIfYpgQQiemo2wM";
+            var google_conversion_value = @ViewBag.SaleValue;
+            /* ]]> */
+        </script>
+            
+        <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+        <noscript>
+            <div style="display:inline;">
+                <img height="1" width="1" style="border-style:none;" alt="" src="@("//www.googleadservices.com/pagead/conversion/996816009/?value=" + ViewBag.SaleValue + "&amp;label=HRh3CIfYpgQQiemo2wM&amp;guid=ON&amp;script=0")" />
+            </div>
+        </noscript>*@
+
+         <!-- Google Code for Bookings Conversion Page -->
+        <script type="text/javascript">
+            /* <![CDATA[ */
+            var google_conversion_id = 958513555;
+            var google_conversion_language = "en";
+            var google_conversion_format = "3";
+            var google_conversion_color = "ffffff";
+            var google_conversion_label = "jb_UCN6x51oQk4OHyQM";
+            var google_remarketing_only = false;
+            /* ]]> */
+        </script>
+        <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+        </script>
+        <noscript>
+            <div style="display:inline;">
+                <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/958513555/?label=jb_UCN6x51oQk4OHyQM&amp;guid=ON&amp;script=0" />
+            </div>
+        </noscript>
+        
+        <!-- Google Code for Google Analytics transaction tracking-->
+        <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36514914-1']);
+        _gaq.push(['_trackPageview']);
+        _gaq.push(['_addTrans','@ViewBag.TransactionId','@ViewBag.Name','@ViewBag.SaleValue','','','','','']);
+        _gaq.push(['_addItem', '@ViewBag.TransactionId', '@ViewBag.EventId', '@ViewBag.EventName', '', '@ViewBag.TicketUnitPrice', '@ViewBag.TotalTickets']);
+        _gaq.push(['_trackTrans']);    
+        </script>
+
+        <!-- Conversion Pixel - Grub Club WebAds bookings - DO NOT MODIFY -->
+        <img src="https://secure.adnxs.com/px?id=513865&t=2" width="1" height="1" />
+        <!-- End of Conversion Pixel -->
+    }
+</div>
+}
+
+@if (bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["UseMentionMeReferrer"]))
+ {
+    <!--- Begin Mention Me referrer integration --->
+    <script type="text/javascript" src="https://tag.mention-me.com/api/v2/referreroffer/mm11fc0d93?implementation=popup&email=@ViewBag.Email&order_number=@ViewBag.OrderId&order_total=@ViewBag.SaleValue&order_currency=gbp&situation=postpurchase&surname=@ViewBag.LastName&firstname=@ViewBag.FirstName&locale=en_gb"></script>
+    <!--- End Mention Me referrer integration --->
+    }

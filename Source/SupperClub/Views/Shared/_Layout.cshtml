@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"><![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"><!--<![endif]-->
+<head>
+    @Html.Partial("_Head")
+    <!-- Page Specific Java Script -->
+    @RenderSection("PageSpecificScripts", false)
+    @RenderSection("Styles", required: false)
+</head>
+
+<body>
+<!-- Header -->
+<div id="header">
+
+	<!-- 960 Container Start -->
+	<div class="container ie-dropdown-fix" style="width:2000px !important; max-width:2000px !important;">
+	
+		<!-- Logo -->
+		<div class="four columns">
+			<a href="@Url.Action("Index", "Home")"><img src="@Url.Content("~/Content/images/logo.png")" alt=""/></a>
+		</div>
+		
+		<!-- Main Navigation Start -->
+		<div class="twelve columns" style="width:900px;">
+			<div id="navigation">
+				<ul id="nav">
+
+                    @*<li style="margin-top:-30px;">
+                        <a style="background:none" href="http://grubclub.myinstapage.com/"><img  style="height:32px;" src="@Url.Content("~/Content/images/Crowdfunding_button1.png")" alt="" /></a>
+                        <a style="background:none" href="http://grubclub.com/crowdfunding"><img style="height:32px;" src="@Url.Content("~/Content/images/Crowdfunding_button1.png")" alt="" /></a>
+
+                    </li>*@
+					<li class="toplevel"><a href="/what-is-a-grub-club">What is a Grub Club?</a>
+                        <ul>
+                            <li><a href="/what-is-a-grub-club">What is a Grub Club?</a></li>
+                        </ul>
+                    </li>
+                    <li class="toplevel"><a class="current" href="@Url.Action("Index", "search")">Find a Grub Club</a>
+                        <ul>
+                            <li><a href="@Url.Action("Index", "search")">Find a Grub Club</a></li>
+                            <li><a href="/how-to-find-and-book-a-grub-club">How It Works For Guests</a></li>
+                            <li><a href="/what-you-need-to-know-about-attending-a-grub-club">FAQs for Guests</a></li>
+                        </ul>
+                    </li>
+                    <li class="toplevel"><a href="@Url.Action("welcome", "host")">Host a Grub Club</a>                   
+    <ul>
+        @*<li><a href="@Url.Action("welcome", "host")">Host a Grub Club</a></li>*@
+                            <li><a href="/how-to-set-up-a-grub-club">How It Works For Hosts</a></li>
+                            <li><a href="/how-to-set-up-a-pop-up-restaurant">FAQs for Hosts</a></li>
+                            <li><a href="/how-to-set-up-a-supperclub">How To Host a Grub Club</a></li>
+                        </ul>
+                    </li>
+                    <li class="toplevel"><a href="@Url.Action("logon", "account")">Log On</a>
+                        <ul>
+                            <li><a href="@Url.Action("logon", "account")">Log On</a></li>
+                        </ul>
+                    </li>
+				</ul>
+			</div>
+		</div>
+		<!-- Main Navigation End -->
+		
+	</div>
+	<!-- 960 Container End -->
+
+    </div>
+<!-- End Header -->
+
+@RenderBody()
+
+@Html.Partial("_Footer")
+
+</body>
+</html>

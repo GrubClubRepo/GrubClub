@@ -1,0 +1,1127 @@
+﻿@model SupperClub.Domain.User
+@{
+    ViewBag.Title = "User Profile";
+    ViewBag.Title = Model.FirstName + " " + Model.LastName + "'s Profile";
+ }
+
+@section PageSpecificScripts {   
+
+    <script src="@Url.Content("~/Scripts/jquery.tmpl.js")" type="text/javascript"></script>
+    @*<script src="@Url.Content("~/Scripts/json2.js")" type="text/javascript"></script>*@
+    <script type="text/javascript">
+
+        @*function _followChef(){
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("FollowChef", "Host")',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({supperClubId: @Model.SupperClub.Id}),
+            success: function(response) {
+                debugger;
+                alert(response.message);
+                $("#btnUnFollowChef").addClass("btn");
+                $("#btnFollowChef").removeClass("btn");
+                $("#btnUnFollowChef")[0].style.display='block' ;
+                $("#btnFollowChef")[0].style.display='none' ;
+
+            },
+            error: function(response) {
+                alert(response.status);
+
+            }
+        });
+    }
+    function _unfollowChef(){
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UnfollowChef", "Host")',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({supperClubId: @Model.SupperClub.Id}),
+            success: function(response) {
+                debugger;
+                alert(response.message);
+                $("#btnFollowChef").addClass("btn");
+                $("#btnUnFollowChef").removeClass("btn");
+                $("#btnUnFollowChef")[0].style.display='none';
+                $("#btnFollowChef")[0].style.display='block';
+            },
+            error: function(response) {
+                alert(response.status);
+            }
+        });
+    }*@
+
+        function _addWishList(SupperClubId) {
+
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddEventToFavourite", "Event")',
+                contentType: "application/json",
+                dataType: "json",
+
+                data: JSON.stringify({ eventId: SupperClubId }),
+                success: function (response) {
+                    // alert(response.message);
+                    $(".message-popup-wraper .messages-popup").addClass("is-hidden"), $(".messages-popup--added").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(3100).queue(function () { $(this).remove() }), $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") });
+
+                },
+                error: function (response) {
+                    alert(response.status);
+                }
+            });
+
+        }
+        function _removeWishList(SupperClubId) {
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("RemoveEventFromFavourite", "Event")',
+                contentType: "application/json",
+                dataType: "json",
+
+                data: JSON.stringify({ eventId: SupperClubId }),
+                success: function (response) {
+                    //  alert(response.message);
+                    $(".messages-popup--removed").clone().appendTo(".message-popup-wraper").addClass("is-active").delay(3100).queue(function () {
+                        $(this).remove()
+                    }),
+                  $(".messages-popup").on("click", function () { $(this).addClass("is-hidden") });
+                },
+                error: function (response) {
+                    alert(response.status);
+                }
+            });
+
+        }
+        function _addWS(eventId) {
+            _addWishList(eventId);
+            $("#divRmWs_" + eventId.toString()).removeClass('hidden');
+            $("#divAddWs_" + eventId.toString()).addClass('hidden');
+            return false;
+        }
+
+        function _removeWS(eventId) {
+            _removeWishList(eventId);
+            $("#divRmWs_" + eventId.toString()).addClass('hidden');
+            $("#divAddWs_" + eventId.toString()).removeClass('hidden');
+            return false;
+        }
+
+    var futureEvents;
+    var pastEvents;
+    var futureEventpageNumber = 1;
+    var pastEventpageNumber = 1;
+    var pageSize = 4;
+    var isInt = false;
+    var futureEventsCount=0;
+    var pastEventsCount = 0;
+    var reviews;
+    var reviewspageNumber = 1;
+    var reviewsCount = 0;
+    var wishListedEvents;
+    var wishListedEventspageNumber = 1;
+    var wishListedEventsCount = 0;
+    var followedSupperClubs;
+    var followedSupperClubspageNumber = 1;
+    var followedSupperClubsCount = 0;
+
+    function initialize()
+    {  
+        var mapCenter = new google.maps.LatLng(futureEvents[0].Lattitude.ToString("F3"),futureEvents[0].Longitude.ToString("F3"))
+        var mapOptions = {
+            zoom: 13,
+            maxZoom: 15,
+            scrollwheel: true,
+            zoomControl: true,
+            streetViewControl: false,
+            disableDefaultUI: false,
+            panControl:true,
+            center: mapCenter,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById('map-single-pin'), mapOptions);
+        google.maps.event.addDomListener(window, 'load', initialize);
+        var marker = new google.maps.Marker({
+            map: map,
+            position : new google.maps.LatLng(futureEvents[0].Lattitude.ToString("F3"), futureEvents[0].Longitude.ToString("F3")),
+            title: ''
+        });
+        var circle = new google.maps.Circle({
+            map: map,
+            @Html.Raw(string.Format("radius: {0},", SupperClub.Code.ServerMethods.GoogleMapsCircleRadius))    // metres
+            strokeWeight:1,
+            strokeColor:'#AA0000',
+            clickable: false,
+        editable: false,
+        fillColor: '#AA0000',
+        fillOpacity: 0.2,
+        strokeOpacity:0.1
+    });
+    circle.bindTo('center', marker, 'position');
+    marker.setVisible(true);
+    };
+
+
+    $(document).ready(function () {
+
+        $("#showMapLink").click(function () {
+            initialize();
+            //$("#map-canvas").addClass('type-small color-gray open-popup');
+            //$("#map-canvas").dialog("open");
+        });
+        $("#btnFollowChef").click(function () {
+            alert("FollowChefRegistered User");
+            _followChef();
+        });
+        $("#btnFollowChefSideBar").click(function () {
+            alert("FollowChefRegistered User");
+            _followChef();
+        });
+        $("#btnUnFollowChef").click(function () {
+            alert("UnFollowChefRegistered User");
+            _unfollowChef();
+        });
+        $("#btnUnFollowChefSideBar").click(function () {
+            alert("UnFollowChefRegistered User");
+            _unfollowChef();
+        });
+        $(".rmvWs").click(function () {
+            alert("wishlist coming");
+            var clkId = jQuery(this).attr("id");
+            var eId = parseInt(clkId.split("_")[1]);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("RemoveEventFromFavourite", "Event")',
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({eventId: eId}),
+                success: function(response) {
+                    
+                    alert(response.message);
+                    $(".search-result__box_"+ eId.toString()).style.display='none';
+                },
+                error: function(response) {
+                    alert(response.status);
+                }
+            });
+        });
+
+        //debugger;
+        var uId = $("#UserId")[0].value;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LoadUserData", "Account")',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({userId: uId}),
+            success: function (response) {
+                
+                futureEvents = response.futureEvents;
+                futureEventsCount=response.futureEvents.length;
+                pastEventsCount=response.pastEvents.length;
+                pastEvents = response.pastEvents;
+                reviews = response.reviews;
+                reviewsCount = response.reviews.Count;
+                wishListedEvents = response.wishListedEvents;
+                wishListedEventsCount=response.wishListedEvents.length;
+                followedSupperClubs = response.followedSupperClubs;
+                followedSupperClubsCount=response.followedSupperClubs.length;
+                renderResults(futureEvents);
+                //$("#DivFutureEvents").empty();
+                //$('#EventTemplate').tmpl(futureEvents).appendTo($("#DivFutureEvents"));
+            },
+            error: function(response) {
+                alert(response.status);
+            }
+        });
+
+
+        function renderResults(result) {
+            futureEventpageNumber = 1;
+            pastEventpageNumber = 1;
+            reviewspageNumber = 1;
+            wishListedEventspageNumber = 1;
+            followedSupperClubspageNumber = 1;
+            //$('#ResultCount').val(result.SearchResultCount)
+            $("#DivFutureEvents").empty(); 		 // Remove current
+            var dfe = $("#DivFutureEvents");
+            var dpe=  $("#DivPastEvents");
+            var drw = $("#DivReviews");
+            var dwle = $("#DivWishListedEvents");
+            var dfsc = $("#DivFollowedSupperClubs");
+            
+            if (futureEvents.length > 1) {
+
+                renderPagedResults(dfe, futureEventpageNumber, futureEvents);
+
+            }
+            if (pastEvents.length > 0) {
+
+                renderPagedResults(dpe, pastEventpageNumber, pastEvents);
+            }
+
+            if (reviews.length > 0) {
+                renderPagedResults(drw, reviewspageNumber, reviews);
+            }
+
+            if (wishListedEvents.length > 0) {
+                renderPagedResults(dwle, wishListedEventspageNumber, wishListedEvents);
+            }
+
+            if (followedSupperClubs.length > 0) {
+                renderPagedResults(dfsc, followedSupperClubspageNumber, followedSupperClubs);
+            }
+
+        }
+
+        function renderPagedResults(divResult, pageNumber, results) {
+            //debugger;
+            var currPage = pageNumber;
+            var startIndex = (currPage - 1) * pageSize;
+            var targetNum = (currPage) * pageSize;
+            var toBeRenderedresult = [];
+            for (var i = startIndex; i < targetNum && i < results.length; i++) {
+                toBeRenderedresult.push(results[i]);
+            }
+            if (divResult[0].id == "DivReviews") {
+                $('#ReviewTemplate').tmpl(toBeRenderedresult).appendTo(divResult);
+            }
+            else {
+                if (divResult[0].id == "DivWishListedEvents") {
+                    $('#WishListTemplate').tmpl(toBeRenderedresult).appendTo(divResult);
+                }
+                else
+                {
+                    if (divResult[0].id == "DivFollowedSupperClubs") {
+                        $('#SupperClubTemplate').tmpl(toBeRenderedresult).appendTo(divResult);
+                    }
+                    else
+                    {
+                        $('#EventTemplate').tmpl(toBeRenderedresult).appendTo(divResult);
+                    }
+                }
+
+            }
+
+            if (divResult[0].id == "DivFutureEvents" ){
+                showLoadMore($("#btnFutureLoadMorediv"), results.length, futureEventpageNumber)
+                ++futureEventpageNumber;
+            }
+            else if (divResult[0].id == "DivPastEvents") {
+                showLoadMore($("#btnPastLoadMorediv"), results.length, pastEventpageNumber)
+                ++pastEventpageNumber;
+
+            }
+            else if (divResult[0].id == "DivReviews") {
+              //  alert("results.length=" + results.length);
+              //  alert("reviewspageNumber=" + reviewspageNumber);
+                showLoadMore($("#btnReviewsLoadMorediv"), results.length, reviewspageNumber)
+                ++reviewspageNumber;
+            }
+            else if (divResult[0].id == "DivWishListedEvents") {
+                showLoadMore($("#btnWishListLoadMorediv"), results.length, wishListedEventspageNumber)
+                ++wishListedEventspageNumber;
+            }
+            else if (divResult[0].id == "DivFollowedSupperClubs") {
+                
+                showLoadMore($("#btnFollowedSCLoadMorediv"), results.length, followedSupperClubspageNumber)
+                ++followedSupperClubspageNumber;
+            }
+        }
+
+        $("#btnFutureLoadMore").click(function () {
+
+            renderPagedResults($("#DivFutureEvents"),futureEventpageNumber, futureEvents);
+
+        });
+        $("#btnPastLoadMore").click(function () {
+
+            renderPagedResults($("#DivPastEvents"), pastEventpageNumber, pastEvents);
+
+        });
+        $("#btnWishListLoadMore").click(function () {
+
+            renderPagedResults($("#DivWishListedEvents"), wishListedEventspageNumber, wishListedEvents);
+
+        });
+        $("#btnReviewLoadMore").click(function () {
+
+            renderPagedResults($("#DivReviews"), reviewspageNumber, reviews);
+
+        });
+        $("#btnFollowedSCLoadMore").click(function () {
+
+            renderPagedResults($("#DivFollowedSupperClubs"), followedSupperClubspageNumber, followedSupperClubs);
+
+        });
+        
+        $(".loginWishList").click(function (e) {
+
+            
+            var clkId = jQuery(this).attr("id");
+            var eId = parseInt(clkId.split(" ")[0]);
+
+            var _rurl = "@(SupperClub.Code.ServerMethods.ServerUrl)"+ 'account/myprofile';
+            var tem = "@Url.Action("WishListEvent", "event")";
+            var _url = encodeURIComponent(tem + "?eventId=" + eId.toString() + "&rurl=" + _rurl);
+            $("#RedirectURL").val(_url); $('#login-dialog').load("@Url.Action("loginRegister", "account", new {})"+ "?returnUrl=" + _url);
+            $( $(this).attr("href")).show();
+                     
+
+        });
+        function showLoadMore(loadmorediv, resultcount, currentPageNumber ) {
+            //debugger;
+            var count = resultcount;//$('#FutreResultCount').val();
+            var page = currentPageNumber;
+
+            if (count > page * pageSize) {
+                loadmorediv.css("display", "block");
+
+                //$("#btnLoadMorediv").css("display", "block");
+            }
+            else {
+                loadmorediv.css("display", "none");
+                // $("#btnLoadMorediv").css("display", "none");
+            }
+
+        }
+
+    });
+
+
+    </script>
+}
+
+    <input type="text" id="UserId" value="@Model.Id" style="display:none;">    
+
+    @*<div class="container mb+">
+        <ul class="breadcrumbs list-inline list-inline--delimited pt-- mb">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">User Profile </a></li>
+            <li class="current"><a href="#">@Model.FirstName @Model.LastName</a></li>
+        </ul>
+    </div>*@
+    <div class="container">
+    <div class="bgr-white p">
+        <div class="layout">
+            @*<div class="layout__item large-and-up-3/8">
+                    <img src="@Url.Content("~/Content/images/")SupperClubs/@Model.SupperClub.ImagePath" alt="" class="full-width" style="width:320px; height:320px;">
+                </div>*@
+            <div class="layout__item large-and-up-5/8">
+                <div class="chef-info">
+                    <h1 class="h2 line-height-1-15 mb--">@Model.FirstName @Model.LastName</h1>
+                    <a class="btn--primary btn--small  type-tiny large-and-up-float-right type-uppercase mr-" style="margin-top: -35px;" href="@Url.Action("userdetails", "account")">edit Profile</a>
+                    <hr class="hr hr--dots mb--">
+                   
+                        <div class="mb- relative large-and-up-pr++" style="display:none;">
+
+                            <div class="block large-and-up-inline-block large-and-up-pr">
+                                <a href="" class="no-underline" >
+                                    <span class="type-small type-semibold">
+                                        <svg role="img" class="icon mr--">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-bubble_icon"></use>
+                                        </svg>
+                                        @Model.Reviews.Count Reviews
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="tabs mb+" style="margin-top:15px;">
+            <ul class="tabs__nav layout layout--flush">
+                <li class="layout__item large-and-up-1/6"><a href="#tab-11">Grub Clubs<span>(@Model.UserEvents.Count())</span></a></li>
+                @*<li class="layout__item large-and-up-1/6"><a href="#tab-12">Grub Clubs <span>(17)</span></a></li>*@
+                <li class="layout__item large-and-up-1/6"><a href="#tab-13">Reviews <span>(@Model.Reviews.Count)</span></a></li>
+                <li class="layout__item large-and-up-1/6"><a href="#tab-14">Wishlist <span>(@Model.WishlistedEvents.Count)</span></a></li>
+                <li class="layout__item large-and-up-1/6"><a href="#tab-15">Following <span>(@Model.FollowedSupperClubs.Count)</span></a></li>
+                <li class="layout__item large-and-up-1/6"><a href="#tab-16">FAQs</a></li>
+                @*<li class="layout__item large-and-up-1/6"><a href="#tab-17">Gallery</a></li>*@
+            </ul>
+            <div id="tab-11" class="tab-item pt">
+            @if (Model.FutureEvents.Count() > 0)
+            {
+            <h2 class="type-bold h4 pb-">Next Grub Club you are attending</h2>
+            <div class="border-orange bgr-white p mb">
+                <div class="layout">
+                    <div class="layout__item medium-and-up-4/7">
+                        <div class="search-result__box">
+                            <a href="/@ViewBag.NextEvent.UrlFriendlyName/@ViewBag.NextEvent.Id">
+                                <img src="@Url.Content("~/Content/images/")Events/@ViewBag.NextEvent.ImagePath" alt="" style="width:498px; height:305px;">
+                                <div class="tooltip-links">
+
+                                    @if (SupperClub.Code.UserMethods.IsLoggedIn)
+                                        {
+                                            if (SupperClub.Code.UserMethods.CurrentUser.WishListedEventIds.Contains(ViewBag.NextEvent.Id))
+                                            {
+                                        <div class="tooltip-links-wl is-active" id="divRmWs_@(@ViewBag.NextEvent.Id)">
+                                            <a href="#!" onclick="_removeWS(@ViewBag.NextEvent.Id);">
+                                                <svg role="img" class="icon color-white">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../content/images/icons/icons.svg#icon-heart"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="tooltip-links-wl hidden" id="divAddWs_@(ViewBag.NextEvent.Id)">
+                                            <a href="#!" onclick="_addWS(@ViewBag.NextEvent.Id);">
+                                                <svg role="img" class="icon color-white">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../content/images/icons/icons.svg#icon-heart"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                            }
+                                            else
+                                            {
+                                        <div class="tooltip-links-wl is-active hidden" id="divRmWs_(@ViewBag.NextEvent.Id)">
+                                            <a href="#!" onclick="_removeWS(@ViewBag.NextEvent.Id);">
+                                                <svg role="img" class="icon color-white">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../content/images/icons/icons.svg#icon-heart"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="tooltip-links-wl" id="divAddWs_@(ViewBag.NextEvent.Id)">
+                                            <a href="#!" onclick="_addWS(@ViewBag.NextEvent.Id);">
+                                                <svg role="img" class="icon color-white">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../content/images/icons/icons.svg#icon-heart"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                        <div class="tooltip-links-wl">
+                                            <a id='@ViewBag.NextEvent.Id _tooltip' class="loginWishList open-popup" href="#login-dialog">
+                                                <svg role="img" class="icon color-white">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../content/images/icons/icons.svg#icon-heart"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        }
+                                    @*<ul class="list-bare">
+                                        <li><h3 class="type-small">New list title here...</h3></li>
+                                        <li><a href="">Indian Food</a></li>
+                                        <li><a href="">Interesting Places</a></li>
+                                        <li><a href="">Valentines &lt; 3</a></li>
+                                    </ul>*@
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="layout__item medium-and-up-3/7">
+                        <h3 class="type-extrahuge line-height-1-15 mb-">@ViewBag.NextEvent.Name</h3>
+                        <hr class="hr hr--dots mb--">
+                        <div>
+                            <span class='type-small mr--'>By @ViewBag.NextEvent.SupperClub.Name</span>
+                            <a href="/@ViewBag.NextEvent.SupperClub.UrlFriendlyName/#reviews" class="no-underline">
+                                <ul class="rating inline-block">
+                                    @for (int i = 0; i < 5; i++)
+                                        {
+                                            if (i < @ViewBag.NextEvent.SupperClub.AverageRank)
+                                            {
+                                        <li class="is-checked">
+
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use>
+                                            </svg>
+                                        </li>
+                                            }
+                                            else
+                                            {
+                                        <li class="">
+
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use>
+                                            </svg>
+                                        </li>
+
+                                            }
+                                        }
+
+
+                                </ul>
+                            </a>
+                        </div>
+                        <div>
+
+                            <svg role="img" class="icon color-blue icon--14x14 ">
+                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-medium_calendar"></use>
+                            </svg>
+                            <span class='type-small mr--'>@ViewBag.NextEvent.Start.ToString("ddd, d MMM yyyy")</span>
+
+                            <svg role="img" class="icon color-blue icon--14x14 ">
+                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-small_clock"></use>
+                            </svg>
+                            <span class='type-small mr--'>@ViewBag.NextEvent.Start.ToShortTimeString()</span>
+
+                            <svg role="img" class="icon color-blue icon--14x14 ">
+                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-smallest_pin"></use>
+                            </svg>
+                            <span class='type-small'>@ViewBag.NextEvent.PostCode.Split(new string[] { " " }, StringSplitOptions.None)[0] - <a id="showMapLink" href="#map-single-pin-wrap" class="color-gray open-popup">View on maps</a></span>
+                        </div>
+                        @if (ViewBag.NextEvent.TotalNumberOfAvailableSeats < 5)
+                            {
+                            <div class="mb-">
+
+                                <svg role="img" class="icon color-blue icon--14x14 ">
+                                    <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-flag"></use>
+                                </svg>
+                                <span class='type-small type-bold'><a href="" class="no-underline color-blue">Last Few Seats Available</a></span>
+                            </div>
+                            }
+                        <p class="line-height-1-3 mb-">@Html.Raw(@ViewBag.NextEvent.ShortDescription.Replace("\r\n", "<br />").Replace("\n", "<br />"))</p>
+                        <hr class="hr hr--dots mb--">
+                        <div class="justifize">
+                            <div class="justifize__box">
+                                <span class='type-bold h4 color-dark'>@Html.DisplayFor(m =>m.FutureEvents[0].CostToGuest)</span>
+                            </div>
+                            @if (ViewBag.NextEvent.Alcohol)
+                                {
+                                <div class="justifize__box">
+                                    <span class='type-bold h4 color-dark tooltip-wrap'>
+                                        <svg role="img" class="icon icon--11x21">
+                                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-large_botles"></use>
+                                        </svg>
+                                        BYOB <div class="tooltip">Bring your own bottle</div>
+                                    </span>
+                                </div>
+                                }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+                <h2 class="h4 type-bold mb-">Attending</h2>
+                <div class="layout mb" id="DivFutureEvents">
+
+                </div>
+                <div class="text-center mb" id="btnFutureLoadMorediv" style="display:none">
+
+                    <button type="button" id="btnFutureLoadMore" class="btn btn--primary btn--radius btn--white">Load More</button>
+                </div>
+
+                <h2 class="h4 type-bold mb-">Attended</h2>
+                <div class="layout mb" id="DivPastEvents">
+
+                </div>
+                <div class="text-center mb" id="btnPastLoadMorediv" style="display:none">
+
+                    <button type="button" id="btnPastLoadMore" class="btn btn--primary btn--radius btn--white">Load More</button>
+                </div>
+            </div>
+            <div id="tab-13" class="tab-item pt+">
+                <div class="container container--small" id="DivReviews">
+
+
+                </div>
+                <div class="text-center mb" id="btnReviewsLoadMorediv" style="display:none">
+
+                    <button type="button" id="btnReviewLoadMore" class="btn btn--primary btn--radius btn--white">Load More</button>
+                </div>
+            </div>
+            <div id="tab-14" class="tab-item pt-">
+                <h2 class="h4 type-bold mb-">Grub Clubs on your wishlist</h2>
+                <div class="layout mb" id="DivWishListedEvents">
+                </div>
+                <div class="text-center mb" id="btnWishListLoadMorediv" style="display:none;">
+                    <button type="button" id="btnWishListLoadMore" class="btn btn--primary btn--radius btn--white">Load More</button>
+
+                </div>
+            </div>
+            <div id="tab-15" class="tab-item pt-">
+                <h2 class="h4 type-bold mb-">Following</h2>
+                <div class="layout mb" id="DivFollowedSupperClubs">
+                </div>
+                <div class="text-center mb" id="btnFollowedSCLoadMorediv" style="display:none;">
+                    <button type="button" id="btnFollowedSCLoadMore" class="btn btn--primary btn--radius btn--white">Load More</button>
+                </div>
+
+            </div>
+            <div id="tab-16" class="tab-item pt+">
+                @Html.Partial("_GuestFaqs")
+            </div>
+        </div>
+
+        </div>
+
+    <script id="EventTemplate" type="text/x-jquery-tmpl">
+        <div class="layout__item large-and-up-1/4 medium-1/2">
+            <div class="search-result search-result--grid">
+                <div class="search-result__box" style="height:300px; width:211px;">
+                    <a href="/${urlFriendlyName}/${eventId}">
+                        <figure>
+                            <img src="@Url.Content("~/Content/images/")Events/${imageURL}" alt="${name}" style="height:149px; width:211px;" />
+                        </figure>
+                    </a>
+                    <header class='mb-'>
+                        <div style="height:50px;overflow:hidden;">
+                            <a href="/${urlFriendlyName}/${eventId}"><h2 class="color-darken">${name}</h2></a>
+                            </div>
+                            <div class="justifize">
+                                <div class="justifize__box">
+                                    <a href="${reviewUrl}">
+                                        <span>
+                                            {{if averageRank== 5}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 4}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 3}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 2}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 1}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank==0}}
+                                            <ul class="rating ">
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                        </span>
+                                    </a>
+                                </div>
+                                {{if reviewsCount>0}}
+                                <div class="justifize__box">
+                                    <a href="${reviewUrl}">
+                                        <span class="color-gray">
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-bubble_icon"></use>
+                                            </svg>
+                                            ${reviewsCount}  Reviews
+                                        </span>
+                                    </a>
+                                </div>
+                                {{/if}}
+                            </div>
+</header>
+                    <footer>
+                        <div class="tableize tableize--bottom">
+                            <div class="tableize__cell">
+                                <div class="justifize">
+                                    <div class="justifize__box">
+                                        <span class="price">
+                                            {{if ticketCost == "£0.00"}}
+                                            Free
+                                            {{else}}
+
+                                            £${ticketCost}
+                                            {{/if}}
+                                       </span>
+                                    </div>
+                                    <div class="justifize__box">
+                                        <time>
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-small_calendar"></use>
+                                            </svg>
+                                            ${startDateTime}
+                                        </time>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="ReviewTemplate" type="text/x-jquery-tmpl">
+        <div class="flag flag--top flag--flush flag--responsive mb">
+            <div class="flag__img ph">
+                <img src="@Url.Content("~/Content/images/")placeholder-img2.jpg" alt="">
+            </div>
+            <div class="flag__body">
+                <h3 class="h6 type-semibold">${Name}</h3>
+                <h3 class="h6 type-semibold"><time>${createdDate}</time></h3>
+
+
+                {{if rating== 5}}
+                <ul class="rating ">
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                </ul>
+                {{/if}}
+                {{if rating== 4}}
+                <ul class="rating ">
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                </ul>
+                {{/if}}
+                {{if rating== 3}}
+                <ul class="rating ">
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                </ul>
+                {{/if}}
+                {{if rating== 2}}
+                <ul class="rating ">
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                </ul>
+                {{/if}}
+                {{if rating== 1}}
+                <ul class="rating ">
+                    <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                </ul>
+                {{/if}}
+                {{if rating== 0}}
+                <ul class="rating ">
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                    <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                </ul>
+                {{/if}}
+
+                <p class="type-light">${review}</p>
+            </div>
+        </div>
+    </script>
+
+    <div class="newsletter">
+        <a href="javascript:;" class="newsletter__button">
+            <div class="tableize tableize--full tableize--middle">
+                <div class="tableize__cell">
+                    <div>
+                        <span>Newsletter</span>
+
+                        <svg role="img" class="icon icon-18x10">
+                            <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-arrow_12x22"></use>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <span class="newsletter__content">
+            <form action="" class="full-height">
+                <div class="close-btn type-small color-white">Close <span class="type-bold">X</span></div>
+                <div class="tableize tableize--full tableize--middle">
+                    <div class="tableize__cell">
+                        <div>
+                            <p class="type-small type-bold color-white mb--">Find out of best Grub Clubs</p>
+                            <input type="email" class="input input--primary" placeholder="Email address">
+                            <button class="btn type-uppercase type-small type-bold">ok</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </span>
+    </div>
+
+    <script id="WishListTemplate" type="text/x-jquery-tmpl">
+        <div class="layout__item large-and-up-1/4 medium-1/2">
+            <div class="search-result search-result--grid">
+                <div class="search-result__box_${eventId}" style="height:300px; width:211px;">
+                    <a href="/${urlFriendlyName}/${eventId}">
+                        <figure>
+                            <img src="@Url.Content("~/Content/images/")Events/${imageURL}" alt="${name}" style="height:149px; width:211px;">
+
+                        </figure>
+                    </a>
+                    <header class='mb-'>
+                        <div style="height:50px;overflow:hidden;">
+                            <a href="/${urlFriendlyName}/${eventId}" class="color-darken">${name}</a>
+                            </div>
+                            <div class="justifize">
+                                <div class="justifize__box">
+                                    <a href="${reviewUrl}">
+                                        <span>
+                                            {{if averageRank== 5}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 4}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 3}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 2}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 1}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank==0}}
+                                            <ul class="rating ">
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                        </span>
+                                    </a>
+                                </div>
+                                {{if reviewsCount>0}}
+                                <div class="justifize__box">
+                                    <a href="${reviewUrl}">
+                                        <span class="color-gray">
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-bubble_icon"></use>
+                                            </svg>
+                                            ${reviewsCount}  Reviews
+                                        </span>
+                                    </a>
+                                </div>
+                                {{/if}}
+                            </div>
+</header>
+                    <footer>
+                        <div class="tableize tableize--bottom">
+                            <div class="tableize__cell">
+                                <div class="justifize">
+                                    <div class="justifize__box">
+                                        <span class="price">
+                                            {{if ticketCost == "£0.00"}}
+                                            Free
+                                            {{else}}
+                                            £${ticketCost}
+                                            {{/if}}
+                                           </span>
+                                    </div>
+                                    <div class="justifize__box">
+                                        <time>
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-small_calendar"></use>
+                                            </svg>
+                                            ${startDateTime}
+                                        </time>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                    <div class="tooltip-links is-active">
+                        <a id="removeWS_${eventId}" class="rmvWs">
+                            <svg role="img" class="icon color-white">
+                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-heart"></use>
+                            </svg>
+                        </a>
+                        @*<ul class="list-bare">
+                                <li><h3 class="type-small">New list title here...</h3></li>
+                                <li><a href="">Indian Food</a></li>
+                                <li><a href="">Interesting Places</a></li>
+                                <li><a href="">Valentines &lt; 3</a></li>
+                            </ul>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="SupperClubTemplate" type="text/x-jquery-tmpl">
+        <div class="layout__item medium-1/2 large-and-up-1/4">
+            <div class="search-result search-result--grid search-result--following">
+                <div class="search-result__box_${supperClubId}" style="height:300px; width:211px;">
+                    <a href="/${urlFriendlyName}">
+                        <figure>
+                            <img src="@Url.Content("~/Content/images/")SupperClubs/${imageUrl}" alt="${name}" style="height:149px; width:211px;" />
+                        </figure>
+                    </a>
+                    <header class='mb--'>
+                        <div style="height:50px;overflow:hidden;">
+                            <a href="/${urlFriendlyName}"><h2 class="color-darken">${name}</h2></a>
+                            </div>
+                            <div class="justifize">
+                                <div class="justifize__box">
+                                    <span>
+                                        <a href="/${urlFriendlyName}/#reviews">
+                                            {{if averageRank== 5}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 4}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 3}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 2}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 1}}
+                                            <ul class="rating ">
+                                                <li class="is-checked"><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                            {{if averageRank== 0}}
+                                            <ul class="rating ">
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                                <li class=""><svg role="img" class="icon "><use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-star"></use></svg></li>
+                                            </ul>
+                                            {{/if}}
+                                        </a>
+                                    </span>
+                                </div>
+                                {{if reviewsCount>0}}
+                                <div class="justifize__box">
+                                    <a href="/${urlFriendlyName}#reviews">
+                                        <span class="color-gray">
+                                            <svg role="img" class="icon ">
+                                                <use xlink:href="@Url.Content("~/Content/images/")icons.svg#icon-bubble_icon"></use>
+                                            </svg>
+                                            ${reviewsCount} Reviews
+                                        </span>
+                                    </a>
+                                </div>
+                                {{/if}}
+                            </div>
+</header>
+                    <div class="remove-button" id="followedsc_${supperClubId}"><img src="@Url.Content("~/Content/images/")close-btn.png" alt=""></div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+
+    <div class="message-popup-wraper text-center"></div>
+    <span class="messages-popup messages-popup--added">
+        <svg role="img" class="icon icon-heart">
+            <use xlink:href="../content/images/icons/icons.svg#icon-heart"></use>
+        </svg>
+        Event is added to wish list!
+    </span>
+    <span class="messages-popup messages-popup--removed">
+        <svg role="img" class="icon icon-heart-break">
+            <use xlink:href="../content/images/icons/icons.svg#icon-heart-break"></use>
+        </svg>
+        Event is removed from wish list!
+    </span>
+
+    <div id="map-single-pin-wrap" class="map--single-pin-wrap mfp-hide magnific-content">
+        <div id="map-single-pin" class="map--single-pin map--popup"></div>
+        <button title="Close (Esc)" type="button" class="mfp-close">
+            <span>
+                <svg role="img" class="icon">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/content/images/icons/icons.svg#icon-X-close"></use>
+                </svg>
+            </span>
+        </button>
+    </div>

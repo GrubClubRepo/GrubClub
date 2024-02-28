@@ -1,0 +1,12 @@
+﻿@model SupperClub.Models.UploadImageModel
+@{
+    ViewBag.Title = "View Image";
+}
+
+<script type="text/javascript">
+    parent.document.getElementById("ImagePath").value = "@Model.SavedFileName";
+</script>
+
+<img alt="Image uploaded" style="max-width: 480px; max-height: 480px;" id="preview" src="@Url.Content(System.Web.Configuration.WebConfigurationManager.AppSettings["TempImagePath"] + Model.SavedFileName)" />
+Don't like this photo? <a href="@Url.Action("UploadImage", "Image")">Change it here</a> otherwise click 'Update/Create' to save it!
+

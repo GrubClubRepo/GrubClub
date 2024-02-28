@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "What is a Grub Club? |Learn about Eating Out with Grub Club";
+    ViewBag.Description = "Want to learn more about Grub Clubs? See what our amazing Chefs are doing with food. Find out how it works and how you can get involved.";
+}
+
+@section PageSpecificScripts {
+}
+
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>	
+</div>
+<!-- Page Title End -->
+
+<div class="container sub-title2">
+    <h2>Chefs</h2>
+</div>
+
+<!--  960 Container Start -->
+<div class="container">
+
+	<!-- Accordions
+	================================================== -->
+	<div class="sixteen columns">
+
+        <p>Grub Club is part dining table in your house and part experimental kitchen,
+Its like your kitchen table because it’s a great place to socialise and get to know
+people; its experimental because it’s a space for Chefs to try out their latest creations
+on a curious set of foodies.</p>
+        <p>A Grub Club is for all food lovers, you can be an amateur who loves cooking for fun
+or someone who wants to attend exciting food events.</p>
+        <p>We are building a growing community of Chefs who want your feedback. Tell them
+you love it, tell them you hate it, just say how you feel.</p>
+
+    </div>
+
+    <div class="sixteen columns">
+        <h2>The Process For Guests</h2>
+    </div>
+
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Guest.1.gif")" alt=""/>
+	</div>
+
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Guest.2.gif")" alt=""/>
+	</div>
+
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Guest.3.gif")" alt=""/>
+	</div>
+
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Guest.4.gif")" alt=""/>
+	</div>
+
+    <div class="sixteen columns">
+        <h2>The Process For Hosts</h2>
+    </div>
+
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Host.1.gif")" alt=""/>
+	</div>
+
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Host.2.gif")" alt=""/>
+	</div>
+
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Host.3.gif")" alt=""/>
+	</div>
+
+	<div class="four columns">
+		<img style="margin-left:auto; margin-right:auto" src="@Url.Content("~/Content/images/Host.4.gif")" alt=""/>
+	</div>
+
+</div>
+<!-- End 960 Container -->

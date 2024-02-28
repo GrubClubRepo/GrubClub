@@ -1,0 +1,12 @@
+﻿
+
+@using(Html.BeginForm("UploadFile","Admin",FormMethod.Post, new {enctype="multipart/form-data"}))
+{ 
+
+<input type="file" name="file" id="file" style="width:240px;" />
+
+<input type="submit" id="btnsubmit" value="Upload" />
+    
+    <input type="text" id="txtSearch" value="Search" />
+    
+}

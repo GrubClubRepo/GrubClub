@@ -1,0 +1,104 @@
+﻿@model SupperClub.Models.EventCloneModel
+@{
+    ViewBag.Title = "Clone existing event";
+}
+@section PageSpecificScripts {
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/datepicker/jquery-ui-1.8.23.custom.css")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/timepicker/jquery.ui.timepicker.css")" />
+   
+      @* http://fgelinas.com/code/timepicker/ *@
+    <script src="@Url.Content("~/Scripts/old/jquery.ui.timepicker.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/old/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/old/jquery.validate.date.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/old/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    @*This script handles additional custom date validation on dd/MM/yy*@
+    <script src="@Url.Content("~/Scripts/old/jquery.validate.custom.js")" type="text/javascript"></script>
+      
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Make sure the validator works for hidden fields
+            $.validator.setDefaults({ ignore: '' });
+            jQuery.validator.methods["date"] = function (value, element) { return true; }
+
+            $.datepicker.setDefaults($.datepicker.regional['en-GB']);
+            $.datepicker.setDefaults({ dateFormat: 'dd/mm/yy' });
+
+            $('#EventDate').datepicker({
+                dateFormat: "dd/mm/yy",
+                minDate: new Date(@DateTime.Now.Year, @DateTime.Now.Month - 1, @DateTime.Now.Day),
+            });
+
+            $('#StartTime').timepicker({
+                defaultTime: '@Model.StartTime.Hour:@Model.StartTime.Minute',
+                showLeadingZero: true,
+                showPeriodLabels: true,
+            });
+        });
+    </script>
+    }
+<!--  Page Title -->
+<div class="container pattern-design2">
+    <div class="container">
+        <p>@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() / @ViewBag.Title</p>
+    </div>
+</div>
+<!-- Page Title End -->
+
+@if (ViewBag.Notification != null || TempData["Notification"] != null)
+{
+    SupperClub.Models.NotificationModel nModel = (ViewBag.Notification == null) ? (SupperClub.Models.NotificationModel)TempData["Notification"] : (SupperClub.Models.NotificationModel)ViewBag.Notification;
+    TempData["Notification"] = null;
+    @Html.Partial("_Notification", nModel);
+}
+
+<!--  960 Container Start -->
+<div class="container">
+	<div class="sixteen columns">
+        @if (ViewBag.NoEventIdFound == null || !ViewBag.NoEventIdFound)
+        {
+            using (Html.BeginForm())
+            {
+                <div class="tab-content">
+                    @Html.HiddenFor(m => m.EventId)
+                    @Html.HiddenFor(m => m.MultiSeating)
+                    <div class="field">
+                        <label>Event Date</label>
+                        @Html.ValidationMessageFor(m => m.EventDate)
+                        @Html.EditorFor(m => m.EventDate, "DatePicker")
+                    </div>
+                    @if (!Model.MultiSeating)
+                    {
+                        <div class="field">
+                            <label>Start Time</label>
+                            @Html.ValidationMessageFor(m => m.StartTime)
+                            <p>This is the time your guests can start to arrive.</p>
+                            @Html.EditorFor(m => m.StartTime, "TimePicker")
+                        </div>
+                        <div class="field">
+                            <label>Duration</label>
+                            @Html.ValidationMessageFor(m => m.Duration)
+                            <p>This is an approximate length of time for the event.</p>
+                            @Html.EditorFor(m => m.Duration)
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(m => m.StartTime)
+                        @Html.HiddenFor(m => m.Duration)
+                    }
+                    <input type="submit" value="Replicate and Submit" class="button small green" style="margin-top:10px;"/>
+                    @if (ViewBag.Status != null && ViewBag.Status)
+                    {
+                        <p style="color:green;">Your event has been successfully replicated and submitted for approval!</p>
+                        <p class="mb pb-">We’ll review your Grub Club within 2 working days and will get back to you if we have further questions. You can view your pending event <a href="@ViewBag.EventUrl"><span class="text-underline">here</span></a>.</p>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <p>Could not find the event you want to copy. Please go back and try again!</p>
+        }
+	</div>
+</div>

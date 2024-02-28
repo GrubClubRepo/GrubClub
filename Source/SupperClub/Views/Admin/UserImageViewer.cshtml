@@ -1,0 +1,26 @@
+﻿@model SupperClub.Models.ImagesModel
+@{
+    ViewBag.Title = "Home Page";
+}
+<h2>List of images</h2>
+<p>
+    This page contains the list of all uploaded images.
+</p>
+@if (Model.Images.Count > 0)
+{
+<div class="imageContainer">
+@foreach (var src in Model.Images)
+{
+    <div class="imageBox">
+        <a href="@Url.Content("~/Content/images/userimages/" + src)" target="_blank"><img src="@Url.Content("~/Content/images/userimages/" + src)" alt="Image" class="imagePreview" /></a>
+    </div>
+}
+</div>
+}
+else
+{
+<div class="imageCenter">
+    No images have been uploaded so far.
+</div>
+}
+<div class="clear"></div>
